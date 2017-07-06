@@ -1,0 +1,30 @@
+<h1>Parameter search runs</h1>
+
+<table class="table table-striped">
+	<thead>
+	  <th tooltip-append-to-body="true" uib-tooltip="The date when the parameter search was submitted to the repository.">Submission date</th>
+	  <th tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">Run date ~</th>
+	  <th tooltip-append-to-body="true" uib-tooltip="The name of the simulation instance.">Name</th>
+	  <th tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">Model name</th>
+	  <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect individual runs of the parameter search.">View individual runs</th>
+	  <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to perform parameter dependent interactive inspection of the paramter search results.">Inspect results</th>
+	</thead>
+	<tbody>
+	  <tr ng-repeat="ps in $ctrl.parameterSearches">
+	    <td>{{ps.submission_date}}</td>
+	    <td>{{ps.simulation_runs[0].run_date}}</td>
+	    <td>{{ps.name.substring(ps.name.lastIndexOf(']')+1)}}</td>
+	    <td>{{ps.simulation_runs[0].model_name}}</td>
+	    <td>
+	        <a href="/simruns/{{ps._id}}" class="btn  btn-sm">
+	          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+	        </a>
+	    </td>
+	    <td>
+	        <a href="/param-search-inspect/{{ps._id}}" class="btn  btn-sm">
+	          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+	        </a>
+	    </td>
+	  </tr>
+	</tbody>
+</table>

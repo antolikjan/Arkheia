@@ -1,0 +1,149 @@
+param-search-inspect .table {
+	margin : 0px;
+}
+
+
+.figure-display {
+	margin-left : 10px;
+	margin-right : 10px;
+}
+
+.horizontal-scroll {
+	margin-left : 10px;
+	margin-right : 10px;
+}
+
+.btn-param-value.btn.active, .btn-param-value.btn:active {
+    background-color: #999999 !important;
+    border-color: #999999 !important;
+}
+
+.btn-param-name.btn {
+    background-color: #999999 !important;
+    border-color: #999999 !important;
+}
+
+.btn-param-name.btn.active, .btn-param-name.btn:active {
+    background-color: #f0ad4e !important;
+    border-color: #f0ad4e !important;
+}
+
+
+.tr-aligned {
+	width : 100%;
+	height:40px; 
+	overflow:hidden; 
+	display:block;
+	border-top: none !important;
+}
+
+param-search-inspect .btn-sm{
+	font-size:14px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin:3px;
+} 
+
+param-search-inspect .img-thumbnail 
+{
+	padding:0px;
+	margin:0px;
+	/*width:300px;*/ 
+	/*height:300px;*/
+ 	float:none;
+}
+
+param-search-inspect .y-param-bar
+{
+	float:left;
+	max-width:30px; 
+	/*in-height:300px;
+	max-height:300px;*/
+	background-color: #eeeeee;
+	width:100%;
+	height:300px;
+	display: inline-block;
+	margin:0px;
+	padding:0px;
+	/*transform: rotate(90deg);
+	transform-origin: left top 0;*/
+}
+param-search-inspect select {
+	float:left;
+	/*margin-top, margin-left, margin-right : 20px;*/
+	margin : 20px;
+	margin-top: 0px;
+}
+
+param-search-inspect tr {
+	border-top: none !important;
+	margin: 0px !important;
+	padding:0px !important;
+}
+
+param-search-inspect td {
+	border-top: none !important;
+	margin: 0px !important;
+	padding:0px !important;
+}
+
+.rzslider {
+  margin: 8px 0px 0px 0px;
+}
+
+param-search-inspect hr {
+	margin-top : 10px;
+	margin-bottom : 10px;
+	border-top : 3px;
+}
+
+
+.rzslider .rz-pointer {
+  top: -10px;
+  width: 24px;
+  height: 24px;
+  -webkit-border-radius: 12px;
+     -moz-border-radius: 12px;
+          border-radius: 12px;
+}
+
+.rzslider .rz-pointer:after {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+
+rzslider .rz-bar-wrapper {
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 16px;
+  padding-top: 8px;
+  margin-top: -8px;
+  box-sizing: border-box;
+}
+
+
+.noscrollbar::-webkit-scrollbar {
+    /*width: 0px;  
+    background: transparent;  */
+    display: none;
+}
+
+
+
+.vertical-text  {
+  /* FF3.5+ */
+  -moz-transform: rotate(-90.0deg);
+  /* Opera 10.5 */
+  -o-transform: rotate(-90.0deg);
+  /* Saf3.1+, Chrome */
+  -webkit-transform: rotate(-90.0deg);
+  /* IE6,IE7 */
+  filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=0.083);
+  /* IE8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
+  /* Standard */
+  transform: rotate(-90.0deg);
+}

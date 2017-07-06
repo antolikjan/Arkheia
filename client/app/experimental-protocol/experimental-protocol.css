@@ -1,0 +1,11 @@
+.tooltip.customClass .tooltip-inner {
+          background-color: #000000;
+          
+        }
+
+.tooltip.customClass {
+          background-color: #033000;
+
+          margin :0px;
+          border :0px;
+        }

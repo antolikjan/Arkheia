@@ -1,0 +1,35 @@
+<h1>Stimuli</h1>
+  <table class="table table-striped" style="overflow: auto;">
+    <thead>
+      <th tooltip-append-to-body="true" uib-tooltip="The source code identifier that generates the given instance of Stimulus (e.g. a class or function name)." style="width : 15%;">Source code name</th>
+      <th tooltip-append-to-body="true" uib-tooltip="Brief description of the recording configuration." style="width : 30%;">Short description</th>
+      <th style="width : 40%;" tooltip-append-to-body="true" uib-tooltip="Detailed description of the recording configuration.">Long description</th>
+      <th style="width : 5%;" tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the parameters and their values of the given stimulus instance.">Parameters</th>
+      <th style="width : 10%;" tooltip-append-to-body="true" uib-tooltip="The stimulus movie. Click to enlarge the movie. Note that due to frame-rate cap in web-browsers the speed of the movies does not neccessarily correspond to the speed at which they were presented during simulation.">View</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="stim in $ctrl.simRun.stimuli">
+        <td>{{stim.class}}</td>
+        <td>{{stim.short_description}}</td>
+        <td>  
+              <a ng-click="$ctrl.long_description_visible[$index]=!$ctrl.long_description_visible[$index]" class="btn  btn">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+              </a>
+              <p ng-show="$ctrl.long_description_visible[$index]">{{stim.long_description}}</p> 
+        </td>
+        <td>
+          
+            <a ng-click="$ctrl.paramsModal(stim.params)" class="btn  btn">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
+           
+
+        </td>
+        <td>
+        	    <a ng-click="$ctrl.openLightboxModal($index)" href>
+                  <img ng-src="/api/simulation-runs/images/{{stim.gif}}" class="img-thumbnail" style="min-height:70px; max-height:70px;">
+              </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>

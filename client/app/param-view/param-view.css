@@ -1,0 +1,53 @@
+.tree-btn {
+    margin-right: 2px;
+    padding : 0px;
+    border: 0px;
+}
+
+.angular-ui-tree-handle {
+    background: #f8faff;
+    border: 0px;
+    color: #7c9eb2;
+    padding: 2px 2px;
+}
+
+.angular-ui-tree-handle:hover {
+    color: #438eb9;
+    background: #f4f6f7;
+    border-color: #dce2e8;
+}
+
+tr.angular-ui-tree-empty {
+    height:100px
+}
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}
+
+.angular-ui-tree-nodes  {
+    padding-left : 25px !important;
+}
+
+/* --- Tree --- */
+.tree-node {
+    background: #f8faff;
+    color: #7c9eb2;
+}
+
+.nodrop {
+    background-color: #f2dede;
+}
+
+.tree-node-content {
+    margin: 0px;
+}
+.tree-handle {
+    padding: 0px;
+    background: #428bca;
+    color: #FFF;
+    margin-right: 2px;
+}
+
+

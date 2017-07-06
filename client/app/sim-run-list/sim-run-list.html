@@ -1,0 +1,41 @@
+<h1>Simulation runs</h1>
+  <table class="table table-striped">
+    <thead>
+      <th tooltip-append-to-body="true" uib-tooltip="The date when the the simulation run was submitted to the repository.">Submission date</th>
+      <th tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">Run date</th>
+      <th tooltip-append-to-body="true" uib-tooltip="The name given to the simulation instance.">Run name</th>
+      <th tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">Model name</th>
+      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the full parametrization of the given simulation run.">View params</th>
+      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the stimuli that were shown during the given simulation run.">View stim</th>
+      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the experimental protocols that were performed over the model during the given simulation run.">View exp. prot</th>
+      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the results (figures) generated during the given simulation run.">View results</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="simrun in $ctrl.simulationRuns">
+        <td>{{simrun.submission_date}}</td>
+        <td>{{simrun.run_date}}</td>
+        <td>{{simrun.simulation_run_name}}</td>
+        <td>{{simrun.model_name}}</td>
+        <td>
+            <a href="/param-view/{{simrun._id}}" class="btn  btn">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
+        </td>
+         <td>
+            <a href="/stimuli/{{simrun._id}}" class="btn  btn">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
+        </td>
+        <td>
+            <a href="/experimental-protocol/{{simrun._id}}" class="btn  btn">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
+        </td>
+        <td>
+            <a href="/results/{{simrun._id}}" class="btn  btn">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>

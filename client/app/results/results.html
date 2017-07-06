@@ -1,0 +1,19 @@
+<h1>Results</h1>
+  <table class="table table-striped" style="overflow: auto;">
+    <thead>
+      <th tooltip-append-to-body="true" uib-tooltip="The source code identifier that generates the given figure (e.g. a class or function name).">Source name</th>
+      <th tooltip-append-to-body="true" uib-tooltip="The name of the figure.">Name</th>
+      <th tooltip-append-to-body="true" uib-tooltip="The figure. Click to enlarge the figure.">Figure</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="simrun in $ctrl.simRun.results">
+        <td>{{simrun.class_name}}</td>
+        <td>{{simrun.name}}</td>
+        <td>
+        	    <a ng-click="$ctrl.openLightboxModal($index)" href>
+                  <img ng-src="/api/simulation-runs/images/{{simrun.figure._id}}" class="img-thumbnail" style="min-height:70px; max-height:70px;">
+              </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>

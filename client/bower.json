@@ -1,0 +1,24 @@
+{
+  "name": "client",
+  "authors": [
+    "antolikjan <antolikjan@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-tree": "^2.22.2",
+    "angular-bootstrap-lightbox" : "",
+    "angularjs-slider" : ""
+
+  }
+}

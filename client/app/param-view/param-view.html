@@ -1,0 +1,26 @@
+<script type="text/ng-template" id="nodes_renderer.html">
+  <div ui-tree-handle class="tree-node tree-node-content">
+    <a class="btn btn-xs tree-btn" ng-if="node.nodes && node.nodes.length > 0" ng-click="toggle(this)"><span
+        class="glyphicon" aria-hidden="true"
+        ng-class="{
+          'glyphicon-plus-sign': collapsed,
+          'glyphicon-minus-sign': !collapsed
+        }"></span></a>
+	<span ng-if="node.nodes.length === 0" class="glyphicon  glyphicon-stop" aria-hidden="true" style="margin:0px; font-size: 12px; margin-right: 2px;"></span>
+
+    <span>{{node.title}} </span>    &nbsp; &nbsp; &nbsp; <span ng-if="node.value !== undefined" class="glyphicon  glyphicon-menu-right" aria-hidden="true"> </span> <span ng-if="node.value !== undefined" style="padding-left:5px; padding-right:5px; background-color:#edffed;">{{node.value}}</span>
+  </div>  
+  <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'">
+    </li>
+  </ol>
+</script>
+
+<div>
+			<div ui-tree id="tree-root" data-drag-enabled=false data-nodrop-enabled=true>
+		      <ol ui-tree-nodes ng-model="$ctrl.data" style="padding : 5px !important;">
+		       	<li ng-repeat="node in $ctrl.data" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+		      </ol>
+		    </div>
+
+</div>
