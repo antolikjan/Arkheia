@@ -75,7 +75,7 @@
 						<span ng-repeat="figures in figureList">
 							<a ng-click="$ctrl.openLightboxModal(figures)" href>
 											<img ng-if="figures[$ctrl.selectedFigure] !== undefined" ng-src="/api/simulation-runs/images/{{figures[$ctrl.selectedFigure]._id}}" class="img-thumbnail" ng-style="{'width' : $ctrl.image_size + 'px'}">
-											<img ng-if="figures[$ctrl.selectedFigure] == undefined" ng-src="//:0" class="img-thumbnail" ng-style="{'width' : $ctrl.image_size + 'px'}">
+											<img ng-if="figures[$ctrl.selectedFigure] == undefined" ng-src="//:0" class="img-thumbnail" ng-style="{'width' : $ctrl.image_size + 'px', 'height' : $ctrl.image_size*$ctrl.image_hw_ratio + 'px'}">
 											
 							</a>
 						</span>

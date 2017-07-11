@@ -2,7 +2,7 @@
  */
 
 'use strict';
-import { ParameterSearch, SimulationRun } from './simulation-run.model';
+import { ParameterSearch, SimulationRun, Configuration } from './simulation-run.model';
 import mongoose from 'mongoose';
 
 var Grid = require('gridfs-stream');
@@ -59,6 +59,15 @@ export function getImage(req, res) {
     found ? gfs.createReadStream({_id: req.params.id}).pipe(res) : console.log('File does not exist');
   });
 }
+
+// Gets the configuration
+export function getConfiguration(req, res) {
+  return Configuration.find()
+    .exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
 
 // Gets a list of ParameterSearches
 export function paramSearchList(req, res) {

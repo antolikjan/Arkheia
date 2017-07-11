@@ -9,8 +9,4 @@ module.exports = {
   mongo: {
     uri: 'mongodb://localhost/arkheia-dev'
   },
-
-  // Seed database on startup
-  seedDB: true
-
 };

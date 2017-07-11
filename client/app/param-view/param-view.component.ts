@@ -18,7 +18,7 @@ export class ParamViewComponent {
   convertJsonToTree(json) {
       let nodes = [];
       for (let key in json) {
-        if(json.hasP)
+        if(json.hasOwnProperty(key))
         this.counter++;
         if (typeof(json[key]) === 'object') {
           if (json[key] instanceof Array) {
