@@ -1,6 +1,7 @@
 'use strict';
 const angular = require('angular');
 const ngRoute = require('angular-route');
+const smartTable = require('angular-smart-table')
 require('../../bower_components/angular-bootstrap-lightbox');
 
 import routes from './stimuli.routes';
@@ -53,7 +54,7 @@ export class StimuliComponent {
   }
 }
 
-export default angular.module('mozaikRepositoryApp.stimuli', [ngRoute, 'bootstrapLightbox',   'ui.bootstrap'])
+export default angular.module('mozaikRepositoryApp.stimuli', [ngRoute, smartTable, 'bootstrapLightbox',   'ui.bootstrap'])
   .config(routes)
   .component('stimuli', {
     template: require('./stimuli.html'),

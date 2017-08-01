@@ -1,8 +1,8 @@
 'use strict';
 const angular = require('angular');
 const ngRoute = require('angular-route');
-
-
+const smartTable = require('angular-smart-table')
+const moment = require('moment');
 import routes from './sim-run-list.routes';
 
 export class SimRunListComponent {
@@ -13,6 +13,16 @@ export class SimRunListComponent {
   /*@ngInject*/
   constructor($http) {
     this.$http = $http;
+  }
+
+  getSubmissionDate(row)
+  {
+    return moment(row.submission_date,'DD/MM/YYYY-HH:mm:ss').valueOf();
+  }
+
+  getRunDate(row)
+  {
+    return moment(row.run_date,'DD/MM/YYYY-HH:mm:ss').valueOf();
   }
 
   $onInit() {
@@ -29,7 +39,7 @@ export class SimRunListComponent {
 
 }
 
-export default angular.module('mozaikRepositoryApp.sim-run-list', [ngRoute])
+export default angular.module('mozaikRepositoryApp.sim-run-list', [ngRoute,smartTable])
   .config(routes)
   .component('simRunList', {
     template: require('./sim-run-list.html'),

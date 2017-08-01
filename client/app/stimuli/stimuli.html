@@ -1,14 +1,24 @@
 <h1>Stimuli</h1>
-  <table class="table table-striped" style="overflow: auto;">
+  <table st-table="stims" st-safe-src="$ctrl.simRun.stimuli" class="table table-striped" style="overflow: auto;">
     <thead>
-      <th tooltip-append-to-body="true" uib-tooltip="The source code identifier that generates the given instance of Stimulus (e.g. a class or function name)." style="width : 15%;">Source code name</th>
-      <th tooltip-append-to-body="true" uib-tooltip="Brief description of the recording configuration." style="width : 30%;">Short description</th>
-      <th style="width : 40%;" tooltip-append-to-body="true" uib-tooltip="Detailed description of the recording configuration.">Long description</th>
-      <th style="width : 5%;" tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the parameters and their values of the given stimulus instance.">Parameters</th>
-      <th style="width : 10%;" tooltip-append-to-body="true" uib-tooltip="The stimulus movie. Click to enlarge the movie. Note that due to frame-rate cap in web-browsers the speed of the movies does not neccessarily correspond to the speed at which they were presented during simulation.">View</th>
+      <tr>
+        <th st-sort='class' tooltip-append-to-body="true" uib-tooltip="The source code identifier that generates the given instance of Stimulus (e.g. a class or function name)." style="width : 15%;">Source code name</th>
+        <th st-sort='short_description  ' tooltip-append-to-body="true" uib-tooltip="Brief description of the recording configuration." style="width : 30%;">Short description</th>
+        <th style="width : 40%;" tooltip-append-to-body="true" uib-tooltip="Detailed description of the recording configuration.">Long description</th>
+        <th style="width : 5%;" tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the parameters and their values of the given stimulus instance.">Parameters</th>
+        <th style="width : 10%;" tooltip-append-to-body="true" uib-tooltip="The stimulus movie. Click to enlarge the movie. Note that due to frame-rate cap in web-browsers the speed of the movies does not neccessarily correspond to the speed at which they were presented during simulation.">View</th>
+      </tr>
+      <tr>
+        <th>
+          <input st-search="class" placeholder="search for code reference" class="input-sm form-control" type="search"/>
+        </th>
+        <th>
+          <input st-search="short_description" placeholder="search for short description" class="input-sm form-control" type="search"/>
+        </th>
+      </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="stim in $ctrl.simRun.stimuli">
+      <tr ng-repeat="stim in stims">
         <td>{{stim.class}}</td>
         <td>{{stim.short_description}}</td>
         <td>  

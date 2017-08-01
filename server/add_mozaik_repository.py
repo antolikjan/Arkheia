@@ -32,16 +32,16 @@ import json
 import pickle
 import imageio
 
-PARAMETERS_REGEX = re.compile(".*Parameters\ +\n-{10}-+")
+PARAMETERS_REGEX = re.compile(".*Parameters\s*\n-{9}-*")
 
-OTHER_PARAMETER_REGEX = re.compile(".*Ohter\ [pP]arameters\ +\n-{15}-+")
+OTHER_PARAMETER_REGEX = re.compile(".*Other\ *[pP]arameters\ *\n-{16}-*")
 
 PARAMETER_REGEX = re.compile("\s*(?P<name>[^:\s]+)\s*\:\s* (?P<tpe>[^\n]*)\n\s*(?P<doc>[^\n]*)")
 
 def reindent(string):
     return "\n".join(l.strip() for l in string.strip().split("\n"))
 
-def parse_docstring(docstring):
+def parse_docstring(docstring,flag=False):
     """Parse the docstring into its components.
     :returns: a dictionary of form
               {
@@ -69,8 +69,10 @@ def parse_docstring(docstring):
             match_parameters = PARAMETERS_REGEX.search(reminder)
             if match_parameters:
                 long_desc_end = match_parameters.start()
-                reminder = reminder[long_desc_end:].strip()
                 long_description = reminder[:long_desc_end].rstrip()
+                reminder = reminder[long_desc_end:].strip()
+            else:
+                long_description = reminder.rstrip()
 
             match = OTHER_PARAMETER_REGEX.search(reminder)
 
@@ -138,8 +140,6 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     stim_docs = []
     for s in unique_stimuli:
-        print str(s)
-        print data_store.sensory_stimulus.keys()
         raws = data_store.get_sensory_stimulus([str(s)])[0]
         if raws == None:
             raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
@@ -192,14 +192,20 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
              'class' : name,
              'params' : p,
              'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
-             'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"],
+             'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__,True)["long_description"],
             })
 
     # load basic info
     f = open(os.path.join(path,'info'),'r')
-    info = eval(f.read())        
+    info = eval(f.read())  
+    # remove indentation
+    tab = re.compile("(^\s*).*").search(info["model_docstring"].split('\n')[1]).group(1)
+    s = ""
+    for ss in info["model_docstring"].split('\n')[1:]:
+        s = s + ss[len(tab):] + '\n'
+    info["model_docstring"] = s;
 
-    
+
     #let load up results
     results = []
     f = open(os.path.join(path,'results'),'r')
@@ -238,6 +244,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
         'run_date'        :     info["creation_data"],
         'simulation_run_name' : info["simulation_run_name"],
         'model_name' : info["model_name"],
+        'model_info' : info["model_docstring"],
         'results' : results,
         'stimuli' : stim_docs,
         'recorders' : recorders_docs,
@@ -262,8 +269,6 @@ if os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
         
     # first check whether all parameter combinations contain the same parameter names
     assert len(set([tuple(set(comb.keys())) for comb in combinations])) == 1 , "The parameter search didn't occur over a fixed set of parameters"
-
-    print combinations[0]
 
     simulation_runs = []
     working_combinations = []

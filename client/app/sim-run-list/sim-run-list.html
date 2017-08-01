@@ -1,19 +1,35 @@
 <h1>Simulation runs</h1>
-  <table class="table table-striped">
+  <table st-table="simruns" st-safe-src="$ctrl.simulationRuns" class="table table-striped">
     <thead>
-      <th tooltip-append-to-body="true" uib-tooltip="The date when the the simulation run was submitted to the repository.">Submission date</th>
-      <th tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">Run date</th>
-      <th tooltip-append-to-body="true" uib-tooltip="The name given to the simulation instance.">Run name</th>
-      <th tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">Model name</th>
-      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the full parametrization of the given simulation run.">View params</th>
-      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the stimuli that were shown during the given simulation run.">View stim</th>
-      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the experimental protocols that were performed over the model during the given simulation run.">View exp. prot</th>
-      <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the results (figures) generated during the given simulation run.">View results</th>
+      <tr>
+        <th st-sort='getSubmissionDate' tooltip-append-to-body="true" uib-tooltip="The date when the the simulation run was submitted to the repository.">Submission date</th>
+        <th st-sort='getRunDate' tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">Run date</th>
+        <th st-sort='simulation_run_name' tooltip-append-to-body="true" uib-tooltip="The name given to the simulation instance.">Run name</th>
+        <th st-sort='model_name' tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">Model name</th>
+        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the full parametrization of the given simulation run.">View params</th>
+        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the stimuli that were shown during the given simulation run.">View stim</th>
+        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the experimental protocols that were performed over the model during the given simulation run.">View exp. prot</th>
+        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the results (figures) generated during the given simulation run.">View results</th>
+      </tr>
+      <tr>
+        <th>
+          <input st-search="submission_date" placeholder="search for submission date" class="input-sm form-control" type="search"/>
+        </th>
+        <th>
+          <input st-search="run_date" placeholder="search for submission date" class="input-sm form-control" type="search"/>
+        </th>
+        <th>
+          <input st-search="simulation_run_name" placeholder="search for submission date" class="input-sm form-control" type="search"/>
+        </th>
+        <th>
+          <input st-search="model_name" placeholder="search for submission date" class="input-sm form-control" type="search"/>
+        </th>
+      </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="simrun in $ctrl.simulationRuns">
-        <td>{{simrun.submission_date}}</td>
-        <td>{{simrun.run_date}}</td>
+      <tr ng-repeat="simrun in simruns">
+        <td>{{$ctrl.getSubmissionDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
+        <td>{{$ctrl.getRunDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
         <td>{{simrun.simulation_run_name}}</td>
         <td>{{simrun.model_name}}</td>
         <td>

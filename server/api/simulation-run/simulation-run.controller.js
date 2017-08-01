@@ -71,7 +71,7 @@ export function getConfiguration(req, res) {
 
 // Gets a list of ParameterSearches
 export function paramSearchList(req, res) {
-  return ParameterSearch.find().select('-simulation_runs')
+  return ParameterSearch.find().select('-simulation_runs.results')
     .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));

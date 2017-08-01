@@ -1,6 +1,8 @@
 'use strict';
 const angular = require('angular');
 const ngRoute = require('angular-route');
+const smartTable  = require('angular-smart-table')
+
 require('../../bower_components/angular-bootstrap-lightbox');
 
 import routes from './results.routes';
@@ -39,7 +41,7 @@ export class ResultsComponent {
   }
 }
 
-export default angular.module('mozaikRepositoryApp.results', [ngRoute, 'bootstrapLightbox'])
+export default angular.module('mozaikRepositoryApp.results', [ngRoute, smartTable 'bootstrapLightbox'])
   .config(routes)
   .component('results', {
     template: require('./results.html'),

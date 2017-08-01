@@ -15,7 +15,8 @@ var SimulationRunSchema = new mongoose.Schema({
   parameters: Object,
   results: [ResultSchema],
   simulation_run_name: String,
-  model_name: String
+  model_name: String,
+  model_info: String
 });
 
 var ParameterSearchSchema = new mongoose.Schema({
