@@ -25,7 +25,7 @@
               <a ng-click="$ctrl.long_description_visible[$index]=!$ctrl.long_description_visible[$index]" class="btn  btn">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
               </a>
-              <p ng-show="$ctrl.long_description_visible[$index]">{{stim.long_description}}</p> 
+              <p ng-show="$ctrl.long_description_visible[$index]" btf-markdown="stim.long_description"></p> 
         </td>
         <td>
           

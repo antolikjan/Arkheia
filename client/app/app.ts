@@ -5,8 +5,10 @@ const ngResource = require('angular-resource');
 const ngSanitize = require('angular-sanitize');
 const ngRoute = require('angular-route');
 const uiBootstrap = require('angular-ui-bootstrap');
+require('showdown');
+require('angular-markdown-directive')
 
-import {routeConfig} from './app.config';
+import {routeConfig,markdownConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
 import account from './account';
@@ -22,7 +24,6 @@ import ExperimentalProtocolComponent from './experimental-protocol/experimental-
 import ParameterSearchComponent from './parameter-search/parameter-search.component';
 import ParamSearchInspectComponent from './param-search-inspect/param-search-inspect.component';
 
-
 import constants from './app.constants';
 import util from '../components/util/util.module';
 
@@ -33,9 +34,8 @@ import './app.css';
 angular.module('arkheiaApp', [
   ngCookies,
   ngResource,
-  ngSanitize,
-
-
+  ngSanitize,  
+  'btford.markdown',
   ngRoute,
   uiBootstrap,
 
@@ -57,7 +57,7 @@ angular.module('arkheiaApp', [
   constants,
   util
 ])
-  .config(routeConfig)
+  .config(routeConfig).config(['markdownConverterProvider',markdownConfig])
   .run(function($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in

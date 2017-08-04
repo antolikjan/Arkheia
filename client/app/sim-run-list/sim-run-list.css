@@ -7,3 +7,12 @@ h1 { text-align : center;}
   .st-sort-descent:after {
     content: '\25BC';
   }
+
+.modal-dialog {
+	width : 50%;
+}
+
+.modal-dialog p { 
+	text-align : justify;
+	margin :10px;
+}

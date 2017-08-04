@@ -7,12 +7,14 @@ import routes from './sim-run-list.routes';
 
 export class SimRunListComponent {
   $http;
+  $uibModal;
   simulationRuns = [];
   idd;
 
   /*@ngInject*/
-  constructor($http) {
+  constructor($http,$uibModal) {
     this.$http = $http;
+    this.$uibModal = $uibModal;
   }
 
   getSubmissionDate(row)
@@ -24,6 +26,20 @@ export class SimRunListComponent {
   {
     return moment(row.run_date,'DD/MM/YYYY-HH:mm:ss').valueOf();
   }
+
+  descriptionModal(docstring) {
+    this.$uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'modal-title-bottom',
+      ariaDescribedBy: 'modal-body-bottom',
+      template: '</div><div btf-markdown="$ctrl.docstring"></div>',
+      controllerAs : '$ctrl',
+      controller: function() {
+        this.docstring = docstring;
+      }
+    });
+  }
+
 
   $onInit() {
     if (this.idd === 'false') {

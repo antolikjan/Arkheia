@@ -14,7 +14,7 @@
               <a ng-click="$ctrl.long_description_visible[$index]=!$ctrl.long_description_visible[$index]" class="btn  btn">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
               </a>
-              <p ng-show="$ctrl.long_description_visible[$index]">{{ep.long_description}}</p> 
+              <p ng-show="$ctrl.long_description_visible[$index]" btf-markdown="ep.long_description"></p> 
         </td>
         <td>
             <a ng-click="$ctrl.paramsModal(ep.params)" class="btn  btn">
@@ -45,7 +45,7 @@
               <a ng-click="$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]=!$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]" class="btn  btn">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
               </a>
-              <p ng-show="$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]">{{rec.long_description}}</p> 
+              <p ng-show="$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]" btf-markdown="rec.long_description"></p> 
         </td>
         <td>
             <a ng-click="$ctrl.paramsModal(rec.params)" class="btn  btn">

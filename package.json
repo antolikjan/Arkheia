@@ -7,6 +7,7 @@
     "angular-animate": "~1.6.0",
     "angular-aria": "~1.6.0",
     "angular-cookies": "~1.6.0",
+    "angular-markdown-directive": "git+https://git@github.com/antolikjan/angular-markdown-directive.git",
     "angular-resource": "~1.6.0",
     "angular-route": "~1.6.0",
     "angular-sanitize": "~1.6.0",
@@ -142,7 +143,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "postinstall": "./node_modules/.bin/typings install",
+    "prepublish": "./node_modules/.bin/typings install",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"
   },

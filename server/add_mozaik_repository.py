@@ -13,6 +13,7 @@ if adding parameter search:
 python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation
 """
 import numpy
+import pypandoc
 from pymongo import MongoClient
 import gridfs
 from sphinx.util.docstrings import prepare_docstring
@@ -38,8 +39,15 @@ OTHER_PARAMETER_REGEX = re.compile(".*Other\ *[pP]arameters\ *\n-{16}-*")
 
 PARAMETER_REGEX = re.compile("\s*(?P<name>[^:\s]+)\s*\:\s* (?P<tpe>[^\n]*)\n\s*(?P<doc>[^\n]*)")
 
-def reindent(string):
-    return "\n".join(l.strip() for l in string.strip().split("\n"))
+
+
+def remove_identation(string):
+    # remove top most indentation from the string
+    tab = re.compile("(^\s*).*").search(string.split('\n')[1]).group(1)
+    s = ""
+    for ss in string.split('\n')[1:]:
+        s = s + ss[len(tab):] + '\n'
+    return s
 
 def parse_docstring(docstring,flag=False):
     """Parse the docstring into its components.
@@ -69,19 +77,18 @@ def parse_docstring(docstring,flag=False):
             match_parameters = PARAMETERS_REGEX.search(reminder)
             if match_parameters:
                 long_desc_end = match_parameters.start()
-                long_description = reminder[:long_desc_end].rstrip()
+                long_description = pypandoc.convert_text(reminder[:long_desc_end].rstrip(), 'md', format='rst')
                 reminder = reminder[long_desc_end:].strip()
             else:
-                long_description = reminder.rstrip()
-
+                long_description = pypandoc.convert_text(reminder.rstrip(), 'md', format='rst') 
             match = OTHER_PARAMETER_REGEX.search(reminder)
 
             if match:
                end = match.start()
                if not match_parameters:
-                  long_description = reminder[:end].rstrip()   
-               reminder = reminder[end:].strip()
-               
+                  long_description = pypandoc.convert_text(reminder[:end].rstrip(), 'md', format='rst') 
+         
+               reminder = reminder[end:].strip()               
 
             if reminder:
                 params = {}
@@ -140,6 +147,8 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     stim_docs = []
     for s in unique_stimuli:
+
+        print data_store.sensory_stimulus.keys()
         raws = data_store.get_sensory_stimulus([str(s)])[0]
         if raws == None:
             raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
@@ -198,13 +207,8 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     # load basic info
     f = open(os.path.join(path,'info'),'r')
     info = eval(f.read())  
-    # remove indentation
-    tab = re.compile("(^\s*).*").search(info["model_docstring"].split('\n')[1]).group(1)
-    s = ""
-    for ss in info["model_docstring"].split('\n')[1:]:
-        s = s + ss[len(tab):] + '\n'
-    info["model_docstring"] = s;
-
+    
+    info["model_docstring"] = remove_identation(info["model_docstring"])
 
     #let load up results
     results = []

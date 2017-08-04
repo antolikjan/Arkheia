@@ -32,7 +32,7 @@ export class ResultsComponent {
       for (let res of this.simRun.results)
       {
         this.images.push({
-          'url': '/api/simulation-runs/images/' + res.figure._id,
+          'url': '/api/simulation-runs/images/' + res.figure._id
           //'caption': res.file_name,
           //'thumbUrl': 'thumb1.jpg' // used only for this example
         });
@@ -41,7 +41,7 @@ export class ResultsComponent {
   }
 }
 
-export default angular.module('mozaikRepositoryApp.results', [ngRoute, smartTable 'bootstrapLightbox'])
+export default angular.module('mozaikRepositoryApp.results', [ngRoute, smartTable, 'bootstrapLightbox'])
   .config(routes)
   .component('results', {
     template: require('./results.html'),
