@@ -124,9 +124,9 @@ class ParametersEncoder(json.JSONEncoder):
 
 def openMongoDB():
     #### MONGODB STUFF #######
-    #client = MongoClient(host='178.62.7.131')
-    client = MongoClient()
-    db = client["arkheia-dev"]
+    client = MongoClient(host='178.62.7.131')
+    #client = MongoClient()
+    db = client["arkheia"]
     gfs = gridfs.GridFS(db)
     return gfs,db
 
