@@ -6,63 +6,63 @@ Arkheia API is fully defined by the format in which individual simulation runs (
 ## Format for individual simulation runs
 
 
-Each simulation run is represented by a single JSON hierarchical data-structure which corresponds to the document inserted into the database collection named *submissions*. At the root level the data-struture contains following entries with indicated expected value types and brief explanations on the semantics of the given entry:
+Each simulation run is represented by a single JSON hierarchical data-structure which corresponds to the document inserted into the database collection named *submissions*. At the root level the data-structure contains following entries with indicated expected value types and brief explanations on the semantics of the given entry:
 
 	{
-	        submission_date        :  string,         # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of submission to Arkheia.
-	        run_date               :  string,         # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of the simulation run.
-	        simulation_run_name    :  string,         # Name given to the simulation run
-	        model_name             :  string,         # The name of the model which was simulated.
-	        results                :  list of JSONs,  # List of JSON structures representing results.
-	        stimuli                :  list of JSONs,  # List of JSON structures representing stimuli presented during simulation.
-	        recorders              :  list of JSONs,  # List of JSON structures representing recording configuration during simulation.
-	        experimental_protocols :  list of JSONs,  # List of JSON structures representing experimental protocols applied to the model during simulation.
-	        parameters             :  JSON			# Nested dictionary representing the full parametrization of the model in this simulation run.
+	        submission_date        :  string,            # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of submission to Arkheia.
+	        run_date               :  string,            # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of the simulation run.
+	        simulation_run_name    :  string,            # Name given to the simulation run
+	        model_name             :  string,            # The name of the model which was simulated.
+	        results                :  list of Result,    # List of JSON structures representing results.
+	        stimuli                :  list of Stimulus,  # List of JSON structures representing stimuli presented during simulation.
+	        recorders              :  list of Recorder,  # List of JSON structures representing recording configuration during simulation.
+	        experimental_protocols :  list of Protocol,  # List of JSON structures representing experimental protocols applied to the model during simulation.
+	        parameters             :  ParameterSet		 # Nested dictionary representing the full parametrization of the model in this simulation run.
 	}
 
 
-The *parameters* entry should desribe the full parametrization of the model used in this run, and can be arbitrary nested associative array, values of which can either be floats, strings, or other associative arrays. 
+The *parameters* entry should describe the full parametrization of the model used in this run and as all parametrization throughout Arkheia API, it should follow the *ParameterSet* format. *ParameterSet* is a nested dictionary where each value associated with a key (that corresponds to the name of the parameter) is a tuple *(a,b,c)*, where *a* corresponds to the value of the parameter and can either be a scalar or *ParameterSet* itself, *b* is the type of the parameter, and *c* is a short description of the parameter's meaning.
 
 Let's have a look at the format of the individual JSON datastructures representing  a single result of the simulation run (list of these is inserted into the *results* entry of the root JSON document described above). Each result is meant to represent a figure with an accompanying explanatory caption, and is stored as following JSON data-structure:
 
 	{
-	        class                  :  string,         # Reference to the source code that generated the given figure (e.g. class or function name).
+	        code                   :  string,         # Reference to the source code that generated the given figure (e.g. class or function name).
 	        name                   :  string,         # The name of the figure.   
 	        caption                :  string,         # The explanatory caption for the figure.
-	        parameters             :  dict,           # The parameters with which the figure was generated.
+	        parameters             :  ParameterSet,   # The parameters with which the figure was generated.
 	        figure                 :  MongoDB GFS ID, # The reference to the figure image stored in the GFS service.
 	}
 
- The *parameters* entry should contain the parameters with which the generator of the figure identified by the *class* entry was invoked to generated the given figure in the form of a list of tuples, each corresponding to one parameter. The tuples should be in the form *(a,b,c,d)*, where *a* is the name of the parameter, *b* its value, *c* the units of the value of the parameter, and *d* contains description of the parameter. Finally, MongoDB provides a sepparate efficient storage for binary datafiles (see MongoDB GridFS). The back-end implementing the specification should thus submit the image of the figure (in either the GIF, JPEG or PNG format) to the database via the GridFS API and then store the returned id which can be used to later retrieve the image to the entry *figure*.
+ The *parameters* entry should contain the parameters with which the generator of the figure identified by the *class* entry was invoked to generated the given figure in the form of *ParameterSet* described above. Finally, MongoDB provides a separate efficient storage for binary data-files (see MongoDB GridFS). The back-end implementing the specification should thus submit the image of the figure (in either the GIF, JPEG or PNG format) to the database via the GridFS API and then store the returned id which can be used to later retrieve the image to the entry *figure*.
 
- Next we will describe the format in which the  information about stimuli that were presented during simulation should be stored. A list of such datastructures is meant to be stored in the *stimuli* root level entry. It assumes that the model was presented with a list of stimuli, generated by some source code entity (class function) and parameters, and its ‘raw’ instantiation can be represented as vector stream, which in turn can be translated into a movie for visual inspection by the user. The format of each stimulus data-structure is as follows:
+ Next we will describe the format in which the  information about stimuli that were presented during simulation should be stored. A list of such data structures is meant to be stored in the *stimuli* root level entry. It assumes that the model was presented with a list of stimuli, generated by some source code entity (class function) and parameters, and its ‘raw’ instantiation can be represented as vector stream, which in turn can be translated into a movie for visual inspection by the user. The format of each stimulus data-structure is as follows:
 
 	{ 		
-	        class                  : string,          # Reference to the source code that generated the given stimulus (e.g. class or function name).
+	        code                   : string,          # Reference to the source code that generated the given stimulus (e.g. class or function name).
 	        short_description      : string,          # Short description of the stimulus.
 	        long_description       : string,          # Detailed description of the stimulus.
-	        params                 : dictionary,      # Parametrs passed to the generator to create the stimulus (same format as for results). 
-	        gif                    : MongoDB GFS ID,  # The reference to the stimulus movie stored in the GFS service. 
+	        parameters             : ParameterSet,    # Parameters passed to the generator to create the stimulus (same format as for results). 
+	        movie                  : MongoDB GFS ID,  # The reference to the stimulus movie stored in the GFS service. 
 	}
 
 The *recorders* root level entry should contain information on the recording configuration present during the stimulation. It assumes that it can be described a list of parametrized entities that each records from some set of neurons some variables. The *recorders* entry should thus contain a list of JSON data-structures each corresponding to one such recording configuration entity. 
 
 	{
-			class                  : string,          # Reference to the source code that generated the given recording configuration (e.g. class or function name). 
+			code                   : string,          # Reference to the source code that generated the given recording configuration (e.g. class or function name). 
 	        short_description      : string           # Short description of the recording configuration.
 	        long_description       : string           # Detailed description of the recording configuration.
-	        params                 : list,            # Parametrs passed to the generator of the recording configuration (same format as for results). 
+	        parameters             : ParameterSet,    # Parameters passed to the generator of the recording configuration (same format as for results). 
 	        variables              : list,            # The names of the variables which were recorded.
 			source                 : string,          # The name of the neural popullation to which the recorder was applied
 	}
 
-FThe *experimental_protocols* root entry is expected to contain a list of JSON data-structures characterizing the experimental protocols that were performed during the simulation of the model: 
+The *experimental_protocols* root entry is expected to contain a list of JSON data-structures characterizing the experimental protocols that were performed during the simulation of the model: 
 
 	{
-			class                  : string,          # Reference to the source code that generated the given experimental protocol (e.g. class or function name). 
+			code                   : string,          # Reference to the source code that generated the given experimental protocol (e.g. class or function name). 
             short_description      : string,          # Short description of the experimental protocol.
             long_description       : string,          # Detailed description of the experimental protocol.
-            params                 : list,            # Parametrs passed to the generator of the experimental protocol (same format as for results).
+            parameters             : ParameterSet,    # Parameteers passed to the generator of the experimental protocol (same format as for results).
 	}
 
 ## Format for parameter search representation

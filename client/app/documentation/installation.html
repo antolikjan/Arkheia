@@ -1,0 +1,53 @@
+<h1>Installation</h1>
+
+<p>We envision two main types of Arkheia deployment:</p>
+
+<ul>
+<li><strong>Local</strong> : user utilizes Arkheia on a daily basis as a local store and exploration tool for her simulation results.</li>
+<li><strong>Public</strong> : the Arkheia instance is used as a publishing platform for a user’s models and results (e.g. accompanying a publication)</li>
+</ul>
+
+<p>Currently we offer two installation methods: <a href="#fs">from source</a> and via the <a href="#docker">Docker</a> container technology.
+We recommend installation from source for the local deployment, and the docker installation method for the public use-case. </p>
+
+<h2>Installation from source</h2>
+
+<p><a id="fs"></a></p>
+
+<h3>Prerequisites</h3>
+
+<ul>
+<li><a href="https://git-scm.com/">Git</a></li>
+<li><a href="nodejs.org">Node.js and npm</a> Node >= 4.x.x, npm >= 2.x.x</li>
+<li><a href="http://gulpjs.com/">Gulp</a> (<code>npm install --global gulp</code>)</li>
+<li><a href="https://www.mongodb.org/">MongoDB</a> - Keep a running daemon with <code>mongod</code></li>
+</ul>
+
+<h3>Installation steps</h3>
+
+<ol>
+<li><p>Install the above prerequisites</p></li>
+<li><p>Run <code>git clone https://github.com/antolikjan/Arkheia</code> in a directory you wish to hold the Arkheia installation</p></li>
+<li><p><code>cd Arkheia</code></p></li>
+<li><p>Run <code>npm install</code> to install server dependencies.</p></li>
+<li><p>Run <code>bower install</code> to install client dependencies.</p></li>
+<li><p>Run <code>sudo service mongod start</code> in a separate shell to keep an instance of the MongoDB Daemon running</p></li>
+<li><p>Run <code>gulp serve</code> will start a local instance at localhost:3000. It should automatically open the client in your browser when ready.</p></li>
+<li><p>New results can be added by pointing the given backend to the database running locally at localhost:27017.</p></li>
+</ol>
+
+<h2>Docker installation</h2>
+
+<p><a id="docker"></a></p>
+
+<p>To facilitate even simpler deployment, especially in the cloud, we also provide a <a href="https://hub.docker.com/r/antolikjan/arkheia/">Docker image</a> of the latest stable version of the system, with accompanying <a href="https://github.com/antolikjan/Arkheia/blob/master/docker-compose.yaml">docker-compose specification</a> which is configured for deploying the system on a server for public access. Assuming an installed docker service, user simply needs to download the docker-compose configuration file and issue the docker-compose command to start the Arkheia service.</p>
+
+<h3>Use-case: DigitalOcean cloud service</h3>
+
+<ol>
+<li>Select the <a href="https://www.digitalocean.com/products/one-click-apps/docker/">'Docker droplet’</a> in the DigitalOcean interface, </li>
+<li>Login to the running droplet (follow DigitalOcean instructions to do this)</li>
+<li>Download the docker compose config file: <code>wget https://raw.githubusercontent.com/antolikjan/Arkheia/master/docker-compose.yaml</code></li>
+<li>Run <code>docker-compose up</code></li>
+<li>At this point Arkheia service is running and is publicly accessible online.</li>
+</ol>

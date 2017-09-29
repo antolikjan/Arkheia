@@ -19,7 +19,7 @@
     </thead>
     <tbody>
       <tr ng-repeat="stim in stims">
-        <td>{{stim.class}}</td>
+        <td>{{stim.code}}</td>
         <td>{{stim.short_description}}</td>
         <td>  
               <a ng-click="$ctrl.long_description_visible[$index]=!$ctrl.long_description_visible[$index]" class="btn  btn">
@@ -28,16 +28,13 @@
               <p ng-show="$ctrl.long_description_visible[$index]" btf-markdown="stim.long_description"></p> 
         </td>
         <td>
-          
-            <a ng-click="$ctrl.paramsModal(stim.params)" class="btn  btn">
+            <a ng-click="$ctrl.paramsModal(stim.data)" class="btn  btn">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
             </a>
-           
-
         </td>
         <td>
         	    <a ng-click="$ctrl.openLightboxModal($index)" href>
-                  <img ng-src="/api/simulation-runs/images/{{stim.gif}}" class="img-thumbnail" style="min-height:70px; max-height:70px;">
+                  <img ng-src="/api/simulation-runs/images/{{stim.movie}}" class="img-thumbnail" style="min-height:70px; max-height:70px;">
               </a>
         </td>
       </tr>

@@ -2,7 +2,12 @@
 const angular = require('angular');
 const ngRoute = require('angular-route');
 const smartTable = require('angular-smart-table')
+
+import {convertJsonToTree} from '../utility';
 require('../../bower_components/angular-bootstrap-lightbox');
+import '../../bower_components/angular-ui-tree/dist/angular-ui-tree.js';
+import '../../bower_components/angular-ui-tree/dist/angular-ui-tree.css';
+
 
 import routes from './stimuli.routes';
 
@@ -13,6 +18,7 @@ export class StimuliComponent {
   lightbox;
   simRun;
   simRunId;
+  data;
   gifs = [];
 
   /*@ngInject*/
@@ -23,15 +29,16 @@ export class StimuliComponent {
     this.$uibModal = $uibModal;
   }
 
-  paramsModal(params) {
+  paramsModal(data) {
     this.$uibModal.open({
       animation: true,
       ariaLabelledBy: 'modal-title-bottom',
       ariaDescribedBy: 'modal-body-bottom',
-      template: '<div ng-repeat="p in $ctrl.params" style="margin:10px"><span uib-tooltip="{{p[2]}}" tooltip-placement="left" style="width:300px;float : left;">{{p[0]}}</span> <span>{{p[1]}}</span></div>',
+      template: require('../param-view/param-view.html'),
       controllerAs : '$ctrl',
       controller: function() {
-        this.params = params;
+        console.log(data)
+        this.data = data;
       }
     });
   }
@@ -44,17 +51,16 @@ export class StimuliComponent {
     this.$http.get('/api/simulation-runs/result/' + this.simRunId).then(response => {
     this.simRun = response.data;
     for (let stim of this.simRun.stimuli) {
+        stim.data = convertJsonToTree(stim.parameters);
         this.gifs.push({
           'url': '/api/simulation-runs/images/' + stim.gif,
-          //'caption': res.file_name,
-          //'thumbUrl': 'thumb1.jpg' // used only for this example
         });
       }
     });
   }
 }
 
-export default angular.module('mozaikRepositoryApp.stimuli', [ngRoute, smartTable, 'bootstrapLightbox',   'ui.bootstrap'])
+export default angular.module('mozaikRepositoryApp.stimuli', [ngRoute, smartTable, 'bootstrapLightbox',   'ui.bootstrap', 'ui.tree'])
   .config(routes)
   .component('stimuli', {
     template: require('./stimuli.html'),

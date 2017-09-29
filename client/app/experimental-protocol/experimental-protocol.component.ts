@@ -2,6 +2,7 @@
 const angular = require('angular');
 const ngRoute = require('angular-route');
 
+import {convertJsonToTree} from '../utility';
 import routes from './experimental-protocol.routes';
 
 export class ExperimentalProtocolComponent {
@@ -17,15 +18,15 @@ export class ExperimentalProtocolComponent {
     this.$uibModal = $uibModal;
   }
 
-  paramsModal(params) {
+  paramsModal(data) {
     this.$uibModal.open({
       animation: true,
       ariaLabelledBy: 'modal-title-bottom',
       ariaDescribedBy: 'modal-body-bottom',
-      template: '<div ng-repeat="p in $ctrl.params" style="margin:10px"><span uib-tooltip="{{p[3]}}" tooltip-placement="left" style="width:300px;float : left;">{{p[0]}} ({{p[2]}})</span> <span>{{p[1]}}</span></div>',
+      template: require('../param-view/param-view.html'),
       controllerAs : '$ctrl',
       controller: function() {
-        this.params = params;
+        this.data = data;
       }
     });
   }
@@ -33,6 +34,13 @@ export class ExperimentalProtocolComponent {
   $onInit() {
     this.$http.get('/api/simulation-runs/result/' + this.simRunId).then(response => {
       this.simRun = response.data;
+
+      for (let ep of this.simRun.experimental_protocols) {
+        ep.data = convertJsonToTree(ep.parameters);
+      }
+      for (let re of this.simRun.recorders) {
+        re.data = convertJsonToTree(re.parameters);
+      }
     });
   }
 }

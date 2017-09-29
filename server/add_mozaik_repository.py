@@ -124,8 +124,8 @@ class ParametersEncoder(json.JSONEncoder):
 
 def openMongoDB():
     #### MONGODB STUFF #######
-    client = MongoClient(host='178.62.7.131')
-    #client = MongoClient()
+    #client = MongoClient(host='178.62.7.131')
+    client = MongoClient()
     db = client["arkheia"]
     gfs = gridfs.GridFS(db)
     return gfs,db
@@ -158,14 +158,14 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
             imageio.mimwrite('movie.gif', raws,duration=0.1)
         params = s.get_param_values()
 
-        params = [(k,v,s.params()[k].doc) for k,v in params]
+        params = dict([(k,(v,s.params()[k].__class__.__name__,s.params()[k].doc)) for k,v in params])
 
         stim_docs.append({
-         'class' : s.name,
-         'params' : params,
+         'code' : s.name,
+         'parameters' : params,
          'short_description' : parse_docstring(getattr(__import__(s.module_path, globals(), locals(), s.name),s.name).__doc__)["short_description"],
          'long_description' : parse_docstring(getattr(__import__(s.module_path, globals(), locals(), s.name),s.name).__doc__)["long_description"],
-         'gif'    : gfs.put(open('movie.gif','r')),
+         'movie'    : gfs.put(open('movie.gif','r')),
         })
     
     ##### RECORDERS ###################
@@ -176,12 +176,12 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
             name = recorder["component"].split('.')[-1]
             module_path = '.'.join(recorder["component"].split('.')[:-1])
             doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-            p = [(k,recorder["params"][k],doc_par[k][0],doc_par[k][1]) for k in recorder["params"].keys()]
+            p = dict([(k,(recorder["params"][k],doc_par[k][0],doc_par[k][1])) for k in recorder["params"].keys()])
             
             recorders_docs.append({
-             'class' : name,
+             'code' : name,
              'source' : sh,
-             'params' : p,
+             'parameters' : p,
              'variables' : recorder["variables"],
              'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
              'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"],
@@ -194,12 +194,13 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
         module_path = '.'.join(ep[0][8:-2].split('.')[:-1])
         doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
         params = eval(ep[1])
-
-        p = [(k,params[k],doc_par[k][0],doc_par[k][1]) for k in params.keys()]
+        p={}
+        for k in params.keys():
+            p[k] = (params[k],doc_par[k][0],doc_par[k][1])
 
         experimental_protocols_docs.append({
-             'class' : name,
-             'params' : p,
+             'code' : name,
+             'parameters' : p,
              'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
              'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__,True)["long_description"],
             })
@@ -227,21 +228,30 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     
     for line in lines:
         r = line
-	if not re.match('.*\..*$',  r['file_name']):
-	    r['file_name'] +='.png'
-        r['class_name'] = r['class_name'][8:-2]
-
-        name = r['class_name'].split('.')[-1]
-        module_path = '.'.join(r['class_name'].split('.')[:-1])
+        if not re.match('.*\..*$',  r['file_name']):
+	         r['file_name'] +='.png'
+        r['code'] = r['class_name'][8:-2]
+        del r['class_name']
+        name = r['code'].split('.')[-1]
+        module_path = '.'.join(r['code'].split('.')[:-1])
+        long_description = parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"]
         doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-        p = [(k,r["parameters"][k],doc_par[k][0],doc_par[k][1]) for k in r["parameters"].keys()]    
+        p = dict([(k,(r["parameters"][k],doc_par[k][0],doc_par[k][1])) for k in r["parameters"].keys()])   
         r["parameters"] = p
         r["name"] = r['file_name']
+        r["caption"] = long_description
         r["figure"] =   gfs.put(open(os.path.join(path,r['file_name']),'r'))
         results.append(r)
     
-    
-
+    # convert param to follow Arkheia format
+    def convertParams(params):
+        p = {}
+        for k in params.keys():
+            if isinstance(params[k], ParameterSet):
+               p[k] = (convertParams(params[k]),'N/A','N/A') 
+            else:
+               p[k] = (params[k],'N/A','N/A') 
+        return p
 
     document = {
         'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
@@ -253,7 +263,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
         'stimuli' : stim_docs,
         'recorders' : recorders_docs,
         'experimental_protocols' : experimental_protocols_docs,
-        'parameters' : json.dumps(param,cls=ParametersEncoder) 
+        'parameters' : json.dumps(convertParams(param),cls=ParametersEncoder) 
     }
     return document
 

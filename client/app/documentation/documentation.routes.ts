@@ -6,10 +6,10 @@ export default function($routeProvider) {
     .when('/documentation', {
       template: '<documentation></documentation>'
     }).when('/documentation/api', {
-      template: '<ng-include src="\'/app/documentation/api.html\'"></ng-include>'
+      template: '<ng-include class="doc-md" src="\'/app/documentation/api.html\'"></ng-include>'
     }).when('/documentation/client', {
-      template: '<ng-include src="\'/app/documentation/client.html\'"></ng-include>'
+      template: '<ng-include class="doc-md" src="\'/app/documentation/client.html\'"></ng-include>'
     }).when('/documentation/install', {
-      template: '<ng-include src="\'/app/documentation/installation.html\'"></ng-include>'
+      template: '<ng-include class="doc-md" src="\'/app/documentation/installation.html\'"></ng-include>'
     });
 }

@@ -4,6 +4,8 @@
       <tr>
         <th st-sort='class_name' tooltip-append-to-body="true" uib-tooltip="The source code identifier that generates the given figure (e.g. a class or function name).">Source name</th>
         <th st-sort='name' tooltip-append-to-body="true" uib-tooltip="The name of the figure.">Name</th>
+        <th tooltip-append-to-body="true" uib-tooltip="The parameters with which the source code that generated the figure was invoked with.">Parameters</th>
+        <th tooltip-append-to-body="true" uib-tooltip="The figure caption. Click the eye icon to show the text.">Caption</th>
         <th tooltip-append-to-body="true" uib-tooltip="The figure. Click to enlarge the figure.">Figure</th>
       </tr>
       <tr>
@@ -16,12 +18,23 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="simrun in results">
-        <td>{{simrun.class_name}}</td>
-        <td>{{simrun.name}}</td>
+      <tr ng-repeat="res in results">
+        <td>{{res.code}}</td>
+        <td>{{res.name}}</td>
+        <td>
+            <a ng-click="$ctrl.paramsModal(res.data)" class="btn btn">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
+        </td>
+        <td>
+            <a ng-click="$ctrl.long_description_visible[$index]=!$ctrl.long_description_visible[$index]" class="btn  btn">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
+            <p ng-show="$ctrl.long_description_visible[$index]" btf-markdown="res.caption"></p>
+        </td>
         <td>
         	    <a ng-click="$ctrl.openLightboxModal($index)" href>
-                  <img ng-src="/api/simulation-runs/images/{{simrun.figure._id}}" class="img-thumbnail" style="min-height:70px; max-height:70px;">
+                  <img ng-src="/api/simulation-runs/images/{{res.figure._id}}" class="img-thumbnail" style="min-height:70px; max-height:70px;">
               </a>
         </td>
       </tr>
