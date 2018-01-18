@@ -125,7 +125,7 @@ class ParametersEncoder(json.JSONEncoder):
 def openMongoDB():
     #### MONGODB STUFF #######
     #client = MongoClient(host='178.62.7.131')
-    client = MongoClient()
+    client = MongoClient(sys.argv[1])
     db = client["arkheia"]
     gfs = gridfs.GridFS(db)
     return gfs,db
@@ -146,6 +146,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     for s in stimuli: stimuli_types[s.name]=True
 
     stim_docs = []
+    i = 0;
     for s in unique_stimuli:
 
         print data_store.sensory_stimulus.keys()
@@ -153,9 +154,9 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
         if raws == None:
             raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
         if param['input_space'] != None:
-            imageio.mimwrite('movie.gif', raws,duration=param['input_space']['update_interval']/1000.0)
+            imageio.mimwrite('movie'+str(i)+'.gif', raws,duration=param['input_space']['update_interval']/1000.0)
         else:
-            imageio.mimwrite('movie.gif', raws,duration=0.1)
+            imageio.mimwrite('movie'+str(i)+'.gif', raws,duration=0.1)
         params = s.get_param_values()
 
         params = dict([(k,(v,s.params()[k].__class__.__name__,s.params()[k].doc)) for k,v in params])
@@ -165,8 +166,9 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
          'parameters' : params,
          'short_description' : parse_docstring(getattr(__import__(s.module_path, globals(), locals(), s.name),s.name).__doc__)["short_description"],
          'long_description' : parse_docstring(getattr(__import__(s.module_path, globals(), locals(), s.name),s.name).__doc__)["long_description"],
-         'movie'    : gfs.put(open('movie.gif','r')),
+         'movie'    : gfs.put(open('movie'+str(i)+'.gif','r')),
         })
+        i+=1;
     
     ##### RECORDERS ###################
     recorders_docs = []
@@ -263,15 +265,15 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
         'stimuli' : stim_docs,
         'recorders' : recorders_docs,
         'experimental_protocols' : experimental_protocols_docs,
-        'parameters' : json.dumps(convertParams(param),cls=ParametersEncoder) 
+        'parameters' : json.loads(json.dumps(convertParams(param),cls=ParametersEncoder))
     }
     return document
 
-assert len(sys.argv)>1 , "Not enough arguments, missing mozaik repository directory. Usage:\npython add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory\n\nor\n\npython add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation"
+assert len(sys.argv)>2 , "Not enough arguments. Usage:\npython add_mozaik_repository.py target_arkheia_repository_addresse path_to_mozaik_simulation_run_output_directory\n\nor\n\npython add_mozaik_repository.py target_arkheia_repository_addresse path_to_mozaik_parameter_search_output_directory name_of_the_simulation"
 
 gfs,db = openMongoDB()
 
-if os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
+if os.path.exists(os.path.join(sys.argv[2],'parameter_combinations')):
 
     assert len(sys.argv)>2, """Missing simulation run argument. Usage: \n python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation """
 
@@ -287,7 +289,7 @@ if os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
     simulation_runs = []
     working_combinations = []
     for i,combination in enumerate(combinations):
-        rdn = result_directory_name('ParameterSearch',sys.argv[2],combination)
+        rdn = result_directory_name('ParameterSearch',sys.argv[3],combination)
         print rdn
         try:
             simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn),gfs))
@@ -305,5 +307,5 @@ if os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
 
     db.parameterSearchRuns.insert_one(document)
 else:
-    db.submissions.insert_one(createSimulationRunDocumentAndUploadImages(sys.argv[1],gfs))
+    db.submissions.insert_one(createSimulationRunDocumentAndUploadImages(sys.argv[2],gfs))
 

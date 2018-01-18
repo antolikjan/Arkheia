@@ -1,10 +1,10 @@
 /**
  */
-
 'use strict';
 import { ParameterSearch, SimulationRun, Configuration } from './simulation-run.model';
 import mongoose from 'mongoose';
 
+var JSZip = require('jszip');
 var Grid = require('gridfs-stream');
 var gfs = Grid(mongoose.connection.db, mongoose.mongo);
 
@@ -28,6 +28,20 @@ function handleEntityNotFound(res) {
   };
 }
 
+function packageDownload(res) {
+  return function(entity) {
+    var zip = new JSZip();
+    zip.file('ArkheiaDocumentBody.json', String(entity));
+
+    for (let r of entity.results) {
+      zip.file(r.file_name, gfs.createReadStream({_id: r.figure.id}));
+    }
+
+    res.attachment('ArkheiaDocument.zip');
+    return zip.generateNodeStream({type:'nodebuffer',streamFiles:true}).pipe(res)
+  }
+}
+
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
@@ -37,13 +51,27 @@ function handleError(res, statusCode) {
 
 // Gets a list of SimulationRuns
 export function index(req, res) {
-  return SimulationRun.find().select('-results')
+  var query = new Object;
+  if('query' in req.params) {
+    var a = req.params.query.split('~')[0]
+    var b = req.params.query.split('~')[1]
+    query[a] = b;  
+  } 
+  return SimulationRun.find(query).select('-results')
     .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
+
 // Gets a single SimulationRun including with populated results from the DB
+export function download(req, res) {
+    return SimulationRun.findById(req.params.id)
+    .exec().then(packageDownload(res))
+    }
+
+
+
 export function result(req, res) {
   return SimulationRun.findById(req.params.id)
     .populate('results.figure')

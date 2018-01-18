@@ -53,7 +53,7 @@ export class StimuliComponent {
     for (let stim of this.simRun.stimuli) {
         stim.data = convertJsonToTree(stim.parameters);
         this.gifs.push({
-          'url': '/api/simulation-runs/images/' + stim.gif,
+          'url': '/api/simulation-runs/images/' + stim.movie,
         });
       }
     });

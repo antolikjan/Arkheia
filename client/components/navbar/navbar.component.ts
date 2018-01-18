@@ -25,6 +25,13 @@ export class NavbarComponent {
   isAdmin: Function;
   getCurrentUser: Function;
   isCollapsed = true;
+  search = "";
+
+  execSearch(){
+    this.$location.path('/simsearch/' + this.search.replace(/\s+/g,'~'))
+    console.log(this.search.replace(/\s+/g,'~'))
+  }
+
 
   constructor($location, Auth) {
     'ngInject';

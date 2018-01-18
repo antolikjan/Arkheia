@@ -1,9 +1,9 @@
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/FeedForwardInhibition_Reference_____/' FeedForwardInhibition
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/FeedForwardInhibition_StrongSynapticDepression_____sheets.l4_cortex_exc.AfferentConnection.short_term_plasticity.tau_rec:100/' FeedForwardInhibition
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/FeedForwardInhibition_WeakSynapticDepression_____sheets.l4_cortex_exc.AfferentConnection.short_term_plasticity.tau_rec:10/' FeedForwardInhibition
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/Boustani2007_Reference_____/' Boustani2007
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/Boustani2007_StrongInhibition_____sheets.l4_cortex_inh.L4InhL4ExcConnection.weights:0.0055/' Boustani2007
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/Boustani2007_WeakInhibition_____sheets.l4_cortex_inh.L4InhL4ExcConnection.weights:0.0045/' Boustani2007
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/VogelsAbbott2005_Original_____/' VogelsAbbott2005
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/VogelsAbbott2005_Even stronger inhibition_____sheets.inh_layer.InhExcConnection.weights:0.006/' VogelsAbbott2005
-python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/VogelsAbbott2005_Stronger inhibition_____sheets.inh_layer.InhExcConnection.weights:0.0055/' VogelsAbbott2005
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/FeedForwardInhibition_Reference_____/' FeedForwardInhibition
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/FeedForwardInhibition_StrongSynapticDepression_____sheets.l4_cortex_exc.AfferentConnection.short_term_plasticity.tau_rec:100/' FeedForwardInhibition
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/FeedForwardInhibition_WeakSynapticDepression_____sheets.l4_cortex_exc.AfferentConnection.short_term_plasticity.tau_rec:10/' FeedForwardInhibition
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/Boustani2007_Reference_____/' Boustani2007
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/Boustani2007_StrongInhibition_____sheets.l4_cortex_inh.L4InhL4ExcConnection.weights:0.0055/' Boustani2007
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/Boustani2007_WeakInhibition_____sheets.l4_cortex_inh.L4InhL4ExcConnection.weights:0.0045/' Boustani2007
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/VogelsAbbott2005_Original_____/' VogelsAbbott2005
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/VogelsAbbott2005_Even stronger inhibition_____sheets.inh_layer.InhExcConnection.weights:0.006/' VogelsAbbott2005
+python add_mozaik_repository.py '/home/antolikjan/pCloudDrive/DATA/mozaik/ForArkheiaDemo/SingleRuns/VogelsAbbott2005_Stronger inhibition_____sheets.inh_layer.InhExcConnection.weights:0.0055/' VogelsAbbott2005

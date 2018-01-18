@@ -10,6 +10,7 @@ export class SimRunListComponent {
   $uibModal;
   simulationRuns = [];
   idd;
+  search;
 
   /*@ngInject*/
   constructor($http,$uibModal) {
@@ -40,15 +41,26 @@ export class SimRunListComponent {
     });
   }
 
-
   $onInit() {
-    if (this.idd === 'false') {
-      this.$http.get('/api/simulation-runs').then(response => {
+    console.log(this.search)
+    console.log(this.idd)
+    
+    console.log(this.search !== undefined)
+    console.log(this.idd !== undefined)
+    
+    if (this.search !== undefined){
+      console.log('Searcing for: ' + this.search)
+      this.$http.get('/api/simulation-runs/' + this.search).then(response => {
         this.simulationRuns = response.data;
       });
-    } else {
+    } else if (this.idd !== undefined)
+    {
       this.$http.get('/api/simulation-runs/param_search/' + this.idd).then(response => {
         this.simulationRuns = response.data.simulation_runs;
+      });
+    } else {
+      this.$http.get('/api/simulation-runs').then(response => {
+        this.simulationRuns = response.data;
       });
     }
   }
@@ -61,7 +73,8 @@ export default angular.module('mozaikRepositoryApp.sim-run-list', [ngRoute,smart
     template: require('./sim-run-list.html'),
     controller: SimRunListComponent,
     bindings : {
-      idd : '@'
+      idd : '@',
+      search : '@'
     }
     //controllerAs: 'simRunListCtrl'
   })

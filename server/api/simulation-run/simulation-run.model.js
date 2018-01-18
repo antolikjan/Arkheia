@@ -34,5 +34,5 @@ var ConfigurationSchema = new mongoose.Schema({
 
 export var GFS = mongoose.model('GFS', new mongoose.Schema({}, {strict: false}), 'fs.files');
 export var ParameterSearch = mongoose.model('parameterSearchRun', ParameterSearchSchema, 'parameterSearchRuns');
-export var Configuration = mongoose.model('configuration', ConfigurationSchema,'configuration');
+export var Configuration = mongoose.model('configuration', ConfigurationSchema, 'configuration');
 export var SimulationRun = mongoose.model('submission', SimulationRunSchema);

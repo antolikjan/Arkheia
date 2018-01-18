@@ -11,7 +11,7 @@ app:
   links:
    - db
   ports:
-   - "3000:8080" # change to whatever port is to be used
+   - "80:8080" # change to whatever port is to be used
   environment:
    - MONGODB_URI=db:27017/arkheia
    - NODE_ENV=production #development # production for staging
@@ -19,5 +19,6 @@ db:
   image: mongo
   volumes:
     - ./data/db:/data/db
-#ports:
-#   - "27017:27017"
+  ports:
+    - "27017:27017"
+  command: ["mongod", "--bind_ip", "0.0.0.0"]

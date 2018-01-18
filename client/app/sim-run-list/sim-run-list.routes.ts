@@ -8,6 +8,10 @@ export default function($routeProvider) {
         return '<sim-run-list idd=' + param.id + '></sim-run-list>';
       }
     }).when('/simruns', {
-      template: '<sim-run-list idd=false></sim-run-list>',
+      template: '<sim-run-list></sim-run-list>',
+    }).when('/simsearch/:id', {
+      template: function(param) {
+        return '<sim-run-list search=' + param.id + '></sim-run-list>';
+      }
     });
 }
