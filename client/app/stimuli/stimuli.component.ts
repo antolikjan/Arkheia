@@ -51,9 +51,9 @@ export class StimuliComponent {
     this.$http.get('/api/simulation-runs/result/' + this.simRunId).then(response => {
     this.simRun = response.data;
     for (let stim of this.simRun.stimuli) {
-        stim.data = convertJsonToTree(stim.parameters);
+        stim.data = convertJsonToTree(stim.params);
         this.gifs.push({
-          'url': '/api/simulation-runs/images/' + stim.movie,
+          'url': '/api/simulation-runs/images/' + stim.gif,
         });
       }
     });

@@ -138,14 +138,14 @@ export class ParamSearchInspectComponent {
                                                                parameterValues.slice().splice(1),
                                                                parPath.concat([[parameterNames[0], v]]),
                                                                paramCombs.filter((x) => {
-                                                                                         return parseFloat(x[parameterNames[0]]).toFixed(this.precission) ===
-                                                                                         parseFloat(v).toFixed(this.precission);
+                                                                                         return parseFloat(x[parameterNames[0]]).toPrecision(this.precission) ===
+                                                                                         parseFloat(v).toPrecision(this.precission);
                                                                                        })
                                                  );
          figuresToDisplay = figuresToDisplay.concat(im);
          parCombs = parCombs.concat(pc);
       } else {
-        let pc = paramCombs.filter((x) => { return parseFloat(x[parameterNames[0]]).toFixed(this.precission) === parseFloat(v).toFixed(this.precission); });
+        let pc = paramCombs.filter((x) => { return parseFloat(x[parameterNames[0]]).toPrecision(this.precission) === parseFloat(v).toPrecision(this.precission); });
         this.assert(pc.length <= 1, 'There shouldn\'t be more than one parameter combination left!');
         if (pc.length === 0) {
            figuresToDisplay = figuresToDisplay.concat(['EmptyFigure' + this.empty_figure_counter]);
@@ -171,7 +171,7 @@ export class ParamSearchInspectComponent {
         // get the selected value of the non-varying parameter
         let v = this.falseKeys(this.selectedParamValues[nvp]);
         this.assert(v.length === 1, 'This parameter should have had exactly one value selected');
-        varyingParamCombs = varyingParamCombs.filter((x) => { return parseFloat(x[nvp]).toFixed(this.precission) === parseFloat(v[0]).toFixed(this.precission); });
+        varyingParamCombs = varyingParamCombs.filter((x) => { return parseFloat(x[nvp]).toPrecision(this.precission) === parseFloat(v[0]).toPrecision(this.precission); });
     }
 
     let varyingSelectedParametersValues = [];
@@ -189,7 +189,7 @@ export class ParamSearchInspectComponent {
 
     for (let i in vs) {
       if (vs.hasOwnProperty(i)) {
-        let pv = varyingParamCombs.filter((x) => { return parseFloat(x[this.parameterNameRadioModel]).toFixed(this.precission) === parseFloat(vs[i]).toFixed(this.precission); });
+        let pv = varyingParamCombs.filter((x) => { return parseFloat(x[this.parameterNameRadioModel]).toPrecision(this.precission) === parseFloat(vs[i]).toPrecision(this.precission); });
         this.yParameterValues[i] = [this.parameterNameRadioModel, vs[i]];
         if (varyingSelectedParameters.length === 0) {
             this.assert(pv.length === 1, 'We would expcet to have only one prameter combination at this point!');
@@ -247,8 +247,8 @@ export class ParamSearchInspectComponent {
       // Lets find out which parameters actually differ in the parameter combinations
       this.varying_params = {};
       for (let key in this.param_combs[0]) {
-        if (this.param_combs.filter((x) => { return parseFloat(x[key]).toFixed(this.precission) === parseFloat(this.param_combs[0][key]).toFixed(this.precission); }).length < this.param_combs.length) {
-            this.varying_params[key] = this.unique(this.param_combs.map((x) => { return parseFloat(x[key]).toFixed(this.precission); }));
+        if (this.param_combs.filter((x) => { return parseFloat(x[key]).toPrecision(this.precission) === parseFloat(this.param_combs[0][key]).toPrecision(this.precission); }).length < this.param_combs.length) {
+            this.varying_params[key] = this.unique(this.param_combs.map((x) => { return parseFloat(x[key]).toPrecision(this.precission); }));
         }
       }
 
@@ -300,7 +300,7 @@ export class ParamSearchInspectComponent {
   }
 }
 
-export default angular.module('mozaikRepositoryApp.param-search-inspect', [ngRoute, 'bootstrapLightbox', 'rzModule'])
+export default angular.module('mozaikRepositoryApp.param-search-inspect', [ngRoute, 'bootstrapLightbox', 'rzSlider'])
   .config(routes)
   .component('paramSearchInspect' , {
     template: require('./param-search-inspect.html'),

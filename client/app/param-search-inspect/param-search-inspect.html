@@ -3,55 +3,55 @@
 	<div style="height:40px">
 		<p style="float:left; margin-left: 10px; margin-right: 10px;">Select figure: </p>   <select ng-options="figname for figname in $ctrl.file_names" ng-model="$ctrl.selectedFigure" ng-change="$ctrl.updateImageInfo();$ctrl.update();"></select>
 
-		<p style="float:left;margin-right: 20px;"> Figure size: </p> <span>
-		<rzslider rz-slider-model="$ctrl.image_size" rz-slider-options="{floor: 100, ceil: 700, step : 50, minRange : 100, maxRange :700, minLimit : 100, maxLimit : 700, ticksArray : [100, 300, 500, 700], value : 100}" style="height:50px; width:250px"></rzslider>
+		<p style="float:left;margin-right: 0px;"> Figure size: </p> 
+		<span>
+		<rzslider rz-slider-model="$ctrl.image_size" rz-slider-options="{floor: 100, ceil: 900,  value : 200}" style="height:34px; width:250px"></rzslider>
 		</span>
 
 		<button type="button" ng-click="$ctrl.param_combs_vis=!$ctrl.param_combs_vis" class="btn btn-primary" style="float:right; padding-left :5px; padding-right : 5px; padding-top : 3px; margin-right: 5px;">Hide param. combs.</button>
 	</div>
-	<div class="noscrollbar" ng-show="$ctrl.param_combs_vis" style="height:15vh; overflow-y: scroll; overflow-x:hidden">
-		<table class="table table-striped"  style="float:left; table-layout: fixed; margin-left: 10px">
-			<tbody>
+
+
+	<div class="noscrollbar" ng-show="$ctrl.param_combs_vis" style="height:12vh; overflow-y: scroll; overflow-x:hidden">
+		<table class="table"  style="margin-left: 20px">
+		    <tbody>
 				<tr>
-			        <td style="width:400px;">
-			        	<table class="table table-striped">
-				        	<tbody>
-				        		<tr class='tr-aligned' ng-repeat="(pname,vals) in $ctrl.varying_params">
-				        			<td style="width:100%; border-top: none !important;">
-									<button type="button" class="btn btn-sm btn-primary btn-param-name" ng-model="$ctrl.parameterNameRadioModel" ng-change="$ctrl.update()" uib-btn-radio="'{{pname}}'" style="width:400px;">
-											{{pname}}
-									</button>
+			            <td>
+				        	<table class="table">
+					    	<tbody>
+					    	    <tr class='tr-aligned' ng-repeat="(pname,vals) in $ctrl.varying_params">
+						    		<td style="border-top: none !important;">
+									    <button type="button" class="btn btn-sm btn-primary btn-param-name btn-block" ng-model="$ctrl.parameterNameRadioModel" ng-change="$ctrl.update()" uib-btn-radio="'{{pname}}'">
+										    {{pname}}
+									    </button>
 									<td>
-								</tr>
-				        	</tbody>
-			        	</table>
-			        </td>
+					 	    	</tr>
+					    	</tbody>
+				        	</table>
+			            </td>
 			        	
-			        <td style="margin-left : 10px">
-			        	<table class="table table-striped">
-				        	<tbody>
-				        		<tr class='tr-aligned' ng-repeat="(pname,vals) in $ctrl.varying_params">
+			            <td style="margin-left : 30px; width: 100%;'" >
+				        	<table class="table" style="width: 100%; float : left">
+					    	<tbody>
+					    	    <tr class='tr-aligned' ng-repeat="(pname,vals) in $ctrl.varying_params"  style="display: block">
 									<td ng-repeat="val in vals" style="border-top: none !important;">
-										
-										<button type="button" class="btn btn-sm btn-success btn-param-value" ng-model="$ctrl.selectedParamValues[pname][val]" ng-change="$ctrl.update()" ng-click="$ctrl.updateButtonActivation()"  uib-btn-checkbox ng-disabled="$ctrl.disabledParamValues[pname][val]" style="max-width:65px;">
-											{{val}}
+										<button type="button" class="btn btn-sm btn-success btn-param-value" ng-model="$ctrl.selectedParamValues[pname][val]" ng-change="$ctrl.update()" ng-click="$ctrl.updateButtonActivation()"  uib-btn-checkbox ng-disabled="$ctrl.disabledParamValues[pname][val]" style="width : 90px; margin-left: 10px">
+										    {{val}}
 										</button>
-									<td>
+								    <td>
 								</tr>	
-			        		</tbody>
-			        	</table>
-			        </td>
-		      </tr>	
-			<tbody>
+				        	</tbody>
+				        	</table>
+			            </td>
+			    </tr>	
+		    <tbody>
 		</table>
 	</div>
-	
-</div>
 
-<table sync-scroll sync-scroll-x="horizontal-scroll" sync-scroll-y="vertical-scroll" style="table-layout: fixed;">
-	<tbody>
+<table sync-scroll sync-scroll-x="horizontal-scroll" sync-scroll-y="vertical-scroll" style="table-layout: fixed; width: 100vw">
+ 	<tbody>
 	<tr style="margin: 0px; height:50px;">
-		<td style="min-width:20px;min-height:50px; margin: 0px;">
+		<td style="width:20px;min-height:50px; margin: 0px;">
 		</td>
 		<td>
 			<div class=".container-fluid horizontal-scroll noscrollbar" style="margin: 0px; background-color:#DFDFDF;height:50px; width : calc(100vw - 20px); overflow-x: scroll; white-space: nowrap; overflow-x:hidden">
@@ -63,14 +63,14 @@
 	</tr>
 	<tr >
 		<td>
-			<div class=".container-fluid vertical-scroll noscrollbar" ng-style="$ctrl.param_combs_vis && {'height' : 'calc(85vh - 151px)'} || {'height' : 'calc(100vh - 141px)'}" style="width:20px;overflow: auto; margin: 0px; background-color:#DFDFDF;">
+			<div class=".container-fluid vertical-scroll noscrollbar" ng-style="$ctrl.param_combs_vis && {'height' : 'calc(88vh - 151px)'} || {'height' : 'calc(100vh - 141px)'}" style="width:20px;overflow: auto; margin: 0px; background-color:#DFDFDF;">
 					<div ng-repeat="pnv in  $ctrl.yParameterValues" ng-style="{'height' : $ctrl.image_size*$ctrl.image_hw_ratio + 'px'}">
 						<p ng-style="{'transform':  'rotate(-90deg) translate(-' + $ctrl.image_size*$ctrl.image_hw_ratio/2 + 'px,0px)'}" style="text-align: center; margin: 0px" >{{pnv[1]}}</p>
 					</div>
 			</div>
 		</td>
 		<td>
-				<div class=".container-fluid figure-display horizontal-scroll vertical-scroll" ng-style="$ctrl.param_combs_vis && {'height' : 'calc(85vh - 151px)'} || {'height' : 'calc(100vh - 141px)'} " style="overflow: auto; white-space: nowrap; margin:0px">
+				<div class=".container-fluid figure-display horizontal-scroll vertical-scroll" ng-style="$ctrl.param_combs_vis && {'height' : 'calc(88vh - 151px)'} || {'height' : 'calc(100vh - 141px)'} " style="overflow: auto; white-space: nowrap; margin:0px">
 					<div ng-repeat="figureList in $ctrl.figuresToDisplay" class="row-fluid">	
 						<span ng-repeat="figures in figureList">
 							<a ng-click="$ctrl.openLightboxModal(figures)" href>

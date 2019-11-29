@@ -23,7 +23,8 @@ export class ParamViewComponent {
   $onInit() {
     this.$http.get('/api/simulation-runs/result/' + this.resId).then(response => {
       this.simRun = response.data;
-      this.data = convertJsonToTree(this.simRun.parameters);
+      
+      this.data = convertJsonToTree(JSON.parse(this.simRun.parameters));
       //JSON.parse
     });
   }

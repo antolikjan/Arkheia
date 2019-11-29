@@ -11,8 +11,9 @@ Each simulation run is represented by a single JSON hierarchical data-structure 
 	{
 	        submission_date        :  string,            # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of submission to Arkheia.
 	        run_date               :  string,            # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of the simulation run.
-	        simulation_run_name    :  string,            # Name given to the simulation run
+	        simulation_run_name    :  string,            # Name given to the simulation run.
 	        model_name             :  string,            # The name of the model which was simulated.
+	        model_description      :  string,            # The description of the model that was simulated.
 	        results                :  list of Result,    # List of JSON structures representing results.
 	        stimuli                :  list of Stimulus,  # List of JSON structures representing stimuli presented during simulation.
 	        recorders              :  list of Recorder,  # List of JSON structures representing recording configuration during simulation.

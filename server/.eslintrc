@@ -1,6 +1,19 @@
 {
-    "extends": "../.eslintrc",
+    "extends": "defaults",
     "env": {
         "node": true
+    },
+    parserOptions: {
+    ecmaVersion: 6,
+    sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
+      modules: true,
+      experimentalObjectRestSpread: true
+    }
+  },
+ rules: {
+        'no-console': 'off',
     }
 }
+

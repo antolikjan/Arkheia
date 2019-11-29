@@ -6,8 +6,8 @@ function _convertJsonToTree(c,json) {
       for (let key in json) {
         if(json.hasOwnProperty(key))
         counter++;
-        if (typeof(json[key][0]) === 'object') {
-          if (json[key][0] instanceof Array) {
+        if (typeof(json[key]) === 'object') {
+          if (json[key] instanceof Array) {
               nodes.push({
                           'nodes' : [],
                           'title' : key,
@@ -16,10 +16,10 @@ function _convertJsonToTree(c,json) {
                           'id' : counter
               });
           } else {
-            let res = _convertJsonToTree(counter,json[key][0]);
+            let res = _convertJsonToTree(counter,json[key]);
             nodes.push({
                         'nodes' : res[1],
-                        'tooltip' : String(json[key][1]) + " : " + String(json[key][2]),
+                        //'tooltip' : String(json[key][1]) + " : " + String(json[key][2]),
                         'title' : key,
                         'id' : counter
             });
@@ -29,8 +29,8 @@ function _convertJsonToTree(c,json) {
             nodes.push({
                         'nodes' : [],
                         'title' : key,
-                        'value' : json[key][0],
-                        'tooltip' : String(json[key][1]) + " : " + String(json[key][2]), 
+                        'value' : json[key],
+                        //tooltip' : String(json[key][1]) + " : " + String(json[key][2]), 
                         'id' : counter
             });
         }

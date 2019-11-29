@@ -26,6 +26,7 @@ export class ExperimentalProtocolComponent {
       template: require('../param-view/param-view.html'),
       controllerAs : '$ctrl',
       controller: function() {
+        console.log(data)
         this.data = data;
       }
     });
@@ -36,10 +37,11 @@ export class ExperimentalProtocolComponent {
       this.simRun = response.data;
 
       for (let ep of this.simRun.experimental_protocols) {
-        ep.data = convertJsonToTree(ep.parameters);
+        ep.data = convertJsonToTree(ep.params);
+
       }
       for (let re of this.simRun.recorders) {
-        re.data = convertJsonToTree(re.parameters);
+        re.data = convertJsonToTree(re.params);
       }
     });
   }

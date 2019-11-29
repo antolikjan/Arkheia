@@ -13,16 +13,15 @@ if adding parameter search:
 python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation
 """
 import numpy
-import pypandoc
 from pymongo import MongoClient
 import gridfs
 from sphinx.util.docstrings import prepare_docstring
+from pyNN.random import RandomDistribution
 from mozaik.tools.distribution_parametrization import MozaikExtendedParameterSet, load_parameters,PyNNDistribution
 from mozaik.storage.datastore import *
 from parameters import ParameterSet
 from mozaik.tools.mozaik_parametrized import MozaikParametrized
 from mozaik.tools.misc import result_directory_name
-from pyNN.random import RandomDistribution
 import re
 from sphinx.util import docstrings
 import sys
@@ -33,23 +32,22 @@ import json
 import pickle
 import imageio
 
-PARAMETERS_REGEX = re.compile(".*Parameters\s*\n-{9}-*")
+# hack for fast addition of results for developmental purposes
+FULL=True
 
-OTHER_PARAMETER_REGEX = re.compile(".*Other\ *[pP]arameters\ *\n-{16}-*")
+sys.path.append('/home/antolikjan/projects/mozaikold/contrib')
+
+PARAMETERS_REGEX = re.compile(".*Parameters.*")
+
+
+OTHER_PARAMETER_REGEX = re.compile(".*Other\ [pP]arameters\ *\n-{15}-+")
 
 PARAMETER_REGEX = re.compile("\s*(?P<name>[^:\s]+)\s*\:\s* (?P<tpe>[^\n]*)\n\s*(?P<doc>[^\n]*)")
 
+def reindent(string):
+    return "\n".join(l.strip() for l in string.strip().split("\n"))
 
-
-def remove_identation(string):
-    # remove top most indentation from the string
-    tab = re.compile("(^\s*).*").search(string.split('\n')[1]).group(1)
-    s = ""
-    for ss in string.split('\n')[1:]:
-        s = s + ss[len(tab):] + '\n'
-    return s
-
-def parse_docstring(docstring,flag=False):
+def parse_docstring(docstring):
     """Parse the docstring into its components.
     :returns: a dictionary of form
               {
@@ -73,28 +71,28 @@ def parse_docstring(docstring,flag=False):
             reminder = lines[1].strip()
 
             params_returns_desc = None
-
             match_parameters = PARAMETERS_REGEX.search(reminder)
             if match_parameters:
                 long_desc_end = match_parameters.start()
-                long_description = pypandoc.convert_text(reminder[:long_desc_end].rstrip(), 'md', format='rst')
+                long_description = reminder[:long_desc_end].rstrip()
                 reminder = reminder[long_desc_end:].strip()
-            else:
-                long_description = pypandoc.convert_text(reminder.rstrip(), 'md', format='rst') 
+
             match = OTHER_PARAMETER_REGEX.search(reminder)
 
             if match:
                end = match.start()
                if not match_parameters:
-                  long_description = pypandoc.convert_text(reminder[:end].rstrip(), 'md', format='rst') 
-         
-               reminder = reminder[end:].strip()               
+                  long_description = reminder[:end].rstrip()   
+               reminder = reminder[end:].strip()
 
             if reminder:
                 params = {}
                     
                 for name, tpe, doc in PARAMETER_REGEX.findall(reminder):
                     params[name] = (tpe,doc)
+
+            if (not match_parameters) and (not match):
+               long_description = reminder
                 
                 
     return {
@@ -124,156 +122,201 @@ class ParametersEncoder(json.JSONEncoder):
 
 def openMongoDB():
     #### MONGODB STUFF #######
-    #client = MongoClient(host='178.62.7.131')
-    client = MongoClient(sys.argv[1])
-    db = client["arkheia"]
+    #client = MongoClient(host='159.65.89.161')
+    client = MongoClient('localhost')
+    #db = client["arkheia-final"]
+    #db = client["arkheia"]
+    db = client["arkheia-dev"]
     gfs = gridfs.GridFS(db)
     return gfs,db
 
 
 def createSimulationRunDocumentAndUploadImages(path,gfs):
-
-    data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':path,'store_stimuli' : False}),replace=False)
-    
+    print path
     #lets get parameters
     param = load_parameters(os.path.join(path,'parameters'),{})
-
-
-    ##### STIMULI ###########
-    stimuli = [MozaikParametrized.idd(s) for s in data_store.get_stimuli()]
-    unique_stimuli = [MozaikParametrized.idd(s) for s in set(data_store.get_stimuli())]
-    stimuli_types = {}
-    for s in stimuli: stimuli_types[s.name]=True
-
     stim_docs = []
-    i = 0;
-    for s in unique_stimuli:
+    experimental_protocols_docs = []
 
-        print data_store.sensory_stimulus.keys()
-        raws = data_store.get_sensory_stimulus([str(s)])[0]
-        if raws == None:
-            raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
-        if param['input_space'] != None:
-            imageio.mimwrite('movie'+str(i)+'.gif', raws,duration=param['input_space']['update_interval']/1000.0)
-        else:
-            imageio.mimwrite('movie'+str(i)+'.gif', raws,duration=0.1)
-        params = s.get_param_values()
+    if FULL:
+        data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':path,'store_stimuli' : False}),replace=False)
+        unique_stimuli = [(s,MozaikParametrized.idd(s)) for s in set(data_store.get_stimuli())]
+    
+        for s,sidd in unique_stimuli:
+	    print data_store.sensory_stimulus.keys()
+            raws = data_store.get_sensory_stimulus([s])[0]
+            if raws == None:
+                raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
+            if param['input_space'] != None:
+                imageio.mimwrite('movie.gif', raws,duration=param['input_space']['update_interval']/1000.0)
+            else:
+                imageio.mimwrite('movie.gif', raws,duration=0.1)
+            params = sidd.get_param_values()
 
-        params = dict([(k,(v,s.params()[k].__class__.__name__,s.params()[k].doc)) for k,v in params])
+            params = {k : (v,sidd.params()[k].doc) for k,v in params}
 
-        stim_docs.append({
-         'code' : s.name,
-         'parameters' : params,
-         'short_description' : parse_docstring(getattr(__import__(s.module_path, globals(), locals(), s.name),s.name).__doc__)["short_description"],
-         'long_description' : parse_docstring(getattr(__import__(s.module_path, globals(), locals(), s.name),s.name).__doc__)["long_description"],
-         'movie'    : gfs.put(open('movie'+str(i)+'.gif','r')),
-        })
-        i+=1;
+            stim_docs.append({
+            'code' : sidd.name,
+            'params' : params,
+            'short_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["short_description"],
+            'long_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["long_description"],
+            'gif'    : gfs.put(open('movie.gif','r')),
+            })
+
+	#### EXPERIMENTAL PROTOCOLS ########
+	print data_store.get_experiment_parametrization_list()
+	for ep in data_store.get_experiment_parametrization_list():
+    	    name = ep[0][8:-2].split('.')[-1]
+    	    module_path = '.'.join(ep[0][8:-2].split('.')[:-1])
+    	    doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
+    	    params = eval(ep[1])
+
+    	    p = {k:(params[k],doc_par[k][0],doc_par[k][1]) for k in params.keys()}
+
+    	    experimental_protocols_docs.append({
+                'code' : module_path + '.' + name,
+                'params' : p,
+                'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
+                'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"],
+        	})
     
     ##### RECORDERS ###################
     recorders_docs = []
     for sh in param["sheets"].keys():
         for rec in param['sheets'][sh]["params"]["recorders"].keys():
-            recorder = param['sheets'][sh]["params"]["recorders"][rec]
-            name = recorder["component"].split('.')[-1]
-            module_path = '.'.join(recorder["component"].split('.')[:-1])
+	    recorder = param['sheets'][sh]["params"]["recorders"][rec]
+	    name = recorder["component"].split('.')[-1]
+	    module_path = '.'.join(recorder["component"].split('.')[:-1])
             doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-            p = dict([(k,(recorder["params"][k],doc_par[k][0],doc_par[k][1])) for k in recorder["params"].keys()])
+            p = {k:(recorder["params"][k],doc_par[k][0],doc_par[k][1]) for k in recorder["params"].keys()}
             
             recorders_docs.append({
-             'code' : name,
+             'code' : module_path + '.' + name,
              'source' : sh,
-             'parameters' : p,
+             'params' : p,
              'variables' : recorder["variables"],
              'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
              'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"],
             })
             
-    #### EXPERIMENTAL PROTOCOLS ########
-    experimental_protocols_docs = []
-    for ep in data_store.get_experiment_parametrization_list():
-        name = ep[0][8:-2].split('.')[-1]
-        module_path = '.'.join(ep[0][8:-2].split('.')[:-1])
-        doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-        params = eval(ep[1])
-        p={}
-        for k in params.keys():
-            p[k] = (params[k],doc_par[k][0],doc_par[k][1])
-
-        experimental_protocols_docs.append({
-             'code' : name,
-             'parameters' : p,
-             'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
-             'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__,True)["long_description"],
-            })
 
     # load basic info
-    f = open(os.path.join(path,'info'),'r')
-    info = eval(f.read())  
-    
-    info["model_docstring"] = remove_identation(info["model_docstring"])
 
+    if os.path.exists(os.path.join(path,'info')):
+        f = open(os.path.join(path,'info'),'r')
+        info = eval(f.read())        
+    else:
+        info={}
+        info["creation_data"] = "????"
+        info["simulation_run_name"] = "???"
+        info["model_name"] = "??"
+
+
+    
     #let load up results
     results = []
-    f = open(os.path.join(path,'results'),'r')
 
-    lines = [eval(line) for line in f]
+    if os.path.exists(os.path.join(path,'results')):
+        f = open(os.path.join(path,'results'),'r')
+	lines = [eval(line) for line in f]
+    else:
+	lines = []
 
+    if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparison.png')):
+         lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparison.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparisonNew.png')):
+	lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparisonNew.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'SpontStatisticsOverview.png')):
+         lines.append({'parameters' : {}, 'file_name' : 'SpontStatisticsOverview.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
     if os.path.exists(os.path.join(path,'Orientation_responseL23.png')):
-        lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
     if os.path.exists(os.path.join(path,'Orientation_responseL4.png')):
-        lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL4.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL4.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'Orientation_responseInhL23.png')):
+         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseInhL23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'Orientation_responseInh23.png')):
+         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseInh23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
     if os.path.exists(os.path.join(path,'MR.png')):
-        lines.append({'parameters' : {}, 'file_name' : 'MR.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+         lines.append({'parameters' : {}, 'file_name' : 'MR.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
     if os.path.exists(os.path.join(path,'MRReal.png')):
-        lines.append({'parameters' : {}, 'file_name' : 'MRReal.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    
+         lines.append({'parameters' : {}, 'file_name' : 'MRReal.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'aaa.png')):
+         lines.append({'parameters' : {}, 'file_name' : 'aaa.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'bbb.png')):
+         lines.append({'parameters' : {}, 'file_name' : 'bbb.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'Orientation_responsInheL4.png')):
+         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responsInheL4.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+    if os.path.exists(os.path.join(path,'GratingExcL23.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'GratingExcL23.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'GratingInhL23.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'GratingInhL23.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'GratingExcL4.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'GratingExcL4.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'GratingInhL4.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'GratingInhL4.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'SpontExcL23.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'SpontExcL23.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'SpontInhL23.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'SpontInhL23.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'SpontExcL4.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'SpontExcL4.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'SpontInhL4.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'SpontInhL4.png', 'class_name' : ''}) 
+    if os.path.exists(os.path.join(path,'NatExcL4.png')):
+       lines.append({'parameters' : {}, 'file_name' : 'NatExcL4.png', 'class_name' : ''}) 
+
     for line in lines:
         r = line
-        if not re.match('.*\..*$',  r['file_name']):
-	         r['file_name'] +='.png'
+	if not re.match('.*\..*$',  r['file_name']):
+	    r['file_name'] +='.png'
         r['code'] = r['class_name'][8:-2]
-        del r['class_name']
-        name = r['code'].split('.')[-1]
-        module_path = '.'.join(r['code'].split('.')[:-1])
-        long_description = parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"]
-        doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-        p = dict([(k,(r["parameters"][k],doc_par[k][0],doc_par[k][1])) for k in r["parameters"].keys()])   
-        r["parameters"] = p
-        r["name"] = r['file_name']
-        r["caption"] = long_description
+	
+	if True:
+	    if r['code'] != '':
+		name = r['code'].split('.')[-1]
+		module_path = '.'.join(r['code'].split('.')[:-1])
+		doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
+		p = {k:(r["parameters"][k],doc_par[k][0],doc_par[k][1]) if doc_par.has_key(k) else (r["parameters"][k],"","") for k in r["parameters"].keys()}
+	    else:
+		p=[]    
+	    r["parameters"] = p
+	r["name"] = r['file_name']
         r["figure"] =   gfs.put(open(os.path.join(path,r['file_name']),'r'))
         results.append(r)
-    
-    # convert param to follow Arkheia format
-    def convertParams(params):
-        p = {}
-        for k in params.keys():
-            if isinstance(params[k], ParameterSet):
-               p[k] = (convertParams(params[k]),'N/A','N/A') 
-            else:
-               p[k] = (params[k],'N/A','N/A') 
-        return p
 
     document = {
         'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
         'run_date'        :     info["creation_data"],
         'simulation_run_name' : info["simulation_run_name"],
         'model_name' : info["model_name"],
-        'model_info' : info["model_docstring"],
+        'model_description' : info["model_docstring"] if info.has_key('model_docstring') else '',
         'results' : results,
         'stimuli' : stim_docs,
         'recorders' : recorders_docs,
         'experimental_protocols' : experimental_protocols_docs,
-        'parameters' : json.loads(json.dumps(convertParams(param),cls=ParametersEncoder))
+        'parameters' : json.dumps(param,cls=ParametersEncoder) #!!!!!!!!!!!!!!!!
     }
     return document
 
-assert len(sys.argv)>2 , "Not enough arguments. Usage:\npython add_mozaik_repository.py target_arkheia_repository_addresse path_to_mozaik_simulation_run_output_directory\n\nor\n\npython add_mozaik_repository.py target_arkheia_repository_addresse path_to_mozaik_parameter_search_output_directory name_of_the_simulation"
+assert len(sys.argv)>1 , "Not enough arguments, missing mozaik repository directory. Usage:\npython add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory\n\nor\n\npython add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation"
 
 gfs,db = openMongoDB()
 
-if os.path.exists(os.path.join(sys.argv[2],'parameter_combinations')):
+if len(sys.argv) == 4:
+    d1 = createSimulationRunDocumentAndUploadImages(sys.argv[1],gfs)
+    d2 = createSimulationRunDocumentAndUploadImages(sys.argv[2],gfs)
+
+    assert d1['simulation_run_name'] == d2['simulation_run_name']
+    assert d1['model_name'] == d2['model_name']
+
+    d1['results'] = d1['results'] + d2['results']
+    d1['stimuli'] = d1['stimuli'] + d2['stimuli']
+    d1['recorders'] = d1['recorders'] + d2['recorders']
+    d1['experimental_protocols'] = d1['experimental_protocols'] + d2['experimental_protocols']
+
+    db.submissions.insert_one(d1)
+
+elif os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
 
     assert len(sys.argv)>2, """Missing simulation run argument. Usage: \n python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation """
 
@@ -289,7 +332,9 @@ if os.path.exists(os.path.join(sys.argv[2],'parameter_combinations')):
     simulation_runs = []
     working_combinations = []
     for i,combination in enumerate(combinations):
-        rdn = result_directory_name('ParameterSearch',sys.argv[3],combination)
+        combination = dict([(x,y.decode('string_escape').decode('string_escape').replace("'", '') if type(y) == str else y) for x,y in combination.iteritems()])
+
+        rdn = result_directory_name('ParameterSearch',sys.argv[2],combination)
         print rdn
         try:
             simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn),gfs))
@@ -307,5 +352,4 @@ if os.path.exists(os.path.join(sys.argv[2],'parameter_combinations')):
 
     db.parameterSearchRuns.insert_one(document)
 else:
-    db.submissions.insert_one(createSimulationRunDocumentAndUploadImages(sys.argv[2],gfs))
-
+    db.submissions.insert_one(createSimulationRunDocumentAndUploadImages(sys.argv[1],gfs))
