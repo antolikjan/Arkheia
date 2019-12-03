@@ -33,7 +33,8 @@ import pickle
 import imageio
 
 # hack for fast addition of results for developmental purposes
-FULL=True
+FULL=False
+WITH_STIMULI=False
 
 sys.path.append('/home/antolikjan/projects/mozaikold/contrib')
 
@@ -139,29 +140,32 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     experimental_protocols_docs = []
 
     if FULL:
+	print "Loading..."
         data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':path,'store_stimuli' : False}),replace=False)
+	print "Loaded"
         unique_stimuli = [(s,MozaikParametrized.idd(s)) for s in set(data_store.get_stimuli())]
-    
-        for s,sidd in unique_stimuli:
-	    print data_store.sensory_stimulus.keys()
-            raws = data_store.get_sensory_stimulus([s])[0]
-            if raws == None:
-                raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
-            if param['input_space'] != None:
-                imageio.mimwrite('movie.gif', raws,duration=param['input_space']['update_interval']/1000.0)
-            else:
-                imageio.mimwrite('movie.gif', raws,duration=0.1)
-            params = sidd.get_param_values()
+	if WITH_STIMULI:
+            for s,sidd in unique_stimuli:
+	        raws = data_store.get_sensory_stimulus([s])
+    		if raws == []:
+    		    raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
+	        else:
+		    raws = raws[0]
+                if param['input_space'] != None:
+	            imageio.mimwrite('movie.gif', raws,duration=param['input_space']['update_interval']/1000.0)
+    	        else:
+        	    imageio.mimwrite('movie.gif', raws,duration=0.1)
+                params = sidd.get_param_values()
 
-            params = {k : (v,sidd.params()[k].doc) for k,v in params}
+	        params = {k : (v,sidd.params()[k].doc) for k,v in params}
 
-            stim_docs.append({
-            'code' : sidd.name,
-            'params' : params,
-            'short_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["short_description"],
-            'long_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["long_description"],
-            'gif'    : gfs.put(open('movie.gif','r')),
-            })
+    	        stim_docs.append({
+        	    'code' : sidd.name,
+	            'params' : params,
+	            'short_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["short_description"],
+	            'long_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["long_description"],
+	            'gif'    : gfs.put(open('movie.gif','r')),
+    	        })
 
 	#### EXPERIMENTAL PROTOCOLS ########
 	print data_store.get_experiment_parametrization_list()
@@ -171,7 +175,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     	    doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
     	    params = eval(ep[1])
 
-    	    p = {k:(params[k],doc_par[k][0],doc_par[k][1]) for k in params.keys()}
+    	    p = {k:(params[k],doc_par[k][0],doc_par[k][1]) if doc_par.has_key(k) else params[k] for k in params.keys()}
 
     	    experimental_protocols_docs.append({
                 'code' : module_path + '.' + name,
@@ -280,7 +284,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 	    else:
 		p=[]    
 	    r["parameters"] = p
-	r["name"] = r['file_name']
+        r["name"] = r['file_name']
         r["figure"] =   gfs.put(open(os.path.join(path,r['file_name']),'r'))
         results.append(r)
 
