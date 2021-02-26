@@ -11,20 +11,20 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 - [Gulp](http://gulpjs.com/) (`npm install --global gulp`)
 - [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
 - [Python 2.7](https://www.python.org/download/releases/2.7/) With the following package installed: 
-	* numpy 
-	* pymongo 
-	* gridfs 
-	* sphinx 
-	* pynn 
-	* parameters 
-	* re 
-	* sys 
-	* os 
-	* datetime 
-	* json 
-	* pickle 
-	* imageio==2.6
-	* mozaik (https://github.com/CSNG-MFF/mozaik/)
+>	* numpy 
+>	* pymongo 
+>	* gridfs 
+>	* sphinx 
+>	* pynn 
+>	* parameters 
+>	* re 
+>	* sys 
+>	* os 
+>	* datetime 
+>	* json 
+>	* pickle 
+>	* imageio==2.6
+>	* mozaik (https://github.com/CSNG-MFF/mozaik/)
 
 ### Developing
 
