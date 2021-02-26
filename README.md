@@ -10,13 +10,13 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 - [Node.js and npm](nodejs.org) Node >= 4.x.x, npm >= 2.x.x
 - [Gulp](http://gulpjs.com/) (`npm install --global gulp`)
 - [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
-- [Python 2.7] With the following package installed: numpy pymongo gridfs sphinx pynn mozaik parameters re sys os datetime json pickle imageio==2.6
+- [Python 2.7](https://www.python.org/download/releases/2.7/) With the following package installed: numpy pymongo gridfs sphinx pynn mozaik parameters re sys os datetime json pickle imageio==2.6
 
 ### Developing
 
 1. Run `npm install` to install server dependencies.
 	* If you get an error message starting by: 'Tried to download(404): ...', run the following commands before trying to Run `npm install` again:
-        	* `rm package-lock.json` to remove this file if it is present.
+		* `rm package-lock.json` to remove this file if it is present.
 		* `rm -r node-modules` to remove this directory if it is present.
 		* `npm cache clean --force`.
 		* `npm install npm@latest -g.`.
