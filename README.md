@@ -11,6 +11,7 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 - [Gulp](http://gulpjs.com/) (`npm install --global gulp`)
 - [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
 - [Python 2.7] With the following package installed: numpy pymongo gridfs sphinx pynn mozaik parameters re sys os datetime json pickle imageio==2.6
+
 ### Developing
 
 1. Run `npm install` to install server dependencies.
@@ -27,7 +28,7 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 
 4. Run `gulp serve` to start the development server. It should automatically open the client in your browser when ready.
 
-5. Use the script add_mozaik_repository.py in the server directory to add mozaik simulations `python add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory` or mozaik parameter search `python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation` in the mozaik repository
+5. Use the script add_mozaik_repository.py in the server directory to add mozaik simulations (`python add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory`) or mozaik parameter search (`python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation`) in the mozaik repository
 
 ## Build & development
 
