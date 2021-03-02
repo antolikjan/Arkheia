@@ -31,10 +31,11 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 1. Run `npm install` to install server dependencies.
 	* If you get an error message starting by: 'Tried to download(404): ...', run the following commands before trying to Run `npm install` again:
 		* `rm package-lock.json` to remove this file if it is present.
-		* `rm -r node-modules` to remove this directory if it is present.
-		* `npm cache clean --force`.
-		* `npm install npm@latest -g.`.
-		* `sudo npm install -g node-gyp`.
+		* `rm -r node_modules` to remove this directory if it is present.
+		* `npm cache clean --force`
+		* `npm install npm@latest -g.`
+		* `sudo npm install -g node-gyp`
+		* `sudo npm install -g grunt-node-inspector`
 
 2. Run `sudo npm install -g bower` to install bower and then `run bower install -f angular-ui-tree angular-bootstrap-lightbox angularjs-slider --config.directory=client/bower_components` to install these bower components in the proper directory
 
