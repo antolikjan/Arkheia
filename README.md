@@ -29,21 +29,14 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 ### Developing
 
 1. Run `npm install` to install server dependencies.
-	* If you get an error message starting by: 'Tried to download(404): ...', run the following commands before trying to Run `npm install` again:
-		* `rm package-lock.json` to remove this file if it is present.
-		* `rm -r node_modules` to remove this directory if it is present.
-		* `npm cache clean --force`
-		* `npm install npm@latest -g.`
-		* `sudo npm install -g node-gyp`
-		* `sudo npm install -g grunt-node-inspector`
 
-2. Run `sudo npm install -g bower` to install bower and then `run bower install -f angular-ui-tree angular-bootstrap-lightbox angularjs-slider --config.directory=client/bower_components` to install these bower components in the proper directory
+2. Run `sudo npm install -g bower` to install bower and then `bower install -f angular-ui-tree angular-bootstrap-lightbox angularjs-slider --config.directory=client/bower_components` to install these bower components in the proper directory.
 
-3. Run `sudo mkdir -p /data/db/` and `sudo chown `id -u` /data/db` to create the MongoDB directory with user ownership and then `mongod` in a separate shell to keep an instance of the MongoDB Daemon running
+3. Run `sudo mkdir -p /data/db/` and `sudo chown ``id -u` /data/db`` to create the MongoDB directory with user ownership and then `mongod` in a separate shell to keep an instance of the MongoDB Daemon running.
 
 4. Run `gulp serve` to start the development server. It should automatically open the client in your browser when ready.
 
-5. Use the script add_mozaik_repository.py in the server directory to add mozaik simulations (`python add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory`) or mozaik parameter search (`python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation`) in the mozaik repository
+5. Use the script add_mozaik_repository.py in the server directory to add mozaik simulations (`python add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory`) or mozaik parameter search (`python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation`) in the mozaik repository.
 
 ## Build & development
 
