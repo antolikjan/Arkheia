@@ -30,9 +30,9 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 
 1. Run `npm install` to install server dependencies.
 
-2. Run `sudo npm install -g bower` to install bower and then `bower install -f angular-ui-tree angular-bootstrap-lightbox angularjs-slider --config.directory=client/bower_components` to install these bower components in the proper directory.
+2. Run `sudo npm install -g bower` to install bower and then run `bower install -f angular-ui-tree angular-bootstrap-lightbox angularjs-slider --config.directory=client/bower_components` to install these bower components in the proper directory.
 
-3. Run `sudo mkdir -p /data/db/` and `sudo chown ``id -u` /data/db`` to create the MongoDB directory with user ownership and then `mongod` in a separate shell to keep an instance of the MongoDB Daemon running.
+3. Run `sudo mkdir -p /data/db/` and ``sudo chown `id -u` /data/db`` to create the MongoDB directory with user ownership and then `mongod` in a separate shell to keep an instance of the MongoDB Daemon running.
 
 4. Run `gulp serve` to start the development server. It should automatically open the client in your browser when ready.
 
