@@ -46,17 +46,5 @@
 
 /* Component styles are injected through gulp */
 /* inject:css */
-@import 'about/about.css';
-@import 'admin/admin.css';
-@import 'documentation/documentation.css';
-@import 'experimental-protocol/experimental-protocol.css';
-@import 'param-search-inspect/param-search-inspect.css';
-@import 'param-view/param-view.css';
-@import 'parameter-search/parameter-search.css';
-@import 'results/results.css';
-@import 'sim-run-list/sim-run-list.css';
-@import 'stimuli/stimuli.css';
-@import '../components/footer/footer.css';
-@import '../components/modal/modal.css';
 @import '../components/oauth-buttons/oauth-buttons.css';
 /* endinject */

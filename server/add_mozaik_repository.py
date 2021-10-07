@@ -36,7 +36,7 @@ import imageio
 FULL=False
 WITH_STIMULI=False
 
-sys.path.append('/home/antolikjan/projects/mozaikold/contrib')
+sys.path.append('/home/antolikjan/projects/mozaik-contrib')
 
 PARAMETERS_REGEX = re.compile(".*Parameters.*")
 
@@ -123,11 +123,11 @@ class ParametersEncoder(json.JSONEncoder):
 
 def openMongoDB():
     #### MONGODB STUFF #######
-    #client = MongoClient(host='159.65.89.161')
-    client = MongoClient('localhost')
-    #db = client["arkheia-final"]
-    #db = client["arkheia"]
+    #client = MongoClient(host='165.22.80.43')   #DigitalOcean work Arkheia 
+    #client = MongoClient(host='68.183.219.26') #Cortical Prosthesis
+    client = MongoClient(host='localhost')
     db = client["arkheia-dev"]
+    #db = client["arkheia"]
     gfs = gridfs.GridFS(db)
     return gfs,db
 
@@ -222,7 +222,8 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     if os.path.exists(os.path.join(path,'results')):
         f = open(os.path.join(path,'results'),'r')
-        lines = [eval(line) for line in f]
+	lines = list(set([line for line in f]))
+	lines = [eval(line) for line in lines]
     else:
         lines = []
 
