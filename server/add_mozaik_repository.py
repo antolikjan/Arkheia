@@ -133,64 +133,64 @@ def openMongoDB():
 
 
 def createSimulationRunDocumentAndUploadImages(path,gfs):
-    print path
+    print(path)
     #lets get parameters
     param = load_parameters(os.path.join(path,'parameters'),{})
     stim_docs = []
     experimental_protocols_docs = []
 
     if FULL:
-	print "Loading..."
+        print("Loading...")
         data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':path,'store_stimuli' : False}),replace=False)
-	print "Loaded"
+        print("Loaded")
         unique_stimuli = [(s,MozaikParametrized.idd(s)) for s in set(data_store.get_stimuli())]
-	if WITH_STIMULI:
+        if WITH_STIMULI:
             for s,sidd in unique_stimuli:
-	        raws = data_store.get_sensory_stimulus([s])
-    		if raws == []:
-    		    raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
-	        else:
-		    raws = raws[0]
+                raws = data_store.get_sensory_stimulus([s])
+                if raws == []:
+                    raws= numpy.array([[[0,0],[0,0.1]],[[0,0],[0,0]]])
+                else:
+                    raws = raws[0]
                 if param['input_space'] != None:
-	            imageio.mimwrite('movie.gif', raws,duration=param['input_space']['update_interval']/1000.0)
-    	        else:
-        	    imageio.mimwrite('movie.gif', raws,duration=0.1)
+                    imageio.mimwrite('movie.gif', raws,duration=param['input_space']['update_interval']/1000.0)
+                else:
+                    imageio.mimwrite('movie.gif', raws,duration=0.1)
                 params = sidd.get_param_values()
 
-	        params = {k : (v,sidd.params()[k].doc) for k,v in params}
+                params = {k : (v,sidd.params()[k].doc) for k,v in params}
 
-    	        stim_docs.append({
-        	    'code' : sidd.name,
-	            'params' : params,
-	            'short_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["short_description"],
-	            'long_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["long_description"],
-	            'gif'    : gfs.put(open('movie.gif','r')),
-    	        })
+                stim_docs.append({
+                    'code' : sidd.name,
+                    'params' : params,
+                    'short_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["short_description"],
+                    'long_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["long_description"],
+                    'gif'    : gfs.put(open('movie.gif','r')),
+                    })
 
-	#### EXPERIMENTAL PROTOCOLS ########
-	print data_store.get_experiment_parametrization_list()
-	for ep in data_store.get_experiment_parametrization_list():
-    	    name = ep[0][8:-2].split('.')[-1]
-    	    module_path = '.'.join(ep[0][8:-2].split('.')[:-1])
-    	    doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-    	    params = eval(ep[1])
+        #### EXPERIMENTAL PROTOCOLS ########
+        print(data_store.get_experiment_parametrization_list())
+        for ep in data_store.get_experiment_parametrization_list():
+            name = ep[0][8:-2].split('.')[-1]
+            module_path = '.'.join(ep[0][8:-2].split('.')[:-1])
+            doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
+            params = eval(ep[1])
 
-    	    p = {k:(params[k],doc_par[k][0],doc_par[k][1]) if doc_par.has_key(k) else params[k] for k in params.keys()}
+            p = {k:(params[k],doc_par[k][0],doc_par[k][1]) if k in doc_par else params[k] for k in params.keys()}
 
-    	    experimental_protocols_docs.append({
+            experimental_protocols_docs.append({
                 'code' : module_path + '.' + name,
                 'params' : p,
                 'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
                 'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"],
-        	})
+                })
     
     ##### RECORDERS ###################
     recorders_docs = []
     for sh in param["sheets"].keys():
         for rec in param['sheets'][sh]["params"]["recorders"].keys():
-	    recorder = param['sheets'][sh]["params"]["recorders"][rec]
-	    name = recorder["component"].split('.')[-1]
-	    module_path = '.'.join(recorder["component"].split('.')[:-1])
+            recorder = param['sheets'][sh]["params"]["recorders"][rec]
+            name = recorder["component"].split('.')[-1]
+            module_path = '.'.join(recorder["component"].split('.')[:-1])
             doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
             p = {k:(recorder["params"][k],doc_par[k][0],doc_par[k][1]) for k in recorder["params"].keys()}
             
@@ -222,14 +222,14 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     if os.path.exists(os.path.join(path,'results')):
         f = open(os.path.join(path,'results'),'r')
-	lines = [eval(line) for line in f]
+        lines = [eval(line) for line in f]
     else:
-	lines = []
+        lines = []
 
     if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparison.png')):
          lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparison.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
     if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparisonNew.png')):
-	lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparisonNew.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
+         lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparisonNew.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
     if os.path.exists(os.path.join(path,'SpontStatisticsOverview.png')):
          lines.append({'parameters' : {}, 'file_name' : 'SpontStatisticsOverview.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
     if os.path.exists(os.path.join(path,'Orientation_responseL23.png')):
@@ -271,21 +271,21 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     for line in lines:
         r = line
-	if not re.match('.*\..*$',  r['file_name']):
-	    r['file_name'] +='.png'
+        if not re.match('.*\..*$',  r['file_name']):
+            r['file_name'] +='.png'
         r['code'] = r['class_name'][8:-2]
-	
-	if True:
-	    if r['code'] != '':
-		name = r['code'].split('.')[-1]
-		module_path = '.'.join(r['code'].split('.')[:-1])
-		doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-		p = {k:(r["parameters"][k],doc_par[k][0],doc_par[k][1]) if doc_par.has_key(k) else (r["parameters"][k],"","") for k in r["parameters"].keys()}
-	    else:
-		p=[]    
-	    r["parameters"] = p
+
+        if True:
+            if r['code'] != '':
+                name = r['code'].split('.')[-1]
+                module_path = '.'.join(r['code'].split('.')[:-1])
+                doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
+                p = {k:(r["parameters"][k],doc_par[k][0],doc_par[k][1]) if k in doc_par else (r["parameters"][k],"","") for k in r["parameters"].keys()}
+            else:
+                p=[]    
+            r["parameters"] = p
         r["name"] = r['file_name']
-        r["figure"] =   gfs.put(open(os.path.join(path,r['file_name']),'r'))
+        r["figure"] =   gfs.put(open(os.path.join(path,r['file_name']),'rb'))
         results.append(r)
 
     document = {
@@ -293,7 +293,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
         'run_date'        :     info["creation_data"],
         'simulation_run_name' : info["simulation_run_name"],
         'model_name' : info["model_name"],
-        'model_description' : info["model_docstring"] if info.has_key('model_docstring') else '',
+        'model_description' : info["model_docstring"] if 'model_docstring' in info else '',
         'results' : results,
         'stimuli' : stim_docs,
         'recorders' : recorders_docs,
@@ -306,7 +306,7 @@ assert len(sys.argv)>1 , "Not enough arguments, missing mozaik repository direct
 
 gfs,db = openMongoDB()
 
-if len(sys.argv) == 4:
+if len(sys.argv) == 5:
     d1 = createSimulationRunDocumentAndUploadImages(sys.argv[1],gfs)
     d2 = createSimulationRunDocumentAndUploadImages(sys.argv[2],gfs)
 
@@ -324,6 +324,11 @@ elif os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
 
     assert len(sys.argv)>2, """Missing simulation run argument. Usage: \n python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation """
 
+    if len(sys.argv) > 3:
+        simulation_name = sys.argv[3]
+    else:
+        simulation_name = sys.argv[1]
+
     master_results_dir = sys.argv[1]
 
     f = open(master_results_dir+'/parameter_combinations','rb')
@@ -336,10 +341,10 @@ elif os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
     simulation_runs = []
     working_combinations = []
     for i,combination in enumerate(combinations):
-        combination = dict([(x,y.decode('string_escape').decode('string_escape').replace("'", '') if type(y) == str else y) for x,y in combination.iteritems()])
+        combination = dict([(x,y.decode('string_escape').decode('string_escape').replace("'", '') if type(y) == str else y) for x,y in combination.items()])
 
         rdn = result_directory_name('ParameterSearch',sys.argv[2],combination)
-        print rdn
+        print(rdn)
         try:
             simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn),gfs))
             working_combinations.append(combination)        
@@ -349,7 +354,8 @@ elif os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
 
     document = {
             'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
-            'name' : master_results_dir,
+            'name' : simulation_name,
+            #'name' : master_results_dir,
             'simulation_runs' : simulation_runs,
             'parameter_combinations' : json.dumps(working_combinations)
     }
