@@ -31,6 +31,7 @@ import datetime
 import json
 import pickle
 import imageio
+from operator import itemgetter
 
 # hack for fast addition of results for developmental purposes
 FULL=False
@@ -231,6 +232,8 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     for f in os.listdir(path):
         if os.path.splitext(f)[1].lower() == ".png" and f not in [l["file_name"] for l in lines]:
             lines.append({'parameters' : {}, 'file_name' : f, 'class_name' : ''})
+
+    lines = sorted(lines, key=itemgetter('file_name'))
 
     for line in lines:
         r = line
