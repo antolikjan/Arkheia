@@ -245,10 +245,13 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
         if True:
             if r['code'] != '':
-                name = r['code'].split('.')[-1]
-                module_path = '.'.join(r['code'].split('.')[:-1])
-                doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-                p = {k:(r["parameters"][k],doc_par[k][0],doc_par[k][1]) if k in doc_par else (r["parameters"][k],"","") for k in r["parameters"].keys()}
+                try:
+                    name = r['code'].split('.')[-1]
+                    module_path = '.'.join(r['code'].split('.')[:-1])
+                    doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
+                    p = {k:(r["parameters"][k],doc_par[k][0],doc_par[k][1]) if k in doc_par else (r["parameters"][k],"","") for k in r["parameters"].keys()}
+                except ImportError:
+                    p=[]
             else:
                 p=[]    
             r["parameters"] = p
