@@ -31,6 +31,7 @@ import datetime
 import json
 import pickle
 import imageio
+from operator import itemgetter
 
 # hack for fast addition of results for developmental purposes
 FULL=False
@@ -222,66 +223,35 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     if os.path.exists(os.path.join(path,'results')):
         f = open(os.path.join(path,'results'),'r')
-	lines = list(set([line for line in f]))
-	lines = [eval(line) for line in lines]
+        lines = list(set([line for line in f]))
+        lines = [eval(line) for line in lines]
     else:
         lines = []
 
-    if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparison.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparison.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparisonNew.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparisonNew.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'SpontStatisticsOverview.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'SpontStatisticsOverview.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseL23.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseL4.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL4.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseInhL23.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseInhL23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseInh23.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseInh23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'MR.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'MR.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'MRReal.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'MRReal.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'aaa.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'aaa.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'bbb.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'bbb.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responsInheL4.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responsInheL4.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'GratingExcL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingExcL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'GratingInhL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingInhL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'GratingExcL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingExcL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'GratingInhL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingInhL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontExcL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontExcL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontInhL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontInhL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontExcL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontExcL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontInhL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontInhL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'NatExcL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'NatExcL4.png', 'class_name' : ''}) 
+    # Add all images not previously added (not in results file)
+    for f in os.listdir(path):
+        if os.path.splitext(f)[1].lower() == ".png" and f not in [l["file_name"] for l in lines]:
+            lines.append({'parameters' : {}, 'file_name' : f, 'class_name' : ''})
+
+    lines = sorted(lines, key=itemgetter('file_name'))
 
     for line in lines:
         r = line
+        if "Movie" in r['file_name']:
+            continue
         if not re.match('.*\..*$',  r['file_name']):
             r['file_name'] +='.png'
         r['code'] = r['class_name'][8:-2]
 
         if True:
             if r['code'] != '':
-                name = r['code'].split('.')[-1]
-                module_path = '.'.join(r['code'].split('.')[:-1])
-                doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
-                p = {k:(r["parameters"][k],doc_par[k][0],doc_par[k][1]) if k in doc_par else (r["parameters"][k],"","") for k in r["parameters"].keys()}
+                try:
+                    name = r['code'].split('.')[-1]
+                    module_path = '.'.join(r['code'].split('.')[:-1])
+                    doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
+                    p = {k:(r["parameters"][k],doc_par[k][0],doc_par[k][1]) if k in doc_par else (r["parameters"][k],"","") for k in r["parameters"].keys()}
+                except ImportError:
+                    p=[]
             else:
                 p=[]    
             r["parameters"] = p
