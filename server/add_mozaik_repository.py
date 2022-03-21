@@ -227,6 +227,11 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     else:
         lines = []
 
+    # Add all images not previously added (not in results file)
+    for f in os.listdir(path):
+        if os.path.splitext(f)[1].lower() == ".png" and f not in [l["file_name"] for l in lines]:
+            lines.append({'parameters' : {}, 'file_name' : f, 'class_name' : ''})
+
     for line in lines:
         r = line
         if not re.match('.*\..*$',  r['file_name']):
