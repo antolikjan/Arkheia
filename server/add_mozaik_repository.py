@@ -227,49 +227,6 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     else:
         lines = []
 
-    if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparison.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparison.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'TrialToTrialVariabilityComparisonNew.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'TrialToTrialVariabilityComparisonNew.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'SpontStatisticsOverview.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'SpontStatisticsOverview.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseL23.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseL4.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseL4.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseInhL23.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseInhL23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responseInh23.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responseInh23.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'MR.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'MR.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'MRReal.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'MRReal.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'aaa.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'aaa.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'bbb.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'bbb.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'Orientation_responsInheL4.png')):
-         lines.append({'parameters' : {}, 'file_name' : 'Orientation_responsInheL4.png', 'class_name' : ''}) #!!!!!!!!!!!!!!!!!
-    if os.path.exists(os.path.join(path,'GratingExcL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingExcL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'GratingInhL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingInhL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'GratingExcL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingExcL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'GratingInhL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'GratingInhL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontExcL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontExcL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontInhL23.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontInhL23.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontExcL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontExcL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'SpontInhL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'SpontInhL4.png', 'class_name' : ''}) 
-    if os.path.exists(os.path.join(path,'NatExcL4.png')):
-       lines.append({'parameters' : {}, 'file_name' : 'NatExcL4.png', 'class_name' : ''}) 
-
     for line in lines:
         r = line
         if not re.match('.*\..*$',  r['file_name']):
