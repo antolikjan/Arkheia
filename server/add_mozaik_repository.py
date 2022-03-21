@@ -222,8 +222,8 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     if os.path.exists(os.path.join(path,'results')):
         f = open(os.path.join(path,'results'),'r')
-	lines = list(set([line for line in f]))
-	lines = [eval(line) for line in lines]
+        lines = list(set([line for line in f]))
+        lines = [eval(line) for line in lines]
     else:
         lines = []
 
