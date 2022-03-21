@@ -237,6 +237,8 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
 
     for line in lines:
         r = line
+        if "Movie" in r['file_name']:
+            continue
         if not re.match('.*\..*$',  r['file_name']):
             r['file_name'] +='.png'
         r['code'] = r['class_name'][8:-2]
