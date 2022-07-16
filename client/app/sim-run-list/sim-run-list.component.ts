@@ -1,7 +1,7 @@
 'use strict';
 const angular = require('angular');
 const ngRoute = require('angular-route');
-const smartTable = require('angular-smart-table')
+const smartTable = require('angular-smart-table');
 const moment = require('moment');
 import routes from './sim-run-list.routes';
 
@@ -19,7 +19,7 @@ export class SimRunListComponent {
   }
 
   deleteRun(runId) {
-    console.log("deleting run with id: " + runId);
+    console.log('deleting run with id: ' + runId);
     // Delete the run from db
     this.$http.get('/api/simulation-runs/delete_run/' + runId);
     // Update the view
@@ -50,14 +50,14 @@ export class SimRunListComponent {
   }
 
   $onInit() {
-    console.log(this.search)
-    console.log(this.idd)
+    console.log(this.search);
+    console.log(this.idd);
 
-    console.log(this.search !== undefined)
-    console.log(this.idd !== undefined)
+    console.log(this.search !== undefined);
+    console.log(this.idd !== undefined);
 
     if (this.search !== undefined) {
-      console.log('Searcing for: ' + this.search)
+      console.log('Searcing for: ' + this.search);
       this.$http.get('/api/simulation-runs/' + this.search).then(response => {
         this.simulationRuns = response.data;
       });

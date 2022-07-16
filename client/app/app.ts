@@ -6,9 +6,9 @@ const ngSanitize = require('angular-sanitize');
 const ngRoute = require('angular-route');
 const uiBootstrap = require('angular-ui-bootstrap');
 require('showdown');
-require('angular-markdown-directive')
+require('angular-markdown-directive');
 
-import {routeConfig,markdownConfig} from './app.config';
+import { routeConfig, markdownConfig } from './app.config';
 
 import _Auth from '../components/auth/auth.module';
 import account from './account';
@@ -34,7 +34,7 @@ import './app.css';
 angular.module('arkheiaApp', [
   ngCookies,
   ngResource,
-  ngSanitize,  
+  ngSanitize,
   'btford.markdown',
   ngRoute,
   uiBootstrap,
@@ -57,12 +57,12 @@ angular.module('arkheiaApp', [
   constants,
   util
 ])
-  .config(routeConfig).config(['markdownConverterProvider',markdownConfig])
-  .run(function($rootScope, $location, Auth) {
+  .config(routeConfig).config(['markdownConverterProvider', markdownConfig])
+  .run(function ($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in
-    $rootScope.$on('$stateChangeStart', function(event, next) {
-      Auth.isLoggedIn(function(loggedIn) {
+    $rootScope.$on('$stateChangeStart', function (event, next) {
+      Auth.isLoggedIn(function (loggedIn) {
         if (next.authenticate && !loggedIn) {
           $location.path('/about');
         }

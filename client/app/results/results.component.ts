@@ -1,9 +1,9 @@
 'use strict';
 const angular = require('angular');
 const ngRoute = require('angular-route');
-const smartTable  = require('angular-smart-table')
+const smartTable = require('angular-smart-table');
 
-import {convertJsonToTree} from '../utility';
+import { convertJsonToTree } from '../utility';
 
 
 import '../../bower_components/angular-ui-tree/dist/angular-ui-tree.js';
@@ -36,8 +36,8 @@ export class ResultsComponent {
       ariaLabelledBy: 'modal-title-bottom',
       ariaDescribedBy: 'modal-body-bottom',
       template: require('../param-view/param-view.html'),
-      controllerAs : '$ctrl',
-      controller: function() {
+      controllerAs: '$ctrl',
+      controller: function () {
         this.data = data;
       }
     });
@@ -52,8 +52,7 @@ export class ResultsComponent {
     this.$http.get('/api/simulation-runs/result/' + this.resId).then(response => {
       this.simRun = response.data;
 
-      for (let res of this.simRun.results)
-      {
+      for (let res of this.simRun.results) {
         res.data = convertJsonToTree(res.parameters);
         this.images.push({
           'url': '/api/simulation-runs/images/' + res.figure._id

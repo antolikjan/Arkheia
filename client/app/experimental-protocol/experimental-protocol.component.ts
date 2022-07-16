@@ -2,7 +2,7 @@
 const angular = require('angular');
 const ngRoute = require('angular-route');
 
-import {convertJsonToTree} from '../utility';
+import { convertJsonToTree } from '../utility';
 import routes from './experimental-protocol.routes';
 
 export class ExperimentalProtocolComponent {
@@ -24,9 +24,9 @@ export class ExperimentalProtocolComponent {
       ariaLabelledBy: 'modal-title-bottom',
       ariaDescribedBy: 'modal-body-bottom',
       template: require('../param-view/param-view.html'),
-      controllerAs : '$ctrl',
-      controller: function() {
-        console.log(data)
+      controllerAs: '$ctrl',
+      controller: function () {
+        console.log(data);
         this.data = data;
       }
     });

@@ -1,7 +1,7 @@
 'use strict';
 const angular = require('angular');
 const ngRoute = require('angular-route');
-import {convertJsonToTree} from '../utility';
+import { convertJsonToTree } from '../utility';
 import '../../bower_components/angular-ui-tree/dist/angular-ui-tree.js';
 import '../../bower_components/angular-ui-tree/dist/angular-ui-tree.css';
 
@@ -23,7 +23,7 @@ export class ParamViewComponent {
   $onInit() {
     this.$http.get('/api/simulation-runs/result/' + this.resId).then(response => {
       this.simRun = response.data;
-      
+
       this.data = convertJsonToTree(JSON.parse(this.simRun.parameters));
       //JSON.parse
     });
@@ -32,7 +32,7 @@ export class ParamViewComponent {
 
 export default angular.module('mozaikRepositoryApp.param-view', [ngRoute, 'ui.tree'])
   .config(routes)
-  .config(function(treeConfig) {
+  .config(function (treeConfig) {
     treeConfig.defaultCollapsed = true; // collapse nodes by default
   })
   .component('paramView', {

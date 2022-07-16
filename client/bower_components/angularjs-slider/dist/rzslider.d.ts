@@ -2,13 +2,13 @@
  * Typescript type definition file.
  */
 
-import * as angular from "angular";
+// import * as angular from 'angular';
 
-declare module "angular" {
+declare module 'angular' {
     export namespace RzSlider {
-        type RzLabelType = "model"|"high"|"floor"|"ceil"|"tick-value";
-        type RzPointerType = "min"|"max";
-        type RzCallback = (id: string, modelValue: number, highValue: number, pointerType: "min"|"max") => void;
+        type RzLabelType = 'model' | 'high' | 'floor' | 'ceil' | 'tick-value';
+        type RzPointerType = 'min' | 'max';
+        type RzCallback = (id: string, modelValue: number, highValue: number, pointerType: 'min' | 'max') => void;
         type RzTranslate = (value: number, sliderId: string, label: RzLabelType) => string;
 
         /** RZ slider options typing */
@@ -29,9 +29,9 @@ declare module "angular" {
              * Object(defaults to null): Has two _Number_ properties, _from_ and _to_ that determine
              * the bounds of an area that is not authorized for values. _Applies to range slider only._
              */
-            restrictedRange?: { from: number, to: number } | Array<{from: number, to: number}>;
+            restrictedRange?: { from: number, to: number } | Array<{ from: number, to: number }>;
             /** Number (defaults to null): The minimum range authorized on the slider. Applies to range slider only. Can also use an array.*/
-            skipRestrictedRangesWithArrowKeys?: boolean
+            skipRestrictedRangesWithArrowKeys?: boolean;
             /** Set to true to skip restricted ranges with arrow keys. */
             minRange?: number;
             /** Number (defaults to null): The maximum range authorized on the slider. Applies to range slider only. */
@@ -77,7 +77,7 @@ declare module "angular" {
              * {value: 10, legend: 'Legend for 10'} // the display value will be 10 and a legend will be displayed under the corresponding tick.
              * ]
              */
-            stepsArray?: number[] | Array<{value: number; legend?: string}>;
+            stepsArray?: number[] | Array<{ value: number; legend?: string }>;
             /**
              * Boolean (defaults to false): Set to true to bind the index of the selected item to rz-slider-model and rz-slider-high.
              * (This was the default behavior prior to 4.0).
@@ -91,7 +91,8 @@ declare module "angular" {
             showSelectionBar?: boolean;
             /** Boolean (defaults to false): Set to true to always show the selection bar after the slider handle. */
             showSelectionBarEnd?: boolean;
-            /** Boolean (defaults to false): Only for range slider. Set to true to visualize in different colour the areas on the left/right (top/bottom for vertical range slider) of selection bar between the handles. */
+            /** Boolean (defaults to false): Only for range slider. Set to true to visualize in different colour the areas on the left/right (top/bottom for vertical range slider) of selection bar between
+             *  the handles. */
             showOuterSelectionBars?: boolean;
             /** Number (defaults to null): Set a number to draw the selection bar between this value and the slider handle. */
             showSelectionBarFromValue?: number;
@@ -110,7 +111,7 @@ declare module "angular" {
              * on a model value (either rzScopeModelor 'rzSliderHigh), you should use the argument passed to the function.
              * Indeed, when the function is called, there is no certainty that the model has already been updated.
              * To handle range slider pointers independently, you should evaluate pointerType within the given function
-             * where "min" stands for rzScopeModel and "max" for rzScopeHigh values.
+             * where 'min' stands for rzScopeModel and 'max' for rzScopeHigh values.
              */
             getPointerColor?: (value: number, pointerType: RzPointerType) => string;
             /** Boolean (defaults to false): Set to true to hide pointer labels */
@@ -133,17 +134,20 @@ declare module "angular" {
             showTicks?: boolean | number;
             /** Boolean or Number (defaults to false): Set to true to display a tick and the step value for each step of the slider. Set an integer to display ticks and the step value at intermediate positions. */
             showTicksValues?: boolean | number;
-            /** Array (defaults to null): Use to display ticks at specific positions. The array contains the index of the ticks that should be displayed. For example, [0, 1, 5] will display a tick for the first, second and sixth values. It also supports the { value: 0, legend: 'Bad' } format to display a legend for each tick. */
-            ticksArray?: number[] | Array<{value: number; legend?: string}>;
+            /** Array (defaults to null): Use to display ticks at specific positions. The array contains the index of the ticks that should be displayed. For example, [0, 1, 5] will display a tick for the first, second
+             * and sixth values. It also supports the { value: 0, legend: 'Bad' } format to display a legend for each tick. */
+            ticksArray?: number[] | Array<{ value: number; legend?: string }>;
             /** Function(value) (defaults to null): (requires angular-ui bootstrap) Used to display a tooltip when a tick is hovered. Set to a function that returns the tooltip content for a given value. */
             ticksTooltip?: (value: number) => string;
             /** Function(value) (defaults to null): Same as ticksTooltip but for ticks values. */
             ticksValuesTooltip?: (value: number) => string;
             /** Number (defaults to 1): If you display the slider in an element that uses transform: scale(0.5), set the scale value to 2 so that the slider is rendered properly and the events are handled correctly. */
             scale?: number;
-            /** Boolean (defaults to true): Set to true to force the value to be rounded to the step, even when modified from the outside.. When set to false, if the model values are modified from outside the slider, they are not rounded and can be between two steps. */
+            /** Boolean (defaults to true): Set to true to force the value to be rounded to the step, even when modified from the outside.. When set to false, if the model values are modified from outside the slider,
+             *  they are not rounded and can be between two steps. */
             enforceStep?: boolean;
-            /** Boolean (defaults to false): Set to true to round the rzSliderModel and rzSliderHigh to the slider range even when modified from outside the slider. When set to false, if the model values are modified from outside the slider, they are not rounded but they are still rendered properly on the slider. */
+            /** Boolean (defaults to false): Set to true to round the rzSliderModel and rzSliderHigh to the slider range even when modified from outside the slider. When set to false, if the model values are modified
+             *  from outside the slider, they are not rounded but they are still rendered properly on the slider. */
             enforceRange?: boolean;
             /** Boolean (defaults to false): Set to true to prevent to user from switching the min and max handles. Applies to range slider only. */
             noSwitching?: boolean;
@@ -151,11 +155,12 @@ declare module "angular" {
             onlyBindHandles?: boolean;
             /** Boolean (defaults to true): Set to true to keep the slider labels inside the slider bounds. */
             boundPointerLabels?: boolean;
-            /** Boolean (defaults to false): Set to true to merge the range labels if they are the same. For instance, if min and max are 50, the label will be "50 - 50" if mergeRangeLabelsIfSame: false, else "50". */
+            /** Boolean (defaults to false): Set to true to merge the range labels if they are the same. For instance, if min and max are 50, the label will be '50 - 50' if mergeRangeLabelsIfSame: false, else '50'. */
             mergeRangeLabelsIfSame?: boolean;
-            /** String (defaults to ' - '): Separator to use when the labels overlap. For instance, if min and max are -1 and 1, the label will be "-1 .. 1" if `labelOverlapSeparator: ' .. '`. */
+            /** String (defaults to ' - '): Separator to use when the labels overlap. For instance, if min and max are -1 and 1, the label will be '-1 .. 1' if `labelOverlapSeparator: ' .. '`. */
             labelOverlapSeparator?: string;
-            /** Function(sliderId, modelValue, highValue, pointerType): Function to be called when a slider update is started. If an id was set in the options, then it's passed to this callback. This callback is called before any update on the model. pointerType is either 'min' or 'max' depending on which handle is used. */
+            /** Function(sliderId, modelValue, highValue, pointerType): Function to be called when a slider update is started. If an id was set in the options, then it's passed to this callback. This callback is caled
+             *  before any update on the model. pointerType is either 'min' or 'max' depending on which handle is used. */
             onStart?: RzCallback;
             /**
              * Function to be called when rz-slider-model or rz-slider-high change. If an id was set in the options,
@@ -163,7 +168,8 @@ declare module "angular" {
              * on which handle is used.
              */
             onChange?: RzCallback;
-            /** Function(sliderId, modelValue, highValue, pointerType): Function to be called when a slider update is ended. If an id was set in the options, then it's passed to this callback. pointerType is either 'min' or 'max' depending on which handle is used. */
+            /** Function(sliderId, modelValue, highValue, pointerType): Function to be called when a slider update is ended. If an id was set in the options, then it's passed to this callback. pointerType is either
+             * 'min' or 'max' depending on which handle is used. */
             onEnd?: RzCallback;
             /** Boolean (defaults to false): Set to true to show graphs right to left. If vertical is true it will be from top to bottom and left / right arrow functions reversed. */
             rightToLeft?: boolean;
@@ -201,7 +207,7 @@ declare module "angular" {
             /** Function(percent, minVal, maxVal): value: Function that returns the value for a given position on the slider. The position is a percentage between 0 and 1. */
             customPositionToValue?: (percent: number, minVal: number, maxVal: number) => number;
             /** Object(default to null): Use to display the selection bar as a gradient. The given object must contain from and to properties which are colors. */
-            selectionBarGradient?: {from: string, to: string};
+            selectionBarGradient?: { from: string, to: string };
             /** String(default to null): Use to add a label directly to the slider(s) for accessibility. Adds the aria-label attribute. */
             ariaLabel?: string;
             /** String(default to null): Use to add a label directly to the slider(s) for accessibility. Adds the aria-label attribute. */

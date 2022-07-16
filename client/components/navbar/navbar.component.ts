@@ -12,12 +12,12 @@ export class NavbarComponent {
     'link': '/parameter-search'
   },
   {
-    'title' : 'About',
-    'link' : '/about'
+    'title': 'About',
+    'link': '/about'
   },
   {
-    'title' : 'Documentation',
-    'link' : '/documentation'
+    'title': 'Documentation',
+    'link': '/documentation'
   }
   ];
   $location;
@@ -25,11 +25,11 @@ export class NavbarComponent {
   isAdmin: Function;
   getCurrentUser: Function;
   isCollapsed = true;
-  search = "";
+  search = '';
 
-  execSearch(){
-    this.$location.path('/simsearch/' + this.search.replace(/\s+/g,'~'))
-    console.log(this.search.replace(/\s+/g,'~'))
+  execSearch() {
+    this.$location.path('/simsearch/' + this.search.replace(/\s+/g, '~'));
+    console.log(this.search.replace(/\s+/g, '~'));
   }
 
 

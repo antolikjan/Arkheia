@@ -12,10 +12,8 @@ export function routeConfig($routeProvider, $locationProvider) {
 
 export function markdownConfig(markdownConverter) {
   //'ngInject';
-  
   markdownConverter.config({
-  	'headerLevelStart' : 3,
-  	'literalMidWordUnderscores' : true,
-
+    'headerLevelStart': 3,
+    'literalMidWordUnderscores': true,
   });
 }
