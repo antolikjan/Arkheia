@@ -13,19 +13,27 @@ export class SimRunListComponent {
   search;
 
   /*@ngInject*/
-  constructor($http,$uibModal) {
+  constructor($http, $uibModal) {
     this.$http = $http;
     this.$uibModal = $uibModal;
   }
 
-  getSubmissionDate(row)
-  {
-    return moment(row.submission_date,'DD/MM/YYYY-HH:mm:ss').valueOf();
+  deleteRun(runId) {
+    console.log("deleting run with id: " + runId);
+    // Delete the run from db
+    this.$http.get('/api/simulation-runs/delete_run/' + runId);
+    // Update the view
+    this.$http.get('/api/simulation-runs').then(response => {
+      this.simulationRuns = response.data;
+    });
   }
 
-  getRunDate(row)
-  {
-    return moment(row.run_date,'DD/MM/YYYY-HH:mm:ss').valueOf();
+  getSubmissionDate(row) {
+    return moment(row.submission_date, 'DD/MM/YYYY-HH:mm:ss').valueOf();
+  }
+
+  getRunDate(row) {
+    return moment(row.run_date, 'DD/MM/YYYY-HH:mm:ss').valueOf();
   }
 
   descriptionModal(docstring) {
@@ -34,8 +42,8 @@ export class SimRunListComponent {
       ariaLabelledBy: 'modal-title-bottom',
       ariaDescribedBy: 'modal-body-bottom',
       template: '</div><div btf-markdown="$ctrl.docstring"></div>',
-      controllerAs : '$ctrl',
-      controller: function() {
+      controllerAs: '$ctrl',
+      controller: function () {
         this.docstring = docstring;
       }
     });
@@ -44,17 +52,16 @@ export class SimRunListComponent {
   $onInit() {
     console.log(this.search)
     console.log(this.idd)
-    
+
     console.log(this.search !== undefined)
     console.log(this.idd !== undefined)
-    
-    if (this.search !== undefined){
+
+    if (this.search !== undefined) {
       console.log('Searcing for: ' + this.search)
       this.$http.get('/api/simulation-runs/' + this.search).then(response => {
         this.simulationRuns = response.data;
       });
-    } else if (this.idd !== undefined)
-    {
+    } else if (this.idd !== undefined) {
       this.$http.get('/api/simulation-runs/param_search/' + this.idd).then(response => {
         this.simulationRuns = response.data.simulation_runs;
       });
@@ -67,14 +74,14 @@ export class SimRunListComponent {
 
 }
 
-export default angular.module('mozaikRepositoryApp.sim-run-list', [ngRoute,smartTable])
+export default angular.module('mozaikRepositoryApp.sim-run-list', [ngRoute, smartTable])
   .config(routes)
   .component('simRunList', {
     template: require('./sim-run-list.html'),
     controller: SimRunListComponent,
-    bindings : {
-      idd : '@',
-      search : '@'
+    bindings: {
+      idd: '@',
+      search: '@'
     }
     //controllerAs: 'simRunListCtrl'
   })
