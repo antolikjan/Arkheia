@@ -57,12 +57,18 @@ export function index(req, res) {
     var b = req.params.query.split("~")[1];
     query[a] = b;
   }
-  return SimulationRun.find(query).select("-results").exec().then(respondWithResult(res)).catch(handleError(res));
+  return SimulationRun.find(query)
+    .select("-results")
+    .exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 // Gets a single SimulationRun including with populated results from the DB
 export function download(req, res) {
-  return SimulationRun.findById(req.params.id).exec().then(packageDownload(res));
+  return SimulationRun.findById(req.params.id)
+    .exec()
+    .then(packageDownload(res));
 }
 
 export function result(req, res) {
@@ -106,10 +112,53 @@ export function paramSearch(req, res) {
     .catch(handleError(res));
 }
 
-export function deleteRun(req, res) {
-  SimulationRun.deleteOne({ _id: req.params.id })
+export async function deleteSimRun(req, res) {
+  if (req.params.id.includes("$")) {
+    var params = req.params.id.split("$");
+    var id = params[0];
+    var index = params[1];
+
+    const paramSearch = await ParameterSearch.findById(id)
+      .select("-simulation_runs.results.parameters")
+      .populate("simulation_runs.results.figure")
+      .exec();
+
+    var newSimulationRuns = paramSearch.simulation_runs
+    newSimulationRuns.splice(index, 1);
+
+    // update ParameterSearch db document to remove desired simulation run
+    await ParameterSearch.findOneAndUpdate(
+      { _id: id },
+      { "simulation_runs": newSimulationRuns }, // removes the run from simulation_runs array
+      function (err, result) {
+        if (err) {
+          res.send(err);
+        }
+        else {
+          res.send(result);
+        }
+      })
+  }
+  else {
+    var query = new Object();
+    const simRuns = await SimulationRun.find(query)
+      .select("-results")
+      .exec()
+
+    await SimulationRun.deleteOne({ _id: simRuns[req.params.id]._id })
+      .exec()
+      .then(handleEntityNotFound(res))
+      .then(respondWithResult(res))
+      .catch(handleError(res));
+  }
+};
+
+
+export async function deleteParamSearch(req, res) {
+  await ParameterSearch.deleteOne({ _id: req.params.id })
     .exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
+

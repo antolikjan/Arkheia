@@ -8,6 +8,7 @@
 	  <th tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">Model name</th>
 	  <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect individual runs of the parameter search.">View individual runs</th>
 	  <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to perform parameter dependent interactive inspection of the paramter search results.">Inspect results</th>
+	  <th tooltip-append-to-body="true" uib-tooltip="Click the 'cross' icon to delete the parameter search run.">Delete results</th>
 	</thead>
 	<tbody>
 	  <tr ng-repeat="ps in $ctrl.parameterSearches">
@@ -23,6 +24,11 @@
 	    <td>
 	        <a href="/param-search-inspect/{{ps._id}}" class="btn  btn-sm">
 	          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+	        </a>
+	    </td>
+		<td>
+	        <a ng-click="$ctrl.deleteParamSearch(ps._id)" class="btn  btn-sm">
+	          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 	        </a>
 	    </td>
 	  </tr>

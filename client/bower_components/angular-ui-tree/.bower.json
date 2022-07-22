@@ -58,6 +58,5 @@
   },
   "_source": "https://github.com/JimLiu/angular-ui-tree.git",
   "_target": "^2.22.6",
-  "_originalSource": "angular-ui-tree",
-  "_direct": true
+  "_originalSource": "angular-ui-tree"
 }
