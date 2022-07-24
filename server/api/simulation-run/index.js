@@ -22,5 +22,7 @@ router.get('/delete_simrun/:id', controller.deleteSimRun);
 router.get('/delete_parameter_search/:id', controller.deleteParamSearch)
 router.get('/:query', controller.index);
 
+router.get('/insert_repository/:file_name/:simrun_name', controller.insertSimrunsToDb)
+
 
 module.exports = router;

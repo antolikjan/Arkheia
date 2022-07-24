@@ -64,40 +64,41 @@
   </thead>
   <tbody>
     <!-- <tr ng-repeat="simrun in simruns"> -->
-    <tr ng-repeat="n in [].constructor(simruns.length) track by $index">
-      <td>{{$ctrl.getSubmissionDate(simruns[$index]) | date : 'dd-MM-yy H:m'}}</td>
-      <td>{{$ctrl.getRunDate(simruns[$index]) | date : 'dd-MM-yy H:m'}}</td>
-      <td>{{simruns[$index].simulation_run_name}}</td>
-      <td>{{simruns[$index].model_name}}</td>
+    <!-- <tr ng-repeat="n in [].constructor(simruns.length) track by $index"> -->
+    <tr ng-repeat="simrun in simruns track by $index">
+      <td>{{$ctrl.getSubmissionDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
+      <td>{{$ctrl.getRunDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
+      <td>{{simrun.simulation_run_name}}</td>
+      <td>{{simrun.model_name}}</td>
       <td>
-        <a ng-click="$ctrl.descriptionModal(simruns[$index].model_description)" class="btn btn">
+        <a ng-click="$ctrl.descriptionModal(simrun.model_description)" class="btn btn">
           <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
         </a>
       </td>
       <td>
-        <a href="/param-view/{{simruns[$index]._id}}" class="btn btn">
+        <a href="/param-view/{{simrun._id}}" class="btn btn">
           <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
         </a>
       </td>
       <td>
-        <a href="/stimuli/{{simruns[$index]._id}}" class="btn btn">
+        <a href="/stimuli/{{simrun._id}}" class="btn btn">
           <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
         </a>
       </td>
       <td>
-        <a href="/experimental-protocol/{{simruns[$index]._id}}" class="btn btn">
+        <a href="/experimental-protocol/{{simrun._id}}" class="btn btn">
           <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
         </a>
       </td>
       <td>
-        <a href="/results/{{simruns[$index]._id}}" class="btn btn">
+        <a href="/results/{{simrun._id}}" class="btn btn">
           <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
         </a>
       </td>
       <td>
-        <a ng-click="$ctrl.download(simruns[$index]._id)" class="btn
+        <a ng-click="$ctrl.download(simrun._id)" class="btn
   btn-success">
-          <a ng-href="/api/simulation-runs/download/{{simruns[$index]._id}}" class="btn btn" target="_blank">
+          <a ng-href="/api/simulation-runs/download/{{simrun._id}}" class="btn btn" target="_blank">
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </a>
       </td>

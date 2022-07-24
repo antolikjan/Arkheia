@@ -49,6 +49,7 @@ export class SimRunListComponent {
   }
 
   descriptionModal(docstring) {
+    console.log(docstring);
     this.$uibModal.open({
       animation: true,
       ariaLabelledBy: "modal-title-bottom",

@@ -3,10 +3,12 @@
 "use strict";
 import { ParameterSearch, SimulationRun, Configuration } from "./simulation-run.model";
 import mongoose from "mongoose";
+const {spawn} = require('child_process');
 
 var JSZip = require("jszip");
 var Grid = require("gridfs-stream");
 var gfs = Grid(mongoose.connection.db, mongoose.mongo);
+var axios = require("axios");
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -161,4 +163,36 @@ export async function deleteParamSearch(req, res) {
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
+
+
+export async function insertSimrunsToDb(req, res) {
+
+   
+  if (!req.params["file_name"]) {
+    res.send("No file name provided");
+    return
+  }
+
+  if (!req.params["simrun_name"]) {
+    res.send("No simulation run name provided");
+    return
+  }
+
+  axios({
+    method: 'post',
+    url: "http://localhost:8080/insertRepository",
+    data: {
+      "file_name": req.params["file_name"],
+      "simrun_name": req.params["simrun_name"]
+    }
+  })
+  .then(function (response) {
+    res.status(200).send(response.data);
+  })
+  .catch(function (error) {
+    console.log(error);
+    res.status(400).send(error);
+  });
+}
+
 

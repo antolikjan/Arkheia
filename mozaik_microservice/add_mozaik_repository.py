@@ -13,8 +13,6 @@ if adding parameter search:
 python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation
 """
 import numpy
-from pymongo import MongoClient
-import gridfs
 from sphinx.util.docstrings import prepare_docstring
 from pyNN.random import RandomDistribution
 from mozaik.tools.distribution_parametrization import MozaikExtendedParameterSet, load_parameters,PyNNDistribution
@@ -32,6 +30,8 @@ import json
 import pickle
 import imageio
 from operator import itemgetter
+import mongodb_client
+import asyncio
 
 # hack for fast addition of results for developmental purposes
 FULL=False
@@ -122,18 +122,8 @@ class ParametersEncoder(json.JSONEncoder):
             
             return json.JSONEncoder.default(self, obj)
 
-def openMongoDB():
-    #### MONGODB STUFF #######
-    #client = MongoClient(host='165.22.80.43')   #DigitalOcean work Arkheia 
-    #client = MongoClient(host='68.183.219.26') #Cortical Prosthesis
-    client = MongoClient(host='localhost')
-    db = client["arkheia-dev"]
-    #db = client["arkheia"]
-    gfs = gridfs.GridFS(db)
-    return gfs,db
 
-
-def createSimulationRunDocumentAndUploadImages(path,gfs):
+def createSimulationRunDocumentAndUploadImages(path):
     print(path)
     #lets get parameters
     param = load_parameters(os.path.join(path,'parameters'),{})
@@ -165,7 +155,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
                     'params' : params,
                     'short_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["short_description"],
                     'long_description' : parse_docstring(getattr(__import__(sidd.module_path, globals(), locals(), sidd.name),sidd.name).__doc__)["long_description"],
-                    'gif'    : gfs.put(open('movie.gif','r')),
+                    'gif'    : mongodb_client.gfs.put(open('movie.gif','r')),
                     })
 
         #### EXPERIMENTAL PROTOCOLS ########
@@ -256,7 +246,7 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
                 p=[]    
             r["parameters"] = p
         r["name"] = r['file_name']
-        r["figure"] =   gfs.put(open(os.path.join(path,r['file_name']),'rb'))
+        r["figure"] = mongodb_client.gfs.put(open(os.path.join(path,r['file_name']),'rb'))
         results.append(r)
 
     document = {
@@ -273,64 +263,68 @@ def createSimulationRunDocumentAndUploadImages(path,gfs):
     }
     return document
 
-assert len(sys.argv)>1 , "Not enough arguments, missing mozaik repository directory. Usage:\npython add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory\n\nor\n\npython add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation"
 
-gfs,db = openMongoDB()
+async def insertMozaikRepository(file_path, simrun_name=None):
+    # assert len(sys.argv)>1 , "Not enough arguments, missing mozaik repository directory. Usage:\npython add_mozaik_repository.py path_to_mozaik_simulation_run_output_directory\n\nor\n\npython add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation"
 
-if len(sys.argv) == 5:
-    d1 = createSimulationRunDocumentAndUploadImages(sys.argv[1],gfs)
-    d2 = createSimulationRunDocumentAndUploadImages(sys.argv[2],gfs)
+    if os.path.exists(os.path.join(file_path, 'parameter_combinations')) and simrun_name is not None: # file_path
 
-    assert d1['simulation_run_name'] == d2['simulation_run_name']
-    assert d1['model_name'] == d2['model_name']
+        # assert len(sys.argv) > 2, """Missing simulation run argument. Usage: \n python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation """
 
-    d1['results'] = d1['results'] + d2['results']
-    d1['stimuli'] = d1['stimuli'] + d2['stimuli']
-    d1['recorders'] = d1['recorders'] + d2['recorders']
-    d1['experimental_protocols'] = d1['experimental_protocols'] + d2['experimental_protocols']
+    
+        simulation_name = simrun_name # sys.argv[1]
 
-    db.submissions.insert_one(d1)
+        master_results_dir = file_path # sys.argv[1]
 
-elif os.path.exists(os.path.join(sys.argv[1],'parameter_combinations')):
+        f = open(master_results_dir+'/parameter_combinations','rb')
+        combinations = pickle.load(f)
+        f.close()
+            
+        # first check whether all parameter combinations contain the same parameter names
+        assert len(set([tuple(set(comb.keys())) for comb in combinations])) == 1 , "The parameter search didn't occur over a fixed set of parameters"
 
-    assert len(sys.argv)>2, """Missing simulation run argument. Usage: \n python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation """
+        simulation_runs = []
+        working_combinations = []
+        for i,combination in enumerate(combinations):
+            combination = dict([(x,y.decode('string_escape').decode('string_escape').replace("'", '') if type(y) == str else y) for x,y in combination.items()])
 
-    if len(sys.argv) > 3:
-        simulation_name = sys.argv[3]
+            rdn = result_directory_name('ParameterSearch', simulation_name, combination)
+            print(rdn)
+            try:
+                simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn)))
+                working_combinations.append(combination)        
+            except Exception as e:
+                print("WARRNING, error in: >> " + rdn + ".\n Error:" + str(e))
+
+
+        document = {
+                'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
+                'name' : simulation_name,
+                # 'name' : master_results_dir,
+                'simulation_runs' : simulation_runs,
+                'parameter_combinations' : json.dumps(working_combinations)
+        }
+
+        mongodb_client.mongo_client.parameterSearchRuns.insert_one(document)
+        return "Successfully inserted {} into the database1".format(simrun_name)
+
     else:
-        simulation_name = sys.argv[1]
-
-    master_results_dir = sys.argv[1]
-
-    f = open(master_results_dir+'/parameter_combinations','rb')
-    combinations = pickle.load(f)
-    f.close()
-        
-    # first check whether all parameter combinations contain the same parameter names
-    assert len(set([tuple(set(comb.keys())) for comb in combinations])) == 1 , "The parameter search didn't occur over a fixed set of parameters"
-
-    simulation_runs = []
-    working_combinations = []
-    for i,combination in enumerate(combinations):
-        combination = dict([(x,y.decode('string_escape').decode('string_escape').replace("'", '') if type(y) == str else y) for x,y in combination.items()])
-
-        rdn = result_directory_name('ParameterSearch',sys.argv[2],combination)
-        print(rdn)
-        try:
-            simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn),gfs))
-            working_combinations.append(combination)        
-        except Exception as e:
-            print("WARRNING, error in: >> " + rdn + ".\n Error:" + str(e))
+        mongodb_client.mongo_client.submissions.insert_one(createSimulationRunDocumentAndUploadImages(file_path))
+        return "Successfully inserted {} into the database2".format(simrun_name)
 
 
-    document = {
-            'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
-            'name' : simulation_name,
-            #'name' : master_results_dir,
-            'simulation_runs' : simulation_runs,
-            'parameter_combinations' : json.dumps(working_combinations)
-    }
+async def mergeAndInsertMozaikRepositories(file_path1, file_path2):
+        d1 = createSimulationRunDocumentAndUploadImages(file_path1)
+        d2 = createSimulationRunDocumentAndUploadImages(file_path2)
 
-    db.parameterSearchRuns.insert_one(document)
-else:
-    db.submissions.insert_one(createSimulationRunDocumentAndUploadImages(sys.argv[1],gfs))
+        assert d1['simulation_run_name'] == d2['simulation_run_name']
+        assert d1['model_name'] == d2['model_name']
+
+        d1['results'] = d1['results'] + d2['results']
+        d1['stimuli'] = d1['stimuli'] + d2['stimuli']
+        d1['recorders'] = d1['recorders'] + d2['recorders']
+        d1['experimental_protocols'] = d1['experimental_protocols'] + d2['experimental_protocols']
+
+        mongodb_client.mongo_client.submissions.insert_one(d1)
+
+        # return "Successfully inserted {} into the database".format(simrun_name)
