@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import gridfs
 
-gfs, mongo_client = None, None
+gfs, mongo_client, client = None, None, None
 
 def openMongoDB():
     global gfs
@@ -13,3 +13,12 @@ def openMongoDB():
     mongo_client = client["arkheia-dev"]
     #db = client["arkheia"]
     gfs = gridfs.GridFS(mongo_client)
+
+
+def closeMongoDB():
+    global client
+    if client:
+        global gfs
+        global mongo_client
+        client.close()
+        gfs, mongo_client, client = None, None, None

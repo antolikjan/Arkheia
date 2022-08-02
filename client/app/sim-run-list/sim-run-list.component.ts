@@ -11,6 +11,7 @@ export class SimRunListComponent {
   simulationRuns = [];
   idd;
   search;
+  file_path;
 
   /*@ngInject*/
   constructor($http, $uibModal) {
@@ -59,6 +60,12 @@ export class SimRunListComponent {
       controller: function () {
         this.docstring = docstring;
       },
+    });
+  }
+
+  insertSimrun() {
+    this.$http.post("/api/simulation-runs/insert_repository", { file_name: this.file_path }).then((response) => {
+      this.simulationRuns = response.data;
     });
   }
 

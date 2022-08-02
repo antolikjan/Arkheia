@@ -1,55 +1,46 @@
-import http.server
-import socketserver
-import simplejson
-from mongodb_client import openMongoDB
+from klein import run, route
+import json
+from mongodb_client import openMongoDB, closeMongoDB
 from add_mozaik_repository import insertMozaikRepository, mergeAndInsertMozaikRepositories
 
-class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
-    def do_POST(self):
-        if self.path == '/insertRepository':
-            try:
-      
-            
-                self.data_string = self.rfile.read(int(self.headers['Content-Length']))
+
+@route('/')
+def home(request):
+    return 'Hello, world!'
+
+@route("/insertRepository",  methods=['POST'])
+async def insertRepository(request):
+    content = json.loads(request.content.read())
+    
+    file_name = content["file_name"]
+    try:
+        paramsearch_name = content["paramsearch_name"]
+    except KeyError:
+        paramsearch_name = None
+
+    if paramsearch_name is None:
+        res = await insertMozaikRepository(file_name)
+    else:
+        res = await insertMozaikRepository(file_name, paramsearch_name)
+
+    return json.dumps(res)
 
 
-                data = simplejson.loads(self.data_string)
-                msg = "test"
+@route("/mergeAndInsertRepository",  methods=['POST'])
+async def mergeAndInsertRepository(request):
+    content = json.loads(request.content.read())
+    
+    file_name1 = content["file_name1"]
+    file_name2 = content["file_name2"]
 
-                file_name = data["file_name"]
-                simrun_name = data["simrun_name"]
+    res = await mergeAndInsertMozaikRepositories(file_name1, file_name2)
 
-                self.protocol_version = 'HTTP/1.1'
-                
-                if file_name == None or simrun_name == None:
-                    self.send_response(400)
+    return json.dumps(res)
 
-                self.send_response(200)
-
-                # self.send_header('Content-type','text/plain; charset=utf-8')
-                # self.send_header('Content-length', str(len(msg)))
-
-                
-                self.wfile.write(bytes(msg, "utf-8"))
-                self.end_headers()
-
-            except Exception as e:
-                self.send_error(400, "Bad Request: %s" % e)
-                self.end_headers()
-
-        return
-
-# Create an object of the above class
-handler_object = MyHttpRequestHandler
-
-PORT = 9001
 openMongoDB()
-my_server = socketserver.TCPServer(("", PORT), handler_object)
+print("Opened MongoDB connection.")
 
-print("Server is running at port:", PORT)
-# Star the server
-try:
-    my_server.serve_forever()
-except KeyboardInterrupt:
-    my_server.shutdown()
-    my_server.server_close()
+run("localhost", 8080)
+
+closeMongoDB()
+print("Closed MongoDB connection.")

@@ -3,7 +3,6 @@
 "use strict";
 import { ParameterSearch, SimulationRun, Configuration } from "./simulation-run.model";
 import mongoose from "mongoose";
-const {spawn} = require('child_process');
 
 var JSZip = require("jszip");
 var Grid = require("gridfs-stream");
@@ -165,34 +164,67 @@ export async function deleteParamSearch(req, res) {
 }
 
 
-export async function insertSimrunsToDb(req, res) {
-
-   
-  if (!req.params["file_name"]) {
-    res.send("No file name provided");
-    return
-  }
-
-  if (!req.params["simrun_name"]) {
-    res.send("No simulation run name provided");
-    return
+export function insertSimrunsToDb(req, res) {
+  if (!req.body.file_name) {
+    res.status(400).send("No file name provided");
+    return;
   }
 
   axios({
     method: 'post',
     url: "http://localhost:8080/insertRepository",
     data: {
-      "file_name": req.params["file_name"],
-      "simrun_name": req.params["simrun_name"]
+      "file_name": req.body.file_name,
+      "paramsearch_name": req.body.paramsearch_name
     }
   })
-  .then(function (response) {
-    res.status(200).send(response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-    res.status(400).send(error);
-  });
+    .then(async function (response) {
+      if (!req.body.paramsearch_name) {
+        SimulationRun.find()
+          .select("-results")
+          .exec()
+          .then(respondWithResult(res))
+          .catch(handleError(res));
+      }
+      else {
+        ParameterSearch.find()
+          .select("-simulation_runs.results")
+          .exec()
+          .then(respondWithResult(res))
+          .catch(handleError(res));
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      res.status(400).send(error);
+    });
 }
 
 
+export function mergeAndInsertSimrunsToDb(req, res) {
+  if (!req.params["file_name1"]) {
+    res.send("No file1 name provided");
+    return;
+  }
+
+  if (!req.params["file_name2"]) {
+    res.send("No file2 name provided");
+    return;
+  }
+
+  axios({
+    method: 'post',
+    url: "http://localhost:8080/mergeAndInsertRepository",
+    data: {
+      "file_name1": req.params["file_name1"],
+      "file_name2": req.params["file_name2"]
+    }
+  })
+    .then(function (response) {
+      res.status(200).send(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+      res.status(400).send(error);
+    });
+}

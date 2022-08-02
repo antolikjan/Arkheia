@@ -1,5 +1,14 @@
 <h1>Parameter search runs</h1>
-
+<div class="input-group">
+	<!-- <span style="margin-left:15px;"><b>Enter a path for a simrun directory to insert to the db:</b></span> -->
+	<label for="simrun-name">Enter parameter search name</label>
+	<input style="margin-left:15px; margin-right:5px;" type="text" ng-model="$ctrl.paramsearch_name" name="paramsearch-name"/>
+	<label for="file-path1">Enter path to parameter search directory</label>
+	<input style="margin-left:15px; margin-right:5px;" type="text" ng-model="$ctrl.file_path1" name="file-path1"/>
+	<label for="file-path2">(optional) Enter path to parameter search second directory</label>
+	<input style="margin-left:15px; margin-right:5px;" type="text" ng-model="$ctrl.file_path2" name="file-path2"/>
+	<button ng-click="$ctrl.insertParamSearch()">Insert</button>
+  </div>
 <table class="table table-striped">
 	<thead>
 	  <th tooltip-append-to-body="true" uib-tooltip="The date when the parameter search was submitted to the repository.">Submission date</th>
