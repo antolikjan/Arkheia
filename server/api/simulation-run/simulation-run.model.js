@@ -10,6 +10,7 @@ var ResultSchema = new mongoose.Schema({
 });
 
 var SimulationRunSchema = new mongoose.Schema({
+  visible: Boolean,
   submission_date: String,
   run_date: String,
   parameters: Object,
@@ -22,7 +23,7 @@ var SimulationRunSchema = new mongoose.Schema({
 var ParameterSearchSchema = new mongoose.Schema({
   submission_date: String,
   name: String,
-  simulation_runs: [SimulationRunSchema],
+  simulation_runs: Object,
   parameter_combinations: Object
 });
 

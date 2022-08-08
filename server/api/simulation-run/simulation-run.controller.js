@@ -58,6 +58,7 @@ export function index(req, res) {
     var b = req.params.query.split("~")[1];
     query[a] = b;
   }
+  query["visible"] = true; // TODO: Is this functional?
   return SimulationRun.find(query)
     .select("-results")
     .exec()
@@ -77,6 +78,16 @@ export function result(req, res) {
     .populate("results.figure")
     .exec()
     .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+export function getSimRunInfo(req, res) {
+  return SimulationRun.findById(req.params.id)
+    .select("-results")
+    .exec()
+    .then(handleEntityNotFound(res))
+    .catch(handleError(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -116,20 +127,24 @@ export function paramSearch(req, res) {
 export async function deleteSimRun(req, res) {
   if (req.params.id.includes("$")) {
     var params = req.params.id.split("$");
-    var id = params[0];
-    var index = params[1];
+    var idd = params[0];
+    var id = params[1];
 
-    const paramSearch = await ParameterSearch.findById(id)
+    var paramSearch = await ParameterSearch.findById(idd)
       .select("-simulation_runs.results.parameters")
       .populate("simulation_runs.results.figure")
       .exec();
+    var newSimulationRuns = paramSearch.simulation_runs.filter(function(el){return el != id});
 
-    var newSimulationRuns = paramSearch.simulation_runs
-    newSimulationRuns.splice(index, 1);
+    await SimulationRun.deleteOne({ _id: id })
+      .exec()
+      .then(handleEntityNotFound(res))
+      .catch(handleError(res));
+
 
     // update ParameterSearch db document to remove desired simulation run
     await ParameterSearch.findOneAndUpdate(
-      { _id: id },
+      { _id: idd },
       { "simulation_runs": newSimulationRuns }, // removes the run from simulation_runs array
       function (err, result) {
         if (err) {
@@ -141,12 +156,12 @@ export async function deleteSimRun(req, res) {
       })
   }
   else {
-    var query = new Object();
-    const simRuns = await SimulationRun.find(query)
-      .select("-results")
-      .exec()
+    // var query = new Object();
+    // const simRuns = await SimulationRun.find(query)
+    //   .select("-results")
+    //   .exec()
 
-    await SimulationRun.deleteOne({ _id: simRuns[req.params.id]._id })
+    await SimulationRun.deleteOne({ _id: req.params.id })
       .exec()
       .then(handleEntityNotFound(res))
       .then(respondWithResult(res))

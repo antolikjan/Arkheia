@@ -8,7 +8,7 @@ import routes from "./sim-run-list.routes";
 export class SimRunListComponent {
   $http;
   $uibModal;
-  simulationRuns = [];
+  simulationRuns = new Array();
   idd;
   search;
   file_path;
@@ -19,20 +19,25 @@ export class SimRunListComponent {
     this.$uibModal = $uibModal;
   }
 
-  deleteSimRun(runIdx) {
-    console.log("deleting run on position: " + runIdx);
+  deleteSimRun(id) {
+    console.log("deleting simulation run with an id: " + id);
 
     if (this.idd !== undefined) {
       // Delete the run from db
-      this.$http.get("/api/simulation-runs/delete_simrun/" + this.idd + "$" + runIdx).then((res) => {
+      this.$http.get("/api/simulation-runs/delete_simrun/" + this.idd + "$" + id).then((res) => {
         // Update the view
         this.$http.get("/api/simulation-runs/param_search/" + this.idd).then((response) => {
-          this.simulationRuns = response.data.simulation_runs;
+          this.simulationRuns = Array();
+          response.data.simulation_runs.forEach((id) => {
+            this.$http.get("/api/simulation-runs/simruninfo/" + id).then((res) => {
+              this.simulationRuns.push(res.data);
+            });
+          });
         });
       });
     } else {
       // Delete the run from db
-      this.$http.get("/api/simulation-runs/delete_simrun/" + runIdx).then((res) => {
+      this.$http.get("/api/simulation-runs/delete_simrun/" + id).then((res) => {
         // Update the view
         this.$http.get("/api/simulation-runs").then((response) => {
           this.simulationRuns = response.data;
@@ -70,11 +75,11 @@ export class SimRunListComponent {
   }
 
   $onInit() {
-    console.log(this.search);
-    console.log(this.idd);
+    // console.log(this.search);
+    // console.log(this.idd);
 
-    console.log(this.search !== undefined);
-    console.log(this.idd !== undefined);
+    // console.log(this.search !== undefined);
+    // console.log(this.idd !== undefined);
 
     if (this.search !== undefined) {
       console.log("Searcing for: " + this.search);
@@ -83,7 +88,11 @@ export class SimRunListComponent {
       });
     } else if (this.idd !== undefined) {
       this.$http.get("/api/simulation-runs/param_search/" + this.idd).then((response) => {
-        this.simulationRuns = response.data.simulation_runs;
+        response.data.simulation_runs.forEach((id) => {
+          this.$http.get("/api/simulation-runs/simruninfo/" + id).then((res) => {
+            this.simulationRuns.push(res.data);
+          });
+        });
       });
     } else {
       this.$http.get("/api/simulation-runs").then((response) => {

@@ -10,6 +10,8 @@ router.get('/result/:id', controller.result);
 router.get('/download/:id', controller.download);
 router.get('/images/:id', controller.getImage);
 
+router.get('/simruninfo/:id', controller.getSimRunInfo);
+
 router.get('/configuration', controller.getConfiguration);
 
 router.get('/param_search_list', controller.paramSearchList);

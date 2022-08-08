@@ -71,8 +71,7 @@ def parse_docstring(docstring):
 
         if len(lines) > 1:
             reminder = lines[1].strip()
-
-            params_returns_desc = None
+            # params_returns_desc = None
             match_parameters = PARAMETERS_REGEX.search(reminder)
             if match_parameters:
                 long_desc_end = match_parameters.start()
@@ -84,19 +83,19 @@ def parse_docstring(docstring):
             if match:
                end = match.start()
                if not match_parameters:
-                  long_description = reminder[:end].rstrip()   
+                  long_description = reminder[:end].rstrip()
                reminder = reminder[end:].strip()
 
             if reminder:
                 params = {}
-                    
+
                 for name, tpe, doc in PARAMETER_REGEX.findall(reminder):
                     params[name] = (tpe,doc)
 
             if (not match_parameters) and (not match):
                long_description = reminder
-                
-                
+
+
     return {
         "short_description": short_description,
         "long_description": long_description,
@@ -119,11 +118,11 @@ class ParametersEncoder(json.JSONEncoder):
             if isinstance(obj, ParameterDist) or isinstance(obj, PyNNDistribution) or isinstance(obj, RandomDistribution):
 
                 return str(obj)
-            
+
             return json.JSONEncoder.default(self, obj)
 
 
-def createSimulationRunDocumentAndUploadImages(path):
+def createSimulationRunDocumentAndUploadImages(path, visible):
     print(path)
     #lets get parameters
     param = load_parameters(os.path.join(path,'parameters'),{})
@@ -174,7 +173,7 @@ def createSimulationRunDocumentAndUploadImages(path):
                 'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
                 'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"],
                 })
-    
+
     ##### RECORDERS ###################
     recorders_docs = []
     for sh in param["sheets"].keys():
@@ -184,7 +183,7 @@ def createSimulationRunDocumentAndUploadImages(path):
             module_path = '.'.join(recorder["component"].split('.')[:-1])
             doc_par = get_params_from_docstring(getattr(__import__(module_path, globals(), locals(), name),name))
             p = {k:(recorder["params"][k],doc_par[k][0],doc_par[k][1]) for k in recorder["params"].keys()}
-            
+
             recorders_docs.append({
              'code' : module_path + '.' + name,
              'source' : sh,
@@ -193,13 +192,13 @@ def createSimulationRunDocumentAndUploadImages(path):
              'short_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["short_description"],
              'long_description' : parse_docstring(getattr(__import__(module_path, globals(), locals(), name),name).__doc__)["long_description"],
             })
-            
+
 
     # load basic info
 
     if os.path.exists(os.path.join(path,'info')):
         f = open(os.path.join(path,'info'),'r')
-        info = eval(f.read())        
+        info = eval(f.read())
     else:
         info={}
         info["creation_data"] = "????"
@@ -207,7 +206,7 @@ def createSimulationRunDocumentAndUploadImages(path):
         info["model_name"] = "??"
 
 
-    
+
     #let load up results
     results = []
 
@@ -243,18 +242,19 @@ def createSimulationRunDocumentAndUploadImages(path):
                 except ImportError:
                     p=[]
             else:
-                p=[]    
+                p=[]
             r["parameters"] = p
         r["name"] = r['file_name']
         r["figure"] = mongodb_client.gfs.put(open(os.path.join(path,r['file_name']),'rb'))
         results.append(r)
 
     document = {
+        'visible': visible,
         'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
         'run_date'        :     info["creation_data"],
         'simulation_run_name' : info["simulation_run_name"],
-        'model_name' : info["model_name"],
-        'model_description' : info["model_docstring"] if 'model_docstring' in info else '',
+        'model_name'          : info["model_name"],
+        'model_description'   : info["model_docstring"] if 'model_docstring' in info else '',
         'results' : results,
         'stimuli' : stim_docs,
         'recorders' : recorders_docs,
@@ -271,51 +271,53 @@ async def insertMozaikRepository(file_path, simrun_name=None):
 
         # assert len(sys.argv) > 2, """Missing simulation run argument. Usage: \n python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation """
 
-    
+
         simulation_name = simrun_name # sys.argv[1]
 
         master_results_dir = file_path # sys.argv[1]
 
-        f = open(master_results_dir+'/parameter_combinations','rb')
-        combinations = pickle.load(f)
-        f.close()
-            
+        file = open(master_results_dir+'/parameter_combinations','rb')
+        combinations = pickle.load(file)
+        file.close()
+
         # first check whether all parameter combinations contain the same parameter names
         assert len(set([tuple(set(comb.keys())) for comb in combinations])) == 1 , "The parameter search didn't occur over a fixed set of parameters"
 
         simulation_runs = []
         working_combinations = []
-        for i,combination in enumerate(combinations):
+        for _, combination in enumerate(combinations):
             combination = dict([(x,y.decode('string_escape').decode('string_escape').replace("'", '') if type(y) == str else y) for x,y in combination.items()])
 
             rdn = result_directory_name('ParameterSearch', simulation_name, combination)
             print(rdn)
             try:
-                simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn)))
-                working_combinations.append(combination)        
-            except Exception as e:
-                print("WARRNING, error in: >> " + rdn + ".\n Error:" + str(e))
+                # simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn)))
+                simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn), visible=False))
+                # TODO: Does this work just like ^^
+                working_combinations.append(combination)
+            except Exception as error:
+                print("WARRNING, error in: >> " + rdn + ".\n Error:" + str(error))
 
-
+        simulation_runs_relation = mongodb_client.mongo_client.submissions.insert_many(simulation_runs)
         document = {
-                'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
-                'name' : simulation_name,
-                # 'name' : master_results_dir,
-                'simulation_runs' : simulation_runs,
-                'parameter_combinations' : json.dumps(working_combinations)
+            'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
+            'name' : simulation_name,
+            # 'name' : master_results_dir,
+            'simulation_runs' : simulation_runs_relation.inserted_ids,
+            'parameter_combinations' : json.dumps(working_combinations)
         }
 
         mongodb_client.mongo_client.parameterSearchRuns.insert_one(document)
-        return "Successfully inserted {} into the database1".format(simrun_name)
+        return "Successfully inserted {} into the parameter search runs db".format(simrun_name)
 
     else:
-        mongodb_client.mongo_client.submissions.insert_one(createSimulationRunDocumentAndUploadImages(file_path))
-        return "Successfully inserted {} into the database2".format(simrun_name)
+        mongodb_client.mongo_client.submissions.insert_one(createSimulationRunDocumentAndUploadImages(file_path, visible=True))
+        return "Successfully inserted {} into the subbmisions db".format(simrun_name)
 
 
 async def mergeAndInsertMozaikRepositories(file_path1, file_path2):
-        d1 = createSimulationRunDocumentAndUploadImages(file_path1)
-        d2 = createSimulationRunDocumentAndUploadImages(file_path2)
+        d1 = createSimulationRunDocumentAndUploadImages(file_path1, visible=True)
+        d2 = createSimulationRunDocumentAndUploadImages(file_path2, visible=True)
 
         assert d1['simulation_run_name'] == d2['simulation_run_name']
         assert d1['model_name'] == d2['model_name']
@@ -327,4 +329,4 @@ async def mergeAndInsertMozaikRepositories(file_path1, file_path2):
 
         mongodb_client.mongo_client.submissions.insert_one(d1)
 
-        # return "Successfully inserted {} into the database".format(simrun_name)
+        return "Successfully inserted {} into the subbmisions db".format(d1['simulation_run_name'])

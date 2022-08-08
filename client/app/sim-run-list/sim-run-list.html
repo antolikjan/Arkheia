@@ -69,7 +69,7 @@
   <tbody>
     <!-- <tr ng-repeat="simrun in simruns"> -->
     <!-- <tr ng-repeat="n in [].constructor(simruns.length) track by $index"> -->
-    <tr ng-repeat="simrun in simruns track by $index">
+    <tr ng-repeat="simrun in simruns">
       <td>{{$ctrl.getSubmissionDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
       <td>{{$ctrl.getRunDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
       <td>{{simrun.simulation_run_name}}</td>
@@ -107,7 +107,7 @@
           </a>
       </td>
       <td>
-        <a ng-click="$ctrl.deleteSimRun($index)" class="btn btn" target="_blank">
+        <a ng-click="$ctrl.deleteSimRun(simrun._id)" class="btn btn" target="_blank">
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
       </td>

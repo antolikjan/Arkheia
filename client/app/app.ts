@@ -1,11 +1,11 @@
 'use strict';
+require('showdown');
 const angular = require('angular');
 const ngCookies = require('angular-cookies');
 const ngResource = require('angular-resource');
 const ngSanitize = require('angular-sanitize');
 const ngRoute = require('angular-route');
 const uiBootstrap = require('angular-ui-bootstrap');
-require('showdown');
 require('angular-markdown-directive');
 
 import { routeConfig, markdownConfig } from './app.config';
