@@ -7,11 +7,24 @@
     type="text"
     ng-model="$ctrl.paramsearch_name"
     name="paramsearch-name"
+    ng-init="$ctrl.paramsearch_name ='SelfSustainedPushPull'"
   />
   <label for="file-path1">Enter path to parameter search directory</label>
-  <input style="margin-left: 15px; margin-right: 5px" type="text" ng-model="$ctrl.file_path1" name="file-path1" />
+  <input
+    style="margin-left: 15px; margin-right: 5px"
+    type="text"
+    ng-model="$ctrl.file_path1"
+    name="file-path1"
+    ng-init="$ctrl.file_path1 ='arkheia_example_data'"
+  />
   <label for="file-path2">(optional) Enter path to parameter search second directory</label>
-  <input style="margin-left: 15px; margin-right: 5px" type="text" ng-model="$ctrl.file_path2" name="file-path2" />
+  <input
+    style="margin-left: 15px; margin-right: 5px"
+    type="text"
+    ng-model="$ctrl.file_path2"
+    name="file-path2"
+    ng-init="$ctrl.file_path2 =''"
+  />
   <button ng-click="$ctrl.insertParamSearch()">Insert</button>
 </div>
 <table class="table table-striped">

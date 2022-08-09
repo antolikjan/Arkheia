@@ -58,7 +58,7 @@ export function index(req, res) {
     var b = req.params.query.split("~")[1];
     query[a] = b;
   }
-  query["visible"] = true; // TODO: Is this functional?
+  query["from_parameter_search"] = true; // TODO: Is this functional?
   return SimulationRun.find(query)
     .select("-results")
     .exec()
@@ -134,7 +134,7 @@ export async function deleteSimRun(req, res) {
       .select("-simulation_runs.results.parameters")
       .populate("simulation_runs.results.figure")
       .exec();
-    var newSimulationRuns = paramSearch.simulation_runs.filter(function(el){return el != id});
+    var newSimulationRuns = paramSearch.simulation_runs.filter(function (el) { return el != id });
 
     await SimulationRun.deleteOne({ _id: id })
       .exec()
@@ -171,11 +171,17 @@ export async function deleteSimRun(req, res) {
 
 
 export async function deleteParamSearch(req, res) {
-  await ParameterSearch.deleteOne({ _id: req.params.id })
+  var paramSearches = await ParameterSearch.findByIdAndRemove({ _id: req.params.id })
     .exec()
     .then(handleEntityNotFound(res))
-    .then(respondWithResult(res))
     .catch(handleError(res));
+
+  await paramSearches.simulation_runs.forEach(simrunID => {
+    SimulationRun.deleteOne({ _id: simrunID })
+      .exec()
+      .then(handleEntityNotFound(res))
+      .catch(handleError(res));
+  });
 }
 
 
@@ -229,7 +235,7 @@ export function mergeAndInsertSimrunsToDb(req, res) {
 
   axios({
     method: 'post',
-    url: "http://localhost:8080/mergeAndInsertRepository",
+    url: "http://localhost:8213/mergeAndInsertRepository",
     data: {
       "file_name1": req.params["file_name1"],
       "file_name2": req.params["file_name2"]

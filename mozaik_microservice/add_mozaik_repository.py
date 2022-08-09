@@ -13,7 +13,7 @@ if adding parameter search:
 python add_mozaik_repository.py path_to_mozaik_parameter_search_output_directory name_of_the_simulation
 """
 import numpy
-from sphinx.util.docstrings import prepare_docstring
+# from sphinx.util.docstrings import prepare_docstring
 from pyNN.random import RandomDistribution
 from mozaik.tools.distribution_parametrization import MozaikExtendedParameterSet, load_parameters,PyNNDistribution
 from mozaik.storage.datastore import *
@@ -31,7 +31,7 @@ import pickle
 import imageio
 from operator import itemgetter
 import mongodb_client
-import asyncio
+# import asyncio
 
 # hack for fast addition of results for developmental purposes
 FULL=False
@@ -122,7 +122,7 @@ class ParametersEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
-def createSimulationRunDocumentAndUploadImages(path, visible):
+def createSimulationRunDocumentAndUploadImages(path, from_parameter_search):
     print(path)
     #lets get parameters
     param = load_parameters(os.path.join(path,'parameters'),{})
@@ -249,7 +249,7 @@ def createSimulationRunDocumentAndUploadImages(path, visible):
         results.append(r)
 
     document = {
-        'visible': visible,
+        'from_parameter_search': from_parameter_search,
         'submission_date' :     datetime.datetime.now().strftime('%d/%m/%Y-%H:%M:%S'),
         'run_date'        :     info["creation_data"],
         'simulation_run_name' : info["simulation_run_name"],
@@ -292,7 +292,7 @@ async def insertMozaikRepository(file_path, simrun_name=None):
             print(rdn)
             try:
                 # simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn)))
-                simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn), visible=False))
+                simulation_runs.append(createSimulationRunDocumentAndUploadImages(os.path.join(master_results_dir,rdn), from_parameter_search=False))
                 # TODO: Does this work just like ^^
                 working_combinations.append(combination)
             except Exception as error:
@@ -311,13 +311,13 @@ async def insertMozaikRepository(file_path, simrun_name=None):
         return "Successfully inserted {} into the parameter search runs db".format(simrun_name)
 
     else:
-        mongodb_client.mongo_client.submissions.insert_one(createSimulationRunDocumentAndUploadImages(file_path, visible=True))
+        mongodb_client.mongo_client.submissions.insert_one(createSimulationRunDocumentAndUploadImages(file_path, from_parameter_search=True))
         return "Successfully inserted {} into the subbmisions db".format(simrun_name)
 
 
 async def mergeAndInsertMozaikRepositories(file_path1, file_path2):
-        d1 = createSimulationRunDocumentAndUploadImages(file_path1, visible=True)
-        d2 = createSimulationRunDocumentAndUploadImages(file_path2, visible=True)
+        d1 = createSimulationRunDocumentAndUploadImages(file_path1, from_parameter_search=True)
+        d2 = createSimulationRunDocumentAndUploadImages(file_path2, from_parameter_search=True)
 
         assert d1['simulation_run_name'] == d2['simulation_run_name']
         assert d1['model_name'] == d2['model_name']

@@ -11,7 +11,7 @@ def home(request):
 @route("/insertRepository",  methods=['POST'])
 async def insertRepository(request):
     content = json.loads(request.content.read())
-    
+
     file_name = content["file_name"]
     try:
         paramsearch_name = content["paramsearch_name"]
@@ -29,7 +29,7 @@ async def insertRepository(request):
 @route("/mergeAndInsertRepository",  methods=['POST'])
 async def mergeAndInsertRepository(request):
     content = json.loads(request.content.read())
-    
+
     file_name1 = content["file_name1"]
     file_name2 = content["file_name2"]
 
@@ -40,7 +40,7 @@ async def mergeAndInsertRepository(request):
 openMongoDB()
 print("Opened MongoDB connection.")
 
-run("localhost", 8080)
+run("localhost", 8213)
 
 closeMongoDB()
 print("Closed MongoDB connection.")

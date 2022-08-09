@@ -10,7 +10,7 @@ export class ParameterSearchComponent {
   file_path1;
   file_path2;
   paramsearch_name;
-  data = new Array();
+  data;
   $http;
 
   /*@ngInject*/
@@ -18,21 +18,24 @@ export class ParameterSearchComponent {
     this.$http = $http;
   }
 
-  // test(id) {
-  //   var abc;
-  //   this.$http.get("/api/simulation-runs/simruninfo/" + id).then((res) => {
-  //     abc = res.data;
-  //     console.log(abc)
-  //   });
-  //   return "TEST";
-  // }
-
   deleteParamSearch(id) {
     // Delete the parameter search from db
     this.$http.get("/api/simulation-runs/delete_parameter_search/" + id).then((res) => {
       // Update the view
       this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
         this.parameterSearches = response.data;
+      });
+    });
+  }
+
+  updateVIew() {
+    this.data = Array();
+    this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
+      this.parameterSearches = response.data;
+      this.parameterSearches.forEach((element) => {
+        this.$http.get("/api/simulation-runs/simruninfo/" + element["simulation_runs"][0]).then((res) => {
+          this.data.push([element, res.data]);
+        });
       });
     });
   }
@@ -45,15 +48,7 @@ export class ParameterSearchComponent {
           file_name2: this.file_path2,
         })
         .then((res) => {
-          this.data = Array();
-          this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
-            this.parameterSearches = response.data;
-            this.parameterSearches.forEach((element) => {
-              this.$http.get("/api/simulation-runs/simruninfo/" + element["simulation_runs"][0]).then((res) => {
-                this.data.push([element, res.data]);
-              });
-            });
-          });
+          this.updateVIew();
         });
     } else {
       this.$http
@@ -62,15 +57,7 @@ export class ParameterSearchComponent {
           paramsearch_name: this.paramsearch_name,
         })
         .then((res) => {
-          this.data = Array();
-          this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
-            this.parameterSearches = response.data;
-            this.parameterSearches.forEach((element) => {
-              this.$http.get("/api/simulation-runs/simruninfo/" + element["simulation_runs"][0]).then((res) => {
-                this.data.push([element, res.data]);
-              });
-            });
-          });
+          this.updateVIew();
         });
     }
   }
@@ -80,14 +67,7 @@ export class ParameterSearchComponent {
   }
 
   $onInit() {
-    this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
-      this.parameterSearches = response.data;
-      this.parameterSearches.forEach((element) => {
-        this.$http.get("/api/simulation-runs/simruninfo/" + element["simulation_runs"][0]).then((res) => {
-          this.data.push([element, res.data]);
-        });
-      });
-    });
+    this.updateVIew();
   }
 }
 
