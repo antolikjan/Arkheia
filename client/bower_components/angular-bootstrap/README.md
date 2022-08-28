@@ -5,21 +5,21 @@
 [![devDependency Status](https://david-dm.org/angular-ui/bootstrap/dev-status.svg?branch=master)](https://david-dm.org/angular-ui/bootstrap#info=devDependencies)
 
 ### Quick links
+
 - [Demo](#demo)
 - [Installation](#installation)
-    - [NPM](#install-with-npm)
-    - [Bower](#install-with-bower)
-    - [NuGet](#install-with-nuget)
-    - [Custom](#custom-build)
-    - [Manual](#manual-download)
+  - [NPM](#install-with-npm)
+  - [Bower](#install-with-bower)
+  - [NuGet](#install-with-nuget)
+  - [Custom](#custom-build)
+  - [Manual](#manual-download)
 - [Support](#support)
-    - [FAQ](#faq)
-    - [Supported browsers](#supported-browsers)
-    - [Need help?](#need-help)
-    - [Found a bug?](#found-a-bug)
+  - [FAQ](#faq)
+  - [Supported browsers](#supported-browsers)
+  - [Need help?](#need-help)
+  - [Found a bug?](#found-a-bug)
 - [Contributing to the project](#contributing-to-the-project)
 - [Development, meeting minutes, roadmap and more.](#development-meeting-minutes-roadmap-and-more)
-
 
 # Demo
 
@@ -39,13 +39,15 @@ $ npm install angular-ui-bootstrap
 This will install AngularJS and Bootstrap NPM packages.
 
 #### Install with Bower
+
 ```sh
 $ bower install angular-bootstrap
 ```
 
-Note: do not install 'angular-ui-bootstrap'.  A separate repository - [bootstrap-bower](https://github.com/angular-ui/bootstrap-bower) - hosts the compiled javascript file and bower.json.
+Note: do not install 'angular-ui-bootstrap'. A separate repository - [bootstrap-bower](https://github.com/angular-ui/bootstrap-bower) - hosts the compiled javascript file and bower.json.
 
 #### Install with NuGet
+
 To install AngularJS UI Bootstrap, run the following command in the Package Manager Console
 
 ```sh
@@ -54,7 +56,7 @@ PM> Install-Package Angular.UI.Bootstrap
 
 #### Custom build
 
-Head over to http://angular-ui.github.io/bootstrap/ and hit the *Custom build* button to create your own custom UI Bootstrap build, just the way you like it.
+Head over to http://angular-ui.github.io/bootstrap/ and hit the _Custom build_ button to create your own custom UI Bootstrap build, just the way you like it.
 
 #### Manual download
 
@@ -67,15 +69,15 @@ Don't worry, if you are not sure which file to take, opt for `ui-bootstrap-tpls-
 When you are done downloading all the dependencies and project files the only remaining part is to add dependencies on the `ui.bootstrap` AngularJS module:
 
 ```js
-angular.module('myModule', ['ui.bootstrap']);
+angular.module("myModule", ["ui.bootstrap"]);
 ```
 
 If you're a Browserify or Webpack user, you can do:
 
 ```js
-var uibs = require('angular-ui-bootstrap');
+var uibs = require("angular-ui-bootstrap");
 
-angular.module('myModule', [uibs]);
+angular.module("myModule", [uibs]);
 ```
 
 # Support
@@ -87,29 +89,29 @@ https://github.com/angular-ui/bootstrap/wiki/FAQ
 ## Supported browsers
 
 Directives from this repository are automatically tested with the following browsers:
-* Chrome (stable and canary channel)
-* Firefox
-* IE 9 and 10
-* Opera
-* Safari
+
+- Chrome (stable and canary channel)
+- Firefox
+- IE 9 and 10
+- Opera
+- Safari
 
 Modern mobile browsers should work without problems.
 
-
 ## Need help?
+
 Need help using UI Bootstrap?
 
-* Live help in the IRC (`#angularjs` channel at the `freenode` network). Use this [webchat](https://webchat.freenode.net/) or your own IRC client.
-* Ask a question in [StackOverflow](http://stackoverflow.com/) under the [angular-ui-bootstrap](http://stackoverflow.com/questions/tagged/angular-ui-bootstrap) tag.
+- Live help in the IRC (`#angularjs` channel at the `freenode` network). Use this [webchat](https://webchat.freenode.net/) or your own IRC client.
+- Ask a question in [StackOverflow](http://stackoverflow.com/) under the [angular-ui-bootstrap](http://stackoverflow.com/questions/tagged/angular-ui-bootstrap) tag.
 
 **Please do not create new issues in this repository to ask questions about using UI Bootstrap**
 
 ## Found a bug?
+
 Please take a look at [CONTRIBUTING.md](CONTRIBUTING.md#you-think-youve-found-a-bug) and submit your issue [here](https://github.com/angular-ui/bootstrap/issues/new).
 
-
-----
-
+---
 
 # Contributing to the project
 

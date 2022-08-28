@@ -1,29 +1,42 @@
 <div class="navbar navbar-default navbar-static-top topnav">
   <div class="container">
     <div class="navbar-header">
-      <a href="about" class='navbar-left'><img style="margin-top: 8px; height: 34px" src="./assets/images/raw-logo-clipped-white-full-name.svg" style="height:26px; padding-right:10px; "></a>
+      <a href="about" class="navbar-left"
+        ><img
+          style="margin-top: 8px; height: 34px"
+          src="./assets/images/raw-logo-clipped-white-full-name.svg"
+          style="height: 26px; padding-right: 10px"
+      /></a>
     </div>
     <div uib-collapse="$ctrl.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav navbar-right">
         <li ng-repeat="item in $ctrl.menu" ng-class="{active: $ctrl.isActive(item.link)}">
-            <a ng-href="{{item.link}}">{{item.title}}</a>
+          <a ng-href="{{item.link}}">{{item.title}}</a>
         </li>
         <li uib-dropdown on-toggle="toggled(open)" auto-close="outsideClick">
-              <a href id="search-dropdown" uib-dropdown-toggle>
-                <span class="glyphicon glyphicon-search"></span>
-              </a>
-              <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="search-dropdown" style="width: 400px; padding:  5px;">
-                <li>
-                  <form ui-keypress="{13:'$ctrl.execSearch($event)'}" ng-submit='$ctrl.execSearch()' ng-controler>
-                    <span tooltip-append-to-body="true" tooltip-placement="bottom" uib-tooltip="Enter '.' sepparated path to parameter followed by space and desired value.">Enter search string:</span>
-                    <input type="text" ng-model='$ctrl.search' style="width: 100%">
-                  </form>
-                </li>
-              </ul>
-          
+          <a href id="search-dropdown" uib-dropdown-toggle>
+            <span class="glyphicon glyphicon-search"></span>
+          </a>
+          <ul
+            class="dropdown-menu"
+            uib-dropdown-menu
+            aria-labelledby="search-dropdown"
+            style="width: 400px; padding: 5px"
+          >
+            <li>
+              <form ui-keypress="{13:'$ctrl.execSearch($event)'}" ng-submit="$ctrl.execSearch()" ng-controler>
+                <span
+                  tooltip-append-to-body="true"
+                  tooltip-placement="bottom"
+                  uib-tooltip="Enter '.' sepparated path to parameter followed by space and desired value."
+                  >Enter search string:</span
+                >
+                <input type="text" ng-model="$ctrl.search" style="width: 100%" />
+              </form>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
-    
   </div>
 </div>

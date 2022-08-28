@@ -1,20 +1,18 @@
-'use strict';
-const angular = require('angular');
-const ngRoute = require('angular-route');
+"use strict";
+const angular = require("angular");
+const ngRoute = require("angular-route");
 
-
-import routes from './documentation.routes';
+import routes from "./documentation.routes";
 
 export class DocumentationComponent {
   /*@ngInject*/
-  constructor() {
-  }
+  constructor() {}
 }
 
-export default angular.module('mozaikRepositoryApp.documentation', [ngRoute])
+export default angular
+  .module("mozaikRepositoryApp.documentation", [ngRoute])
   .config(routes)
-  .component('documentation', {
-    template: require('./documentation.html'),
+  .component("documentation", {
+    template: require("./documentation.html"),
     controller: DocumentationComponent,
-  })
-  .name;
+  }).name;

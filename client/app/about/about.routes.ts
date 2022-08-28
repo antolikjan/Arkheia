@@ -1,11 +1,12 @@
-'use strict';
+"use strict";
 
-export default function($routeProvider) {
-  'ngInject';
+export default function ($routeProvider) {
+  "ngInject";
   $routeProvider
-    .when('/about', {
-      template: '<about></about>'
-    }).when('/', {
-      template: '<about></about>'
+    .when("/about", {
+      template: "<about></about>",
+    })
+    .when("/", {
+      template: "<about></about>",
     });
 }

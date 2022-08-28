@@ -1,86 +1,85 @@
 .figure-display {
-	margin-left : 10px;
-	margin-right : 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .horizontal-scroll {
-	margin-left : 10px;
-	margin-right : 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-.btn-param-value.btn.active, .btn-param-value.btn:active {
-    background-color: #999999 !important;
-    border-color: #999999 !important;
+.btn-param-value.btn.active,
+.btn-param-value.btn:active {
+  background-color: #999999 !important;
+  border-color: #999999 !important;
 }
 
 .btn-param-name.btn {
-    background-color: #999999 !important;
-    border-color: #999999 !important;
+  background-color: #999999 !important;
+  border-color: #999999 !important;
 }
 
-.btn-param-name.btn.active, .btn-param-name.btn:active {
-    background-color: #f0ad4e !important;
-    border-color: #f0ad4e !important;
+.btn-param-name.btn.active,
+.btn-param-name.btn:active {
+  background-color: #f0ad4e !important;
+  border-color: #f0ad4e !important;
 }
-
 
 .tr-aligned {
-	width : 100%;
-	height:30px; 
-	overflow:hidden; 
-/*	display:block;*/
-	border-top: none !important;
+  width: 100%;
+  height: 30px;
+  overflow: hidden;
+  /*	display:block;*/
+  border-top: none !important;
 }
 
-param-search-inspect .btn-sm{
-	font-size:14px;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	margin:0px;
-} 
-
-param-search-inspect .img-thumbnail 
-{
-	padding:0px;
-	margin:0px;
-	/*width:300px;*/ 
-	/*height:300px;*/
- 	float:none;
+param-search-inspect .btn-sm {
+  font-size: 14px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin: 0px;
 }
 
-param-search-inspect .y-param-bar
-{
-	float:left;
-	max-width:30px; 
-	/*in-height:300px;
+param-search-inspect .img-thumbnail {
+  padding: 0px;
+  margin: 0px;
+  /*width:300px;*/
+  /*height:300px;*/
+  float: none;
+}
+
+param-search-inspect .y-param-bar {
+  float: left;
+  max-width: 30px;
+  /*in-height:300px;
 	max-height:300px;*/
-	background-color: #eeeeee;
-	width:100%;
-	height:300px;
-	display: inline-block;
-	margin:0px;
-	padding:0px;
-	/*transform: rotate(90deg);
+  background-color: #eeeeee;
+  width: 100%;
+  height: 300px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  /*transform: rotate(90deg);
 	transform-origin: left top 0;*/
 }
 param-search-inspect select {
-	float:left;
-	/*margin-top, margin-left, margin-right : 20px;*/
-	margin-left : 0px;
-	margin-right : 40px;
-	margin-bottom: 5px;
+  float: left;
+  /*margin-top, margin-left, margin-right : 20px;*/
+  margin-left: 0px;
+  margin-right: 40px;
+  margin-bottom: 5px;
 }
 
 param-search-inspect tr {
-	border-top: none !important;
-	margin: 0px;
-	padding:0px !important;
+  border-top: none !important;
+  margin: 0px;
+  padding: 0px !important;
 }
 
 param-search-inspect td {
-	border-top: none !important;
-	margin: 0px;
-	padding:0px !important;
+  border-top: none !important;
+  margin: 0px;
+  padding: 0px !important;
 }
 
 .rzslider {
@@ -88,19 +87,18 @@ param-search-inspect td {
 }
 
 param-search-inspect hr {
-	margin-top : 10px;
-	margin-bottom : 10px;
-	border-top : 3px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-top: 3px;
 }
-
 
 .rzslider .rz-pointer {
   top: -5px;
   width: 16px;
   height: 16px;
   -webkit-border-radius: 12px;
-     -moz-border-radius: 12px;
-          border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
 }
 
 .rzslider .rz-pointer:after {
@@ -108,7 +106,6 @@ param-search-inspect hr {
   top: 4px;
   left: 4px;
 }
-
 
 .rzslider .rz-bar-wrapper {
   left: 0;
@@ -126,28 +123,24 @@ param-search-inspect hr {
   color: #55637d;
   cursor: default;
   transition: all linear 0.3s;
-}s
-
-
-.noscrollbar::-webkit-scrollbar {
-    /*width: 0px;  
+}
+s .noscrollbar::-webkit-scrollbar {
+  /*width: 0px;  
     background: transparent;  */
-    display: none;
+  display: none;
 }
 
-
-
-.vertical-text  {
+.vertical-text {
   /* FF3.5+ */
-  -moz-transform: rotate(-90.0deg);
+  -moz-transform: rotate(-90deg);
   /* Opera 10.5 */
-  -o-transform: rotate(-90.0deg);
+  -o-transform: rotate(-90deg);
   /* Saf3.1+, Chrome */
-  -webkit-transform: rotate(-90.0deg);
+  -webkit-transform: rotate(-90deg);
   /* IE6,IE7 */
   filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=0.083);
   /* IE8 */
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
   /* Standard */
-  transform: rotate(-90.0deg);
+  transform: rotate(-90deg);
 }

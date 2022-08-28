@@ -7,14 +7,14 @@
 #   - /var/run/docker.sock:/tmp/docker.sock:ro
 #   - ~/certs:/etc/nginx/certs # "~/certs" needs to be created on host to store SSL certificates (if necessary)
 app:
-  image: antolikjan/arkheia
+  image: csng/arkheia
   links:
-   - db
+    - db
   ports:
-   - "80:8080" # change to whatever port is to be used
+    - "80:8080" # change to whatever port is to be used
   environment:
-   - MONGODB_URI=db:27017/arkheia
-   - NODE_ENV=production #development # production for staging
+    - MONGODB_URI=db:27017/arkheia
+    - NODE_ENV=production #development # production for staging
 db:
   image: mongo
   volumes:

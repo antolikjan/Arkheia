@@ -8,10 +8,7 @@
     "Stefan Mohr <https://github.com/StefanCodes>"
   ],
   "description": "Tree directive for AngularJS",
-  "main": [
-    "dist/angular-ui-tree.js",
-    "dist/angular-ui-tree.css"
-  ],
+  "main": ["dist/angular-ui-tree.js", "dist/angular-ui-tree.css"],
   "keywords": [
     "angular",
     "NestedSortable",

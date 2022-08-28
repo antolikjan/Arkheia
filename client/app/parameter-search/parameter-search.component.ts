@@ -20,24 +20,34 @@ export class ParameterSearchComponent {
 
   deleteParamSearch(id) {
     // Delete the parameter search from db
-    this.$http.get("/api/simulation-runs/delete_parameter_search/" + id).then((res) => {
-      // Update the view
-      this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
-        this.parameterSearches = response.data;
+    this.$http
+      .get("/api/simulation-runs/delete_parameter_search/" + id)
+      .then((res) => {
+        // Update the view
+        this.$http
+          .get("/api/simulation-runs/param_search_list")
+          .then((response) => {
+            this.parameterSearches = response.data;
+          });
       });
-    });
   }
 
   updateVIew() {
     this.data = Array();
-    this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
-      this.parameterSearches = response.data;
-      this.parameterSearches.forEach((element) => {
-        this.$http.get("/api/simulation-runs/simruninfo/" + element["simulation_runs"][0]).then((res) => {
-          this.data.push([element, res.data]);
+    this.$http
+      .get("/api/simulation-runs/param_search_list")
+      .then((response) => {
+        this.parameterSearches = response.data;
+        this.parameterSearches.forEach((element) => {
+          this.$http
+            .get(
+              "/api/simulation-runs/simruninfo/" + element["simulation_runs"][0]
+            )
+            .then((res) => {
+              this.data.push([element, res.data]);
+            });
         });
       });
-    });
   }
 
   insertParamSearch() {

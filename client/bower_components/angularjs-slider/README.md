@@ -61,11 +61,11 @@ For instance, when displaying a slider inside an element which visibility is tog
 Here's an example of `refreshSlider` method that you should call whenever the slider becomes visible.
 
 ```js
-vm.refreshSlider = function() {
-  $timeout(function() {
-    $scope.$broadcast('rzSliderForceRender')
-  })
-}
+vm.refreshSlider = function () {
+  $timeout(function () {
+    $scope.$broadcast("rzSliderForceRender");
+  });
+};
 ```
 
 if you get some flickering issues, you can try to replace to `$timeout` call by `$scope.$$postDigest` as suggested by @maknapp in [this issue](https://github.com/angular-slider/angularjs-slider/issues/79#issuecomment-219213647).
@@ -124,7 +124,11 @@ Directly use (replace `X.X.X` by the version you want to use):
 ### Imports
 
 ```html
-<link rel="stylesheet" type="text/css" href="/path/to/angularjs-slider/dist/rzslider.css"/>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="/path/to/angularjs-slider/dist/rzslider.css"
+/>
 <script src="/path/to/angularjs/angular.min.js"></script>
 <script src="/path/to/angularjs-slider/dist/rzslider.min.js"></script>
 ```
@@ -132,19 +136,19 @@ Directly use (replace `X.X.X` by the version you want to use):
 ### Module
 
 ```javascript
-angular.module('yourApp', ['rzSlider'])
+angular.module("yourApp", ["rzSlider"]);
 ```
 
 ### Single slider
 
 ```javascript
 // In your controller
-$scope.priceSlider = 150
+$scope.priceSlider = 150;
 ```
 
 ```html
 <div>
-    <rzslider rz-slider-model="priceSlider"></rzslider>
+  <rzslider rz-slider-model="priceSlider"></rzslider>
 </div>
 ```
 
@@ -152,9 +156,10 @@ Above example would render a slider from 0 to 150. If you need floor and ceiling
 
 ```html
 <div>
-    <rzslider
-         rz-slider-model="slider.value"
-         rz-slider-options="slider.options"></rzslider>
+  <rzslider
+    rz-slider-model="slider.value"
+    rz-slider-options="slider.options"
+  ></rzslider>
 </div>
 ```
 
@@ -165,21 +170,22 @@ $scope.slider = {
     floor: 0,
     ceil: 450,
   },
-}
+};
 ```
 
 If you don't want to bother with an object set in your javascript file, you can pass an anonymous object literal to the slider options:
 
 ```html
 <div>
-    <rzslider
-         rz-slider-model="value"
-         rz-slider-options="{floor: 0, ceil: 450}"></rzslider>
+  <rzslider
+    rz-slider-model="value"
+    rz-slider-options="{floor: 0, ceil: 450}"
+  ></rzslider>
 </div>
 ```
 
 ```js
-$scope.value = 150
+$scope.value = 150;
 ```
 
 ### Range slider
@@ -193,14 +199,15 @@ $scope.slider = {
     floor: 0,
     ceil: 450,
   },
-}
+};
 ```
 
 ```html
 <rzslider
-    rz-slider-model="slider.min"
-    rz-slider-high="slider.max"
-    rz-slider-options="slider.options"></rzslider>
+  rz-slider-model="slider.min"
+  rz-slider-high="slider.max"
+  rz-slider-options="slider.options"
+></rzslider>
 ```
 
 ## Directive attributes
@@ -336,9 +343,10 @@ For example if you want to display dollar amounts instead of just numbers:
 
 ```html
 <div>
-    <rzslider
-         rz-slider-model="slider.value"
-         rz-slider-options="slider.options"></rzslider>
+  <rzslider
+    rz-slider-model="slider.value"
+    rz-slider-options="slider.options"
+  ></rzslider>
 </div>
 ```
 
@@ -348,11 +356,11 @@ $scope.slider = {
   options: {
     floor: 0,
     ceil: 100,
-    translate: function(value) {
-      return '$' + value
+    translate: function (value) {
+      return "$" + value;
     },
   },
-}
+};
 ```
 
 **getLegend** - _Function(value, sliderId)_: Use to display legend under ticks (thus, it needs to be used along with `showTicks` or `showTicksValues`). The function will be called with each tick value and returned content will be displayed under the tick as a legend. If the returned value is null, then no legend is displayed under the corresponding tick.You can also directly provide the legend values in the `stepsArray` option.
@@ -367,12 +375,12 @@ Just pass an array with each slider value and that's it; the floor, ceil and ste
 `stepsArray` can also be an array of objects or Dates like:
 
 ```js
-;[
-  { value: 'A' }, // the display value will be *A*
-  { value: 10, legend: 'Legend for 10' }, // the display value will be 10 and a legend will be displayed under the corresponding tick.
+[
+  { value: "A" }, // the display value will be *A*
+  { value: 10, legend: "Legend for 10" }, // the display value will be 10 and a legend will be displayed under the corresponding tick.
   new Date(2016, 7, 12), // the display value will be the default format of Date. To customize it, use the `translate` option
-  { value: new Date(2016, 7, 12), legend: 'Legend for 10' }, // same as above but with a legend
-]
+  { value: new Date(2016, 7, 12), legend: "Legend for 10" }, // same as above but with a legend
+];
 ```
 
 **bindIndexForStepsArray** - _Boolean (defaults to false)_: Set to true to bind the index of the selected item to `rz-slider-model` and `rz-slider-high`. (This was the default behavior prior to 4.0).
@@ -485,10 +493,10 @@ For custom scales:
 If you want the change the default options for all the sliders displayed in your application, you can set them using the `RzSliderOptions.options()` method:
 
 ```js
-angular.module('App', ['rzSlider']).run(function(RzSliderOptions) {
+angular.module("App", ["rzSlider"]).run(function (RzSliderOptions) {
   // show ticks for all sliders
-  RzSliderOptions.options({ showTicks: true })
-})
+  RzSliderOptions.options({ showTicks: true });
+});
 ```
 
 ## Slider events
@@ -500,9 +508,9 @@ You can also force redraw with **rzSliderForceRender** event.
 At the end of each "slide" slider emits `slideEnded` event.
 
 ```javascript
-$scope.$on('slideEnded', function() {
+$scope.$on("slideEnded", function () {
   // user finished sliding a handle
-})
+});
 ```
 
 ## Browser support

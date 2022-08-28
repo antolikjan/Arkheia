@@ -1,20 +1,20 @@
 .intro-header h1 {
-    color: #f8f8f8;
+  color: #f8f8f8;
 }
 
 .doc-md img {
-	width: 1000px;
-	display:block;
-	margin: 0 auto;
+  width: 1000px;
+  display: block;
+  margin: 0 auto;
 }
 
 img + em {
-	text-align: center;
-	display:block;
-	margin: 0 auto;
-	font-size: 20px;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  font-size: 20px;
 }
 
 strong {
-	font-weight: bold;
+  font-weight: bold;
 }

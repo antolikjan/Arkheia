@@ -1,7 +1,7 @@
-'use strict';
-const angular = require('angular');
+"use strict";
+const angular = require("angular");
 
-let mod = angular.module('mozaikRepositoryApp.sync-scroll-x', []);
+let mod = angular.module("mozaikRepositoryApp.sync-scroll-x", []);
 
 /*mod.directive('syncScrollX', [function(){
     var scrollLeft = 0;
@@ -30,4 +30,3 @@ let mod = angular.module('mozaikRepositoryApp.sync-scroll-x', []);
   }]);*/
 
 export default mod;
-

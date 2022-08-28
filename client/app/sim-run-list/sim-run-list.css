@@ -1,18 +1,20 @@
-h1 { text-align : center;}
-
-.st-sort-ascent:after {
-    content: '\25B2';
-  }
-
-  .st-sort-descent:after {
-    content: '\25BC';
-  }
-
-.modal-dialog {
-	width : 50%;
+h1 {
+  text-align: center;
 }
 
-.modal-dialog p { 
-	text-align : justify;
-	margin :10px;
+.st-sort-ascent:after {
+  content: "\25B2";
+}
+
+.st-sort-descent:after {
+  content: "\25BC";
+}
+
+.modal-dialog {
+  width: 50%;
+}
+
+.modal-dialog p {
+  text-align: justify;
+  margin: 10px;
 }

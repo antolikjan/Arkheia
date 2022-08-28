@@ -4,5 +4,6 @@ arkheia_example_data
 v3.1.tar.gz
 arkheia_example_data.zip:Zone.Identifier
 nest-simulator-3.1
-mozaik
-imagen
+.vscode
+.mypy_cache
+dist

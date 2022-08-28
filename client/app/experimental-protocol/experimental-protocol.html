@@ -1,57 +1,129 @@
 <h1>Experimental protocols</h1>
-  <table class="table table-striped" style="overflow: auto;">
-    <thead>
-      <th style="width : 15%;" tooltip-append-to-body="true" uib-tooltip='The source code identifier that generates the given instance of Experimental Protocol configuration (e.g. a class or function name).'>Source code name</th>
-      <th style="width : 30%;" tooltip-append-to-body="true" uib-tooltip="Brief description of the experimental protocol configuration.">Short description</th>
-      <th style="width : 30%;" tooltip-append-to-body="true" uib-tooltip="Detailed description of the experimental protocol configuration.">Long description</th>
-      <th style="width : 4%;" tooltip-append-to-body="true" uib-tooltip="The parameters and their values of the given experimental protocol configuration.">Parameters</th>
-    </thead>
-    <tbody>
-      <tr ng-repeat="ep in $ctrl.simRun.experimental_protocols">
-        <td>{{ep.code}}</td>
-        <td>{{ep.short_description}}</td>
-        <td>  
-              <a ng-click="$ctrl.long_description_visible[$index]=!$ctrl.long_description_visible[$index]" class="btn  btn">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-              </a>
-              <p ng-show="$ctrl.long_description_visible[$index]" btf-markdown="ep.long_description"></p> 
-        </td>
-        <td>
-            <a ng-click="$ctrl.paramsModal(ep.data)" class="btn  btn">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<table class="table table-striped" style="overflow: auto">
+  <thead>
+    <th
+      style="width: 15%"
+      tooltip-append-to-body="true"
+      uib-tooltip="The source code identifier that generates the given instance of Experimental Protocol configuration (e.g. a class or function name)."
+    >
+      Source code name
+    </th>
+    <th
+      style="width: 30%"
+      tooltip-append-to-body="true"
+      uib-tooltip="Brief description of the experimental protocol configuration."
+    >
+      Short description
+    </th>
+    <th
+      style="width: 30%"
+      tooltip-append-to-body="true"
+      uib-tooltip="Detailed description of the experimental protocol configuration."
+    >
+      Long description
+    </th>
+    <th
+      style="width: 4%"
+      tooltip-append-to-body="true"
+      uib-tooltip="The parameters and their values of the given experimental protocol configuration."
+    >
+      Parameters
+    </th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="ep in $ctrl.simRun.experimental_protocols">
+      <td>{{ep.code}}</td>
+      <td>{{ep.short_description}}</td>
+      <td>
+        <a
+          ng-click="$ctrl.long_description_visible[$index]=!$ctrl.long_description_visible[$index]"
+          class="btn btn"
+        >
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+        <p
+          ng-show="$ctrl.long_description_visible[$index]"
+          btf-markdown="ep.long_description"
+        ></p>
+      </td>
+      <td>
+        <a ng-click="$ctrl.paramsModal(ep.data)" class="btn btn">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <h1>Recording configurations</h1>
-  <table class="table table-striped" style="overflow: auto;">
-    <thead>
-      <th style="width : 15%;" tooltip-append-to-body="true" uib-tooltip='The source code identifier that generates this instance of Recording configuration (e.g. a class or function name).'>Source code name</th>
-      <th style="width : 11%;" tooltip-append-to-body="true" uib-tooltip="Identifier of the neural popullation in which the recordings were performed.">Target popullation</th>
-      <th style="width : 15%;" tooltip-append-to-body="true" uib-tooltip="The variables that were recorded in the selected neurons (i.e. spikes, membrane potential etc.).">Recorded variables</th>
-      <th style="width : 30%;" tooltip-append-to-body="true" uib-tooltip="Brief description of the recording configuration.">Short description</th>
-      <th style="width : 30%;" tooltip-append-to-body="true" uib-tooltip="Detailed description of the recording configuration.">Long description</th>
-      <th style="width : 4%;" tooltip-append-to-body="true" uib-tooltip="The parameters and their values of the given recording configuration.">Parameters</th>
-    </thead>
-    <tbody>
-      <tr ng-repeat="rec in $ctrl.simRun.recorders">
-        <td>{{rec.code}}</td>
-        <td>{{rec.source}}</td>
-        <td>{{rec.variables}}</td>
-        <td>{{rec.short_description}}</td>
-        <td>  
-              <a ng-click="$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]=!$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]" class="btn  btn">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-              </a>
-              <p ng-show="$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]" btf-markdown="rec.long_description"></p> 
-        </td>
-        <td>
-            <a ng-click="$ctrl.paramsModal(rec.data)" class="btn  btn">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<table class="table table-striped" style="overflow: auto">
+  <thead>
+    <th
+      style="width: 15%"
+      tooltip-append-to-body="true"
+      uib-tooltip="The source code identifier that generates this instance of Recording configuration (e.g. a class or function name)."
+    >
+      Source code name
+    </th>
+    <th
+      style="width: 11%"
+      tooltip-append-to-body="true"
+      uib-tooltip="Identifier of the neural popullation in which the recordings were performed."
+    >
+      Target popullation
+    </th>
+    <th
+      style="width: 15%"
+      tooltip-append-to-body="true"
+      uib-tooltip="The variables that were recorded in the selected neurons (i.e. spikes, membrane potential etc.)."
+    >
+      Recorded variables
+    </th>
+    <th
+      style="width: 30%"
+      tooltip-append-to-body="true"
+      uib-tooltip="Brief description of the recording configuration."
+    >
+      Short description
+    </th>
+    <th
+      style="width: 30%"
+      tooltip-append-to-body="true"
+      uib-tooltip="Detailed description of the recording configuration."
+    >
+      Long description
+    </th>
+    <th
+      style="width: 4%"
+      tooltip-append-to-body="true"
+      uib-tooltip="The parameters and their values of the given recording configuration."
+    >
+      Parameters
+    </th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="rec in $ctrl.simRun.recorders">
+      <td>{{rec.code}}</td>
+      <td>{{rec.source}}</td>
+      <td>{{rec.variables}}</td>
+      <td>{{rec.short_description}}</td>
+      <td>
+        <a
+          ng-click="$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]=!$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]"
+          class="btn btn"
+        >
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+        <p
+          ng-show="$ctrl.long_description_visible[$index+$ctrl.simRun.experimental_protocols.length]"
+          btf-markdown="rec.long_description"
+        ></p>
+      </td>
+      <td>
+        <a ng-click="$ctrl.paramsModal(rec.data)" class="btn btn">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -138,7 +138,12 @@ export class ParamSearchInspectComponent {
     return [vary, nonVary];
   }
 
-  findImagesForParameterCombinations(parameterNames, parameterValues, parPath, paramCombs) {
+  findImagesForParameterCombinations(
+    parameterNames,
+    parameterValues,
+    parPath,
+    paramCombs
+  ) {
     this.assert(
       parameterNames.length === parameterValues.length,
       "parameterNames have to have the same length as parameterValues"
@@ -164,12 +169,18 @@ export class ParamSearchInspectComponent {
       } else {
         let pc = paramCombs.filter((x) => {
           return (
-            parseFloat(x[parameterNames[0]]).toPrecision(this.precission) === parseFloat(v).toPrecision(this.precission)
+            parseFloat(x[parameterNames[0]]).toPrecision(this.precission) ===
+            parseFloat(v).toPrecision(this.precission)
           );
         });
-        this.assert(pc.length <= 1, "There shouldn't be more than one parameter combination left!");
+        this.assert(
+          pc.length <= 1,
+          "There shouldn't be more than one parameter combination left!"
+        );
         if (pc.length === 0) {
-          figuresToDisplay = figuresToDisplay.concat(["EmptyFigure" + this.empty_figure_counter]);
+          figuresToDisplay = figuresToDisplay.concat([
+            "EmptyFigure" + this.empty_figure_counter,
+          ]);
           this.empty_figure_counter = this.empty_figure_counter + 1;
         } else {
           figuresToDisplay = figuresToDisplay.concat(pc[0].figures);
@@ -181,10 +192,13 @@ export class ParamSearchInspectComponent {
   }
 
   updateImagesAndParameterGuides() {
-    let [varyingSelectedParameters, nonVaryingSelectedParameters] = this.identifySelectedVaryingAndNonVaryingParamers();
+    let [varyingSelectedParameters, nonVaryingSelectedParameters] =
+      this.identifySelectedVaryingAndNonVaryingParamers();
 
     this.assert(
-      this.values(this.selectedParamValues[this.parameterNameRadioModel]).some((v) => !v),
+      this.values(this.selectedParamValues[this.parameterNameRadioModel]).some(
+        (v) => !v
+      ),
       "Error y parameter without selected values"
     );
 
@@ -194,9 +208,15 @@ export class ParamSearchInspectComponent {
     for (let nvp of nonVaryingSelectedParameters) {
       // get the selected value of the non-varying parameter
       let v = this.falseKeys(this.selectedParamValues[nvp]);
-      this.assert(v.length === 1, "This parameter should have had exactly one value selected");
+      this.assert(
+        v.length === 1,
+        "This parameter should have had exactly one value selected"
+      );
       varyingParamCombs = varyingParamCombs.filter((x) => {
-        return parseFloat(x[nvp]).toPrecision(this.precission) === parseFloat(v[0]).toPrecision(this.precission);
+        return (
+          parseFloat(x[nvp]).toPrecision(this.precission) ===
+          parseFloat(v[0]).toPrecision(this.precission)
+        );
       });
     }
 
@@ -204,12 +224,16 @@ export class ParamSearchInspectComponent {
 
     for (let i in varyingSelectedParameters) {
       if (varyingSelectedParameters.hasOwnProperty(i)) {
-        varyingSelectedParametersValues[i] = this.falseKeys(this.selectedParamValues[varyingSelectedParameters[i]]);
+        varyingSelectedParametersValues[i] = this.falseKeys(
+          this.selectedParamValues[varyingSelectedParameters[i]]
+        );
       }
     }
 
     this.figuresToDisplay = [];
-    let vs = this.falseKeys(this.selectedParamValues[this.parameterNameRadioModel]);
+    let vs = this.falseKeys(
+      this.selectedParamValues[this.parameterNameRadioModel]
+    );
 
     this.yParameterValues = [];
 
@@ -217,13 +241,17 @@ export class ParamSearchInspectComponent {
       if (vs.hasOwnProperty(i)) {
         let pv = varyingParamCombs.filter((x) => {
           return (
-            parseFloat(x[this.parameterNameRadioModel]).toPrecision(this.precission) ===
-            parseFloat(vs[i]).toPrecision(this.precission)
+            parseFloat(x[this.parameterNameRadioModel]).toPrecision(
+              this.precission
+            ) === parseFloat(vs[i]).toPrecision(this.precission)
           );
         });
         this.yParameterValues[i] = [this.parameterNameRadioModel, vs[i]];
         if (varyingSelectedParameters.length === 0) {
-          this.assert(pv.length === 1, "We would expcet to have only one prameter combination at this point!");
+          this.assert(
+            pv.length === 1,
+            "We would expcet to have only one prameter combination at this point!"
+          );
           this.figuresToDisplay[i] = [pv[0].figures];
         } else {
           let [figs, pc] = this.findImagesForParameterCombinations(
@@ -261,8 +289,12 @@ export class ParamSearchInspectComponent {
       if (this.figuresToDisplay.hasOwnProperty(a)) {
         for (let b in this.figuresToDisplay[a]) {
           if (this.figuresToDisplay[a].hasOwnProperty(b)) {
-            if (this.figuresToDisplay[a][b][this.selectedFigure] !== undefined) {
-              src = "/api/simulation-runs/images/" + this.figuresToDisplay[a][b][this.selectedFigure]._id;
+            if (
+              this.figuresToDisplay[a][b][this.selectedFigure] !== undefined
+            ) {
+              src =
+                "/api/simulation-runs/images/" +
+                this.figuresToDisplay[a][b][this.selectedFigure]._id;
               break;
             }
           }
@@ -285,76 +317,86 @@ export class ParamSearchInspectComponent {
   }
 
   $onInit() {
-    this.$http.get("/api/simulation-runs/param_search/" + this.idd).then((response) => {
-      this.param_combs = JSON.parse(response.data.parameter_combinations);
-      this.simulationRuns = response.data.simulation_runs;
-      // Lets find out which parameters actually differ in the parameter combinations
-      this.varying_params = {};
-      for (let key in this.param_combs[0]) {
-        if (
-          this.param_combs.filter((x) => {
-            return (
-              parseFloat(x[key]).toPrecision(this.precission) ===
-              parseFloat(this.param_combs[0][key]).toPrecision(this.precission)
+    this.$http
+      .get("/api/simulation-runs/param_search/" + this.idd)
+      .then((response) => {
+        this.param_combs = JSON.parse(response.data.parameter_combinations);
+        this.simulationRuns = response.data.simulation_runs;
+        // Lets find out which parameters actually differ in the parameter combinations
+        this.varying_params = {};
+        for (let key in this.param_combs[0]) {
+          if (
+            this.param_combs.filter((x) => {
+              return (
+                parseFloat(x[key]).toPrecision(this.precission) ===
+                parseFloat(this.param_combs[0][key]).toPrecision(
+                  this.precission
+                )
+              );
+            }).length < this.param_combs.length
+          ) {
+            this.varying_params[key] = this.unique(
+              this.param_combs.map((x) => {
+                return parseFloat(x[key]).toPrecision(this.precission);
+              })
             );
-          }).length < this.param_combs.length
-        ) {
-          this.varying_params[key] = this.unique(
-            this.param_combs.map((x) => {
-              return parseFloat(x[key]).toPrecision(this.precission);
-            })
+          }
+        }
+
+        this.parameterNameRadioModel = Object.keys(this.varying_params)[0];
+        for (let k in this.varying_params) {
+          if (this.varying_params.hasOwnProperty(k)) {
+            let d = {};
+            let d1 = {};
+            for (let v in this.varying_params[k]) {
+              if (this.varying_params[k].hasOwnProperty(v)) {
+                d[this.varying_params[k][v]] = false;
+                d1[this.varying_params[k][v]] = false;
+              }
+            }
+            this.selectedParamValues[k] = d;
+            this.disabledParamValues[k] = d1;
+          }
+        }
+        // double check the number of parameter combinations and the number of simulation runs match
+        if (this.param_combs.length !== this.simulationRuns.length) {
+          console.log(
+            "ERROR: number of parameter combinations does not match namber of simulation runs."
           );
         }
-      }
 
-      this.parameterNameRadioModel = Object.keys(this.varying_params)[0];
-      for (let k in this.varying_params) {
-        if (this.varying_params.hasOwnProperty(k)) {
-          let d = {};
-          let d1 = {};
-          for (let v in this.varying_params[k]) {
-            if (this.varying_params[k].hasOwnProperty(v)) {
-              d[this.varying_params[k][v]] = false;
-              d1[this.varying_params[k][v]] = false;
+        this.file_names = {};
+
+        for (let i in this.param_combs) {
+          if (this.param_combs.hasOwnProperty(i)) {
+            // let's reduce and reorganize results as a dictionary holding figure names and keys and
+            // corresponding image urls as values
+            let d = {};
+
+            for (let r of this.simulationRuns[i].results) {
+              d[r.file_name] = r.figure;
+              this.file_names[r.file_name] = true;
             }
+            this.param_combs[i].figures = d;
           }
-          this.selectedParamValues[k] = d;
-          this.disabledParamValues[k] = d1;
         }
-      }
-      // double check the number of parameter combinations and the number of simulation runs match
-      if (this.param_combs.length !== this.simulationRuns.length) {
-        console.log("ERROR: number of parameter combinations does not match namber of simulation runs.");
-      }
+        this.file_names = Object.keys(this.file_names);
+        this.selectedFigure = this.file_names[0];
+        this.updateImagesAndParameterGuides();
+        this.updateImageInfo();
 
-      this.file_names = {};
-
-      for (let i in this.param_combs) {
-        if (this.param_combs.hasOwnProperty(i)) {
-          // let's reduce and reorganize results as a dictionary holding figure names and keys and
-          // corresponding image urls as values
-          let d = {};
-
-          for (let r of this.simulationRuns[i].results) {
-            d[r.file_name] = r.figure;
-            this.file_names[r.file_name] = true;
-          }
-          this.param_combs[i].figures = d;
-        }
-      }
-      this.file_names = Object.keys(this.file_names);
-      this.selectedFigure = this.file_names[0];
-      this.updateImagesAndParameterGuides();
-      this.updateImageInfo();
-
-      console.log(this.file_names);
-      console.log(this.param_combs);
-    });
+        console.log(this.file_names);
+        console.log(this.param_combs);
+      });
   }
 }
 
 export default angular
-  .module("mozaikRepositoryApp.param-search-inspect", [ngRoute, "bootstrapLightbox", "rzSlider"])
+  .module("mozaikRepositoryApp.param-search-inspect", [
+    ngRoute,
+    "bootstrapLightbox",
+    "rzSlider",
+  ])
   .config(routes)
   .component("paramSearchInspect", {
     template: require("./param-search-inspect.html"),
@@ -385,8 +427,16 @@ export default angular
         restrict: "A",
         replace: false,
         compile: function (element, attrs) {
-          combineX(angular.element(element[0].querySelectorAll("." + attrs.syncScrollX)));
-          combineY(angular.element(element[0].querySelectorAll("." + attrs.syncScrollY)));
+          combineX(
+            angular.element(
+              element[0].querySelectorAll("." + attrs.syncScrollX)
+            )
+          );
+          combineY(
+            angular.element(
+              element[0].querySelectorAll("." + attrs.syncScrollY)
+            )
+          );
         },
       };
     },

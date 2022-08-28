@@ -2,21 +2,21 @@
 // http://karma-runner.github.io/0.13/config/configuration-file.html
 /*eslint-env node*/
 
-import makeWebpackConfig from './webpack.make';
+import makeWebpackConfig from "./webpack.make";
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     // base path, that will be used to resolve files and exclude
-    basePath: '',
+    basePath: "",
 
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['jasmine'],
+    frameworks: ["jasmine"],
 
     // list of files / patterns to load in the browser
-    files: ['spec.js'],
+    files: ["spec.js"],
 
     preprocessors: {
-      'spec.js': ['webpack']
+      "spec.js": ["webpack"],
     },
 
     webpack: makeWebpackConfig({ TEST: true }),
@@ -24,32 +24,35 @@ module.exports = function(config) {
     webpackMiddleware: {
       // webpack-dev-middleware configuration
       // i. e.
-      noInfo: true
+      noInfo: true,
     },
 
     coverageReporter: {
-      reporters: [{
-        type: 'html', //produces a html document after code is run
-        subdir: 'client'
-      }, {
-        type: 'json',
-        subdir: '.',
-        file: 'client-coverage.json'
-      }],
-      dir: 'coverage/' //path to created html doc
+      reporters: [
+        {
+          type: "html", //produces a html document after code is run
+          subdir: "client",
+        },
+        {
+          type: "json",
+          subdir: ".",
+          file: "client-coverage.json",
+        },
+      ],
+      dir: "coverage/", //path to created html doc
     },
 
     plugins: [
-      require('karma-chrome-launcher'),
-      require('karma-coverage'),
-      require('karma-firefox-launcher'),
+      require("karma-chrome-launcher"),
+      require("karma-coverage"),
+      require("karma-firefox-launcher"),
 
-      require('karma-jasmine'),
-      require('karma-spec-reporter'),
-      require('karma-phantomjs-launcher'),
-      require('karma-script-launcher'),
-      require('karma-webpack'),
-      require('karma-sourcemap-loader')
+      require("karma-jasmine"),
+      require("karma-spec-reporter"),
+      require("karma-phantomjs-launcher"),
+      require("karma-script-launcher"),
+      require("karma-webpack"),
+      require("karma-sourcemap-loader"),
     ],
 
     // list of files / patterns to exclude
@@ -69,7 +72,7 @@ module.exports = function(config) {
     // - junit
     // - growl
     // - coverage
-    reporters: ['spec', 'coverage'],
+    reporters: ["spec", "coverage"],
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
@@ -82,10 +85,10 @@ module.exports = function(config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['PhantomJS'],
+    browsers: ["PhantomJS"],
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: false,
   });
 };

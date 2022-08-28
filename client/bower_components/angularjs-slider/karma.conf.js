@@ -1,29 +1,29 @@
-'use strict';
+"use strict";
 
 module.exports = function (config) {
   config.set({
     // base path, that will be used to resolve files and exclude
-    basePath: '',
+    basePath: "",
 
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['mocha', 'sinon', 'chai'],
+    frameworks: ["mocha", "sinon", "chai"],
 
-    reporters: ['mocha', 'coverage'],
+    reporters: ["mocha", "coverage"],
 
     mochaReporter: {
-      showDiff: true
+      showDiff: true,
     },
 
     // list of files / patterns to load in the browser
     files: [
-      'node_modules/angular/angular.js',
-      'node_modules/angular-mocks/angular-mocks.js',
-      'src/*.js',
-      'tests/specs/helper.js',
-      'tests/specs/**/*-test.js',
-      'tests/specs/*.html',
-      'dist/rzslider.css',
-      'src/*.html'
+      "node_modules/angular/angular.js",
+      "node_modules/angular-mocks/angular-mocks.js",
+      "src/*.js",
+      "tests/specs/helper.js",
+      "tests/specs/**/*-test.js",
+      "tests/specs/*.html",
+      "dist/rzslider.css",
+      "src/*.html",
     ],
 
     // list of files / patterns to exclude
@@ -31,14 +31,14 @@ module.exports = function (config) {
 
     // preprocess matching files before serving them to the browser
     preprocessors: {
-      "src/*.js": ['coverage'],
-      "src/*Tpl.html": 'ng-html2js',
-      "tests/specs/*-tpl.html": 'ng-html2js'
+      "src/*.js": ["coverage"],
+      "src/*Tpl.html": "ng-html2js",
+      "tests/specs/*-tpl.html": "ng-html2js",
     },
 
     ngHtml2JsPreprocessor: {
-      stripPrefix: 'src/',
-      moduleName: 'appTemplates'
+      stripPrefix: "src/",
+      moduleName: "appTemplates",
     },
 
     // web server port
@@ -48,15 +48,14 @@ module.exports = function (config) {
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
     coverageReporter: {
       // specify a common output directory
-      dir: 'tests/coverage',
-      type: 'lcov',
-      subdir: '.'
+      dir: "tests/coverage",
+      type: "lcov",
+      subdir: ".",
     },
 
     // Start these browsers, currently available:
@@ -67,12 +66,10 @@ module.exports = function (config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['PhantomJS'],
+    browsers: ["PhantomJS"],
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
-  })
-  ;
-}
-;
+    singleRun: false,
+  });
+};

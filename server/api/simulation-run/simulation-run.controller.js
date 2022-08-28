@@ -1,7 +1,11 @@
 /**
  */
 "use strict";
-import { ParameterSearch, SimulationRun, Configuration } from "./simulation-run.model";
+import {
+  ParameterSearch,
+  SimulationRun,
+  Configuration,
+} from "./simulation-run.model";
 import mongoose from "mongoose";
 
 var JSZip = require("jszip");
@@ -39,7 +43,9 @@ function packageDownload(res) {
     }
 
     res.attachment("ArkheiaDocument.zip");
-    return zip.generateNodeStream({ type: "nodebuffer", streamFiles: true }).pipe(res);
+    return zip
+      .generateNodeStream({ type: "nodebuffer", streamFiles: true })
+      .pipe(res);
   };
 }
 
@@ -95,13 +101,18 @@ export function getSimRunInfo(req, res) {
 export function getImage(req, res) {
   gfs.exist({ _id: req.params.id }, function (err, found) {
     if (err) return handleError(err);
-    found ? gfs.createReadStream({ _id: req.params.id }).pipe(res) : console.log("File does not exist");
+    found
+      ? gfs.createReadStream({ _id: req.params.id }).pipe(res)
+      : console.log("File does not exist");
   });
 }
 
 // Gets the configuration
 export function getConfiguration(req, res) {
-  return Configuration.find().exec().then(respondWithResult(res)).catch(handleError(res));
+  return Configuration.find()
+    .exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 // Gets a list of ParameterSearches
@@ -134,28 +145,28 @@ export async function deleteSimRun(req, res) {
       .select("-simulation_runs.results.parameters")
       .populate("simulation_runs.results.figure")
       .exec();
-    var newSimulationRuns = paramSearch.simulation_runs.filter(function (el) { return el != id });
+    var newSimulationRuns = paramSearch.simulation_runs.filter(function (el) {
+      return el != id;
+    });
 
     await SimulationRun.deleteOne({ _id: id })
       .exec()
       .then(handleEntityNotFound(res))
       .catch(handleError(res));
 
-
     // update ParameterSearch db document to remove desired simulation run
     await ParameterSearch.findOneAndUpdate(
       { _id: idd },
-      { "simulation_runs": newSimulationRuns }, // removes the run from simulation_runs array
+      { simulation_runs: newSimulationRuns }, // removes the run from simulation_runs array
       function (err, result) {
         if (err) {
           res.send(err);
-        }
-        else {
+        } else {
           res.send(result);
         }
-      })
-  }
-  else {
+      }
+    );
+  } else {
     // var query = new Object();
     // const simRuns = await SimulationRun.find(query)
     //   .select("-results")
@@ -167,23 +178,23 @@ export async function deleteSimRun(req, res) {
       .then(respondWithResult(res))
       .catch(handleError(res));
   }
-};
-
+}
 
 export async function deleteParamSearch(req, res) {
-  var paramSearches = await ParameterSearch.findByIdAndRemove({ _id: req.params.id })
+  var paramSearches = await ParameterSearch.findByIdAndRemove({
+    _id: req.params.id,
+  })
     .exec()
     .then(handleEntityNotFound(res))
     .catch(handleError(res));
 
-  await paramSearches.simulation_runs.forEach(simrunID => {
+  await paramSearches.simulation_runs.forEach((simrunID) => {
     SimulationRun.deleteOne({ _id: simrunID })
       .exec()
       .then(handleEntityNotFound(res))
       .catch(handleError(res));
   });
 }
-
 
 export function insertSimrunsToDb(req, res) {
   if (!req.body.file_name) {
@@ -192,12 +203,12 @@ export function insertSimrunsToDb(req, res) {
   }
 
   axios({
-    method: 'post',
+    method: "post",
     url: "http://localhost:8080/insertRepository",
     data: {
-      "file_name": req.body.file_name,
-      "paramsearch_name": req.body.paramsearch_name
-    }
+      file_name: req.body.file_name,
+      paramsearch_name: req.body.paramsearch_name,
+    },
   })
     .then(async function (response) {
       if (!req.body.paramsearch_name) {
@@ -206,8 +217,7 @@ export function insertSimrunsToDb(req, res) {
           .exec()
           .then(respondWithResult(res))
           .catch(handleError(res));
-      }
-      else {
+      } else {
         ParameterSearch.find()
           .select("-simulation_runs.results")
           .exec()
@@ -221,7 +231,6 @@ export function insertSimrunsToDb(req, res) {
     });
 }
 
-
 export function mergeAndInsertSimrunsToDb(req, res) {
   if (!req.params["file_name1"]) {
     res.send("No file1 name provided");
@@ -234,12 +243,12 @@ export function mergeAndInsertSimrunsToDb(req, res) {
   }
 
   axios({
-    method: 'post',
+    method: "post",
     url: "http://localhost:8213/mergeAndInsertRepository",
     data: {
-      "file_name1": req.params["file_name1"],
-      "file_name2": req.params["file_name2"]
-    }
+      file_name1: req.params["file_name1"],
+      file_name2: req.params["file_name2"],
+    },
   })
     .then(function (response) {
       res.status(200).send(response.data);

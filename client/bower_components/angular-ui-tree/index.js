@@ -1,2 +1,2 @@
-require('./dist/angular-ui-tree');
-module.exports = 'ui.tree';
+require("./dist/angular-ui-tree");
+module.exports = "ui.tree";

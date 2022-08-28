@@ -1,7 +1,9 @@
 <div style="height: 0px; margin: 10px"></div>
 <div>
   <div style="height: 40px">
-    <p style="float: left; margin-left: 10px; margin-right: 10px">Select figure:</p>
+    <p style="float: left; margin-left: 10px; margin-right: 10px">
+      Select figure:
+    </p>
     <select
       ng-options="figname for figname in $ctrl.file_names"
       ng-model="$ctrl.selectedFigure"
@@ -21,20 +23,33 @@
       type="button"
       ng-click="$ctrl.param_combs_vis=!$ctrl.param_combs_vis"
       class="btn btn-primary"
-      style="float: right; padding-left: 5px; padding-right: 5px; padding-top: 3px; margin-right: 5px"
+      style="
+        float: right;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 3px;
+        margin-right: 5px;
+      "
     >
       Hide param. combs.
     </button>
   </div>
 
-  <div class="noscrollbar" ng-show="$ctrl.param_combs_vis" style="height: 12vh; overflow-y: scroll; overflow-x: hidden">
+  <div
+    class="noscrollbar"
+    ng-show="$ctrl.param_combs_vis"
+    style="height: 12vh; overflow-y: scroll; overflow-x: hidden"
+  >
     <table class="table" style="margin-left: 20px">
       <tbody>
         <tr>
           <td>
             <table class="table">
               <tbody>
-                <tr class="tr-aligned" ng-repeat="(pname,vals) in $ctrl.varying_params">
+                <tr
+                  class="tr-aligned"
+                  ng-repeat="(pname,vals) in $ctrl.varying_params"
+                >
                   <td style="border-top: none !important">
                     <button
                       type="button"
@@ -53,11 +68,18 @@
             </table>
           </td>
 
-          <td style="margin-left: 30px; width: 100%;">
+          <td style="margin-left: 30px; width: 100%">
             <table class="table" style="width: 100%; float: left">
               <tbody>
-                <tr class="tr-aligned" ng-repeat="(pname,vals) in $ctrl.varying_params" style="display: block">
-                  <td ng-repeat="val in vals" style="border-top: none !important">
+                <tr
+                  class="tr-aligned"
+                  ng-repeat="(pname,vals) in $ctrl.varying_params"
+                  style="display: block"
+                >
+                  <td
+                    ng-repeat="val in vals"
+                    style="border-top: none !important"
+                  >
                     <button
                       type="button"
                       class="btn btn-sm btn-success btn-param-value"
@@ -111,7 +133,9 @@
               style="display: inline-block; margin: 0px"
               ng-style="{'width' : $ctrl.image_size + 4 + 'px'}"
             >
-              <p ng-repeat="z in pnv" style="text-align: center; margin: 0px">{{z[0]}} : {{z[1]}}</p>
+              <p ng-repeat="z in pnv" style="text-align: center; margin: 0px">
+                {{z[0]}} : {{z[1]}}
+              </p>
             </span>
           </div>
         </td>
@@ -121,7 +145,12 @@
           <div
             class=".container-fluid vertical-scroll noscrollbar"
             ng-style="$ctrl.param_combs_vis && {'height' : 'calc(88vh - 151px)'} || {'height' : 'calc(100vh - 141px)'}"
-            style="width: 20px; overflow: auto; margin: 0px; background-color: #dfdfdf"
+            style="
+              width: 20px;
+              overflow: auto;
+              margin: 0px;
+              background-color: #dfdfdf;
+            "
           >
             <div
               ng-repeat="pnv in  $ctrl.yParameterValues"
@@ -142,7 +171,10 @@
             ng-style="$ctrl.param_combs_vis && {'height' : 'calc(88vh - 151px)'} || {'height' : 'calc(100vh - 141px)'} "
             style="overflow: auto; white-space: nowrap; margin: 0px"
           >
-            <div ng-repeat="figureList in $ctrl.figuresToDisplay" class="row-fluid">
+            <div
+              ng-repeat="figureList in $ctrl.figuresToDisplay"
+              class="row-fluid"
+            >
               <span ng-repeat="figures in figureList">
                 <a ng-click="$ctrl.openLightboxModal(figures)" href>
                   <img
