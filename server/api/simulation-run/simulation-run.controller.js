@@ -204,7 +204,7 @@ export function insertSimrunsToDb(req, res) {
 
   axios({
     method: "post",
-    url: "http://localhost:8080/insertRepository",
+    url: "http://localhost:8213/insertRepository",
     data: {
       file_name: req.body.file_name,
       paramsearch_name: req.body.paramsearch_name,

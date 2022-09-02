@@ -6,6 +6,6 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: "mongodb://localhost/arkheia-dev",
-  },
+    uri: "mongodb://localhost/arkheia-dev"
+  }
 };

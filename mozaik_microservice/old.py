@@ -2,16 +2,14 @@ import http.server
 import socketserver
 import simplejson
 from mongodb_client import openMongoDB
-from add_mozaik_repository import insertMozaikRepository, mergeAndInsertMozaikRepositories
+
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
-        if self.path == '/insertRepository':
+        if self.path == "/insertRepository":
             try:
-      
-            
-                self.data_string = self.rfile.read(int(self.headers['Content-Length']))
 
+                self.data_string = self.rfile.read(int(self.headers["Content-Length"]))
 
                 data = simplejson.loads(self.data_string)
                 msg = "test"
@@ -19,17 +17,13 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 file_name = data["file_name"]
                 simrun_name = data["simrun_name"]
 
-                self.protocol_version = 'HTTP/1.1'
-                
+                self.protocol_version = "HTTP/1.1"
+
                 if file_name == None or simrun_name == None:
                     self.send_response(400)
 
                 self.send_response(200)
 
-                # self.send_header('Content-type','text/plain; charset=utf-8')
-                # self.send_header('Content-length', str(len(msg)))
-
-                
                 self.wfile.write(bytes(msg, "utf-8"))
                 self.end_headers()
 
@@ -38,6 +32,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
 
         return
+
 
 # Create an object of the above class
 handler_object = MyHttpRequestHandler

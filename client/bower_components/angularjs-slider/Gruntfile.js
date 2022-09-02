@@ -1,14 +1,14 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
   var banner =
-      "/*! <%= pkg.name %> - v<%= pkg.version %> - \n" +
-      " (c) <%= pkg.author %> - \n" +
-      " <%= pkg.repository.url %> - \n" +
+      '/*! <%= pkg.name %> - v<%= pkg.version %> - \n' +
+      ' (c) <%= pkg.author %> - \n' +
+      ' <%= pkg.repository.url %> - \n' +
       ' <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-    minBanner = banner.replace(/\n/g, "") + "\n";
+    minBanner = banner.replace(/\n/g, '') + '\n'
 
   // Project configuration.
   grunt.initConfig({
-    pkg: grunt.file.readJSON("package.json"),
+    pkg: grunt.file.readJSON('package.json'),
 
     minBanner: minBanner,
 
@@ -18,36 +18,36 @@ module.exports = function (grunt) {
       },
 
       slider: {
-        src: ["src/rzslider.less"],
-        dest: "dist/rzslider.css",
+        src: ['src/rzslider.less'],
+        dest: 'dist/rzslider.css',
       },
 
       min: {
         options: {
           compress: true,
-          banner: "<%= minBanner %>",
+          banner: '<%= minBanner %>',
         },
-        src: ["dist/rzslider.css"],
-        dest: "dist/rzslider.min.css",
+        src: ['dist/rzslider.css'],
+        dest: 'dist/rzslider.min.css',
       },
     },
 
     uglify: {
       options: {
-        report: "min",
-        banner: "<%= minBanner %>",
+        report: 'min',
+        banner: '<%= minBanner %>',
       },
       rzslider: {
         files: {
-          "dist/rzslider.min.js": ["dist/rzslider.js"],
+          'dist/rzslider.min.js': ['dist/rzslider.js'],
         },
       },
     },
 
     ngtemplates: {
       app: {
-        src: "src/**.html",
-        dest: "temp/templates.js",
+        src: 'src/**.html',
+        dest: 'temp/templates.js',
         options: {
           htmlmin: {
             collapseBooleanAttributes: true,
@@ -59,12 +59,12 @@ module.exports = function (grunt) {
             removeScriptTypeAttributes: true,
             removeStyleLinkTypeAttributes: true,
           },
-          module: "rzSlider",
-          url: function (url) {
-            return url.replace("src/", "");
+          module: 'rzSlider',
+          url: function(url) {
+            return url.replace('src/', '')
           },
-          bootstrap: function (module, script) {
-            return "module.run(function($templateCache) {\n" + script + "\n});";
+          bootstrap: function(module, script) {
+            return 'module.run(function($templateCache) {\n' + script + '\n});'
           },
         },
       },
@@ -84,8 +84,8 @@ module.exports = function (grunt) {
           {
             expand: true,
             flatten: true,
-            src: ["src/rzslider.js", "rzslider.d.ts"],
-            dest: "dist/",
+            src: ['src/rzslider.js', 'rzslider.d.ts'],
+            dest: 'dist/',
           },
         ],
       },
@@ -97,15 +97,15 @@ module.exports = function (grunt) {
         banner: banner,
       },
       js: {
-        src: ["dist/rzslider.js"],
-        dest: "dist/rzslider.js",
+        src: ['dist/rzslider.js'],
+        dest: 'dist/rzslider.js',
         options: {
-          footer: ";", // to prevent error when people concat the file and don't use the min version
+          footer: ';', // to prevent error when people concat the file and don't use the min version
         },
       },
       css: {
-        src: ["dist/rzslider.css"],
-        dest: "dist/rzslider.css",
+        src: ['dist/rzslider.css'],
+        dest: 'dist/rzslider.css',
       },
     },
 
@@ -116,33 +116,33 @@ module.exports = function (grunt) {
       rzslider: {
         files: [
           {
-            "dist/rzslider.js": "dist/rzslider.js",
+            'dist/rzslider.js': 'dist/rzslider.js',
           },
           {
             expand: true,
-            src: ["dist/rzslider.js"],
+            src: ['dist/rzslider.js'],
           },
         ],
       },
     },
     watch: {
       all: {
-        files: ["dist/*", "demo/*"],
+        files: ['dist/*', 'demo/*'],
         options: {
           livereload: true,
         },
       },
       js: {
-        files: ["src/*.js", "src/*.html"],
-        tasks: ["js"],
+        files: ['src/*.js', 'src/*.html'],
+        tasks: ['js'],
       },
       less: {
-        files: ["src/*.less"],
-        tasks: ["css"],
+        files: ['src/*.less'],
+        tasks: ['css'],
       },
       test: {
-        files: ["src/*.js", "tests/specs/**/*.js"],
-        tasks: ["test"],
+        files: ['src/*.js', 'tests/specs/**/*.js'],
+        tasks: ['test'],
       },
     },
     serve: {
@@ -152,7 +152,7 @@ module.exports = function (grunt) {
     },
     karma: {
       unit: {
-        configFile: "karma.conf.js",
+        configFile: 'karma.conf.js',
         singleRun: true,
       },
     },
@@ -162,8 +162,8 @@ module.exports = function (grunt) {
         files: [
           {
             expand: false,
-            src: ["dist/rzslider.css"],
-            dest: "dist/rzslider.scss",
+            src: ['dist/rzslider.css'],
+            dest: 'dist/rzslider.scss',
           },
         ],
       },
@@ -172,43 +172,43 @@ module.exports = function (grunt) {
       options: {
         map: true,
         processors: [
-          require("autoprefixer")({
-            browsers: ["> 1%", "last 2 versions", "Firefox ESR"],
+          require('autoprefixer')({
+            browsers: ['> 1%', 'last 2 versions', 'Firefox ESR'],
           }),
         ],
       },
       dist: {
-        src: "dist/rzslider.css",
+        src: 'dist/rzslider.css',
       },
     },
-  });
+  })
 
-  grunt.loadNpmTasks("grunt-contrib-uglify");
-  grunt.loadNpmTasks("grunt-recess");
-  grunt.loadNpmTasks("grunt-angular-templates");
-  grunt.loadNpmTasks("grunt-replace");
-  grunt.loadNpmTasks("grunt-contrib-concat");
-  grunt.loadNpmTasks("grunt-ng-annotate");
-  grunt.loadNpmTasks("grunt-contrib-watch");
-  grunt.loadNpmTasks("grunt-serve");
-  grunt.loadNpmTasks("grunt-karma");
-  grunt.loadNpmTasks("grunt-contrib-copy");
-  grunt.loadNpmTasks("grunt-postcss");
+  grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-recess')
+  grunt.loadNpmTasks('grunt-angular-templates')
+  grunt.loadNpmTasks('grunt-replace')
+  grunt.loadNpmTasks('grunt-contrib-concat')
+  grunt.loadNpmTasks('grunt-ng-annotate')
+  grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-serve')
+  grunt.loadNpmTasks('grunt-karma')
+  grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-postcss')
 
-  grunt.registerTask("default", ["css", "js"]);
-  grunt.registerTask("test", ["karma"]);
+  grunt.registerTask('default', ['css', 'js'])
+  grunt.registerTask('test', ['karma'])
 
-  grunt.registerTask("css", [
-    "recess",
-    "concat:css",
-    "postcss:dist",
-    "copy:copyToSass",
-  ]);
-  grunt.registerTask("js", [
-    "ngtemplates",
-    "replace",
-    "concat:js",
-    "ngAnnotate",
-    "uglify",
-  ]);
-};
+  grunt.registerTask('css', [
+    'recess',
+    'concat:css',
+    'postcss:dist',
+    'copy:copyToSass',
+  ])
+  grunt.registerTask('js', [
+    'ngtemplates',
+    'replace',
+    'concat:js',
+    'ngAnnotate',
+    'uglify',
+  ])
+}

@@ -10,9 +10,9 @@
   margin: 35px 0 15px 0;
   vertical-align: middle;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .rzslider.noanimate * {
@@ -128,7 +128,7 @@
   height: 8px;
   background: #ffffff;
   border-radius: 4px;
-  content: "";
+  content: '';
 }
 
 .rzslider .rz-pointer:hover:after {

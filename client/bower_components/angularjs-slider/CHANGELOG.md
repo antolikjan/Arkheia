@@ -345,17 +345,17 @@ Code that relies on the module object to be exported (accessing the name via .na
 vm.slider = {
   value: 4, // index of the 'E' value in the array
   options: {
-    stepsArray: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+    stepsArray: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   },
-};
+}
 
 /* from 4.0 version */
 vm.slider = {
-  value: "E",
+  value: 'E',
   options: {
-    stepsArray: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+    stepsArray: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   },
-};
+}
 ```
 
 # 3.0.0 (2016-06-02)

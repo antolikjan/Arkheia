@@ -15,7 +15,6 @@ import errorHandler from "errorhandler";
 import path from "path";
 import lusca from "lusca";
 import config from "./environment";
-import passport from "passport";
 import session from "express-session";
 import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
@@ -44,7 +43,6 @@ export default function (app) {
   app.use(bodyParser.json());
   app.use(methodOverride());
   app.use(cookieParser());
-  app.use(passport.initialize());
 
   // Persist sessions with MongoStore / sequelizeStore
   // We need to enable sessions for passport-twitter because it's an
@@ -56,8 +54,8 @@ export default function (app) {
       resave: false,
       store: new MongoStore({
         mongooseConnection: mongoose.connection,
-        db: "test-a",
-      }),
+        db: "test-a"
+      })
     })
   );
 
@@ -69,15 +67,15 @@ export default function (app) {
     app.use(
       lusca({
         csrf: {
-          angular: true,
+          angular: true
         },
         xframe: "SAMEORIGIN",
         hsts: {
           maxAge: 31536000, //1 year, in seconds
           includeSubDomains: true,
-          preload: true,
+          preload: true
         },
-        xssProtection: true,
+        xssProtection: true
       })
     );
   }
@@ -105,12 +103,12 @@ export default function (app) {
           stats: {
             colors: true,
             timings: true,
-            chunks: false,
-          },
-        }),
+            chunks: false
+          }
+        })
       ],
       port: config.browserSyncPort,
-      plugins: ["bs-fullscreen-message"],
+      plugins: ["bs-fullscreen-message"]
     });
 
     /**
@@ -123,7 +121,7 @@ export default function (app) {
         return browserSync.sockets.emit("fullscreen:message", {
           title: "Webpack Error:",
           body: stripAnsi(stats.toString()),
-          timeout: 100000,
+          timeout: 100000
         });
       }
       browserSync.reload();

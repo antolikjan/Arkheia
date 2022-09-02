@@ -14,36 +14,33 @@ Large images are scaled to fit inside the window. An optional image caption over
 
 1. Install in one of the following ways:
 
-- Install with Bower: `bower install angular-bootstrap-lightbox --save`
-- Install with npm: `npm install angular-bootstrap-lightbox --save`
-- Manually save the script and stylesheet from [`dist`](dist).
+  * Install with Bower: `bower install angular-bootstrap-lightbox --save`
+  * Install with npm: `npm install angular-bootstrap-lightbox --save`
+  * Manually save the script and stylesheet from [`dist`](dist).
 
 2. Include the stylesheet in your app:
 
-```html
-<link
-  rel="stylesheet"
-  href="angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css"
-/>
-```
+  ```html
+  <link rel="stylesheet" href="angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css">
+  ```
 
 3. Include the script in your app:
 
-```html
-<script src="angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js"></script>
-```
+  ```html
+  <script src="angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js"></script>
+  ```
 
 4. The Angular module is named `bootstrapLightbox`. Add it as a dependency to your module:
 
-```js
-angular.module("app", ["bootstrapLightbox"]);
-```
+  ```js
+  angular.module('app', ['bootstrapLightbox']);
+  ```
 
 5. Optional dependencies:
 
-- To enable swipe navigation in the lightbox, include the [ngTouch](https://docs.angularjs.org/api/ngTouch) script.
-- To show a loading bar while an image is loading, include the [angular-loading-bar](https://github.com/chieffancypants/angular-loading-bar) script.
-- For video support, include the [ng-videosharing-embed](https://github.com/erost/ng-videosharing-embed) script.
+  * To enable swipe navigation in the lightbox, include the [ngTouch](https://docs.angularjs.org/api/ngTouch) script.
+  * To show a loading bar while an image is loading, include the [angular-loading-bar](https://github.com/chieffancypants/angular-loading-bar) script.
+  * For video support, include the [ng-videosharing-embed](https://github.com/erost/ng-videosharing-embed) script.
 
 ## Basic example
 
@@ -53,7 +50,7 @@ Gallery:
 <ul ng-controller="GalleryCtrl">
   <li ng-repeat="image in images">
     <a ng-click="openLightboxModal($index)">
-      <img ng-src="{{image.thumbUrl}}" class="img-thumbnail" />
+      <img ng-src="{{image.thumbUrl}}" class="img-thumbnail">
     </a>
   </li>
 </ul>
@@ -62,21 +59,21 @@ Gallery:
 Controller:
 
 ```js
-angular.module("app").controller("GalleryCtrl", function ($scope, Lightbox) {
+angular.module('app').controller('GalleryCtrl', function ($scope, Lightbox) {
   $scope.images = [
     {
-      url: "1.jpg",
-      caption: "Optional caption",
-      thumbUrl: "thumb1.jpg", // used only for this example
+      'url': '1.jpg',
+      'caption': 'Optional caption',
+      'thumbUrl': 'thumb1.jpg' // used only for this example
     },
     {
-      url: "2.gif",
-      thumbUrl: "thumb2.jpg",
+      'url': '2.gif',
+      'thumbUrl': 'thumb2.jpg'
     },
     {
-      url: "3.png",
-      thumbUrl: "thumb3.png",
-    },
+      'url': '3.png',
+      'thumbUrl': 'thumb3.png'
+    }
   ];
 
   $scope.openLightboxModal = function (index) {
@@ -94,9 +91,9 @@ The default view template for the lightbox is [lightbox.html](src/lightbox.html)
 If you make your own template and save it at `lightbox.html`, no further code is necessary. If you save it at a different path, set it in the provider:
 
 ```js
-angular.module("app").config(function (LightboxProvider) {
+angular.module('app').config(function (LightboxProvider) {
   // set a custom template
-  LightboxProvider.templateUrl = "path/to/your-template.html";
+  LightboxProvider.templateUrl = 'path/to/your-template.html';
 });
 ```
 
@@ -109,9 +106,9 @@ The keyboard navigation in the lightbox with the left/right arrow keys can be en
 The first argument to `Lightbox.openModal` must be an array, and its elements may be of any type. In the basic example above, it is an array of objects with properties `url` and `caption`, but this is only the default and is not required. To let the `Lightbox` service know the correct values, set these methods in the provider:
 
 ```js
-angular.module("app").config(function (LightboxProvider) {
+angular.module('app').config(function (LightboxProvider) {
   LightboxProvider.getImageUrl = function (image) {
-    return "/base/dir/" + image.getName();
+    return '/base/dir/' + image.getName();
   };
 
   LightboxProvider.getImageCaption = function (image) {
@@ -127,7 +124,7 @@ By default, images are scaled only if they are too large for the modal to contai
 If you want all images to be scaled to the maximum possible dimensions, update the `Lightbox.fullScreenMode` boolean:
 
 ```js
-angular.module("app").config(function (LightboxProvider) {
+angular.module('app').config(function (LightboxProvider) {
   LightboxProvider.fullScreenMode = true;
 });
 ```
@@ -144,28 +141,28 @@ For now, the maximum video dimensions are fixed at 1280x720 (16:9).
 
 ## Development
 
-- [API documentation](api.md) of the services and directive in the Angular module
+* [API documentation](api.md) of the services and directive in the Angular module
 
-- Setup:
+* Setup:
 
   ```sh
   npm install
   bower install
   ```
 
-- Build:
+* Build:
 
   ```sh
   grunt
   ```
 
-- Generate docs:
+* Generate docs:
 
   ```sh
   grunt jsdoc2md
   ```
 
-- Serve the GitHub Pages:
+* Serve the GitHub Pages:
 
   ```sh
   git checkout gh-pages

@@ -52,7 +52,9 @@ angular
   .config(["markdownConverterProvider", markdownConfig])
   .run(function ($rootScope, $location) {
     "ngInject";
-    $location.path("/about");
+    $rootScope.$on("$stateChangeStart", function (event, next) {
+      $location.path("/about");
+    });
   });
 
 angular.element(document).ready(() => {

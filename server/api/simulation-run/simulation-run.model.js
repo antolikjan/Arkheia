@@ -6,7 +6,7 @@ var ResultSchema = new mongoose.Schema({
   class_name: String,
   file_name: String,
   figure: { type: mongoose.Schema.Types.Object, ref: "GFS" },
-  parameters: Object,
+  parameters: Object
 });
 
 var SimulationRunSchema = new mongoose.Schema({
@@ -17,21 +17,21 @@ var SimulationRunSchema = new mongoose.Schema({
   results: [ResultSchema],
   simulation_run_name: String,
   model_name: String,
-  model_info: String,
+  model_info: String
 });
 
 var ParameterSearchSchema = new mongoose.Schema({
   submission_date: String,
   name: String,
   simulation_runs: [
-    { type: mongoose.Schema.Types.ObjectId, ref: SimulationRun },
+    { type: mongoose.Schema.Types.ObjectId, ref: SimulationRun }
   ],
-  parameter_combinations: Object,
+  parameter_combinations: Object
 });
 
 var ConfigurationSchema = new mongoose.Schema({
   wellcome_message: String,
-  description_message: String,
+  description_message: String
 });
 
 export var GFS = mongoose.model(
