@@ -18,6 +18,8 @@ router.get("/configuration", controller.getConfiguration);
 router.get("/param_search_list", controller.paramSearchList);
 router.get("/param_search/:id", controller.paramSearch);
 
+router.post("/change_param_search_name", controller.changeParamSearchName)
+
 router.get("/delete_simrun/:id", controller.deleteSimRun);
 router.get("/delete_parameter_search/:id", controller.deleteParamSearch);
 router.get("/:query", controller.index);

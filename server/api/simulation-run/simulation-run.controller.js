@@ -88,6 +88,14 @@ export function result(req, res) {
     .catch(handleError(res));
 }
 
+export function changeParamSearchName(req, res) {
+  return ParameterSearch.findByIdAndUpdate(req.body._id, {name: req.body.name})
+    .exec()
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
 export function getSimRuns(req, res) {
   return SimulationRun.find({ '_id': { $in: req.body } })
     .select("-results")

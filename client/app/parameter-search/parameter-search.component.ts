@@ -12,6 +12,7 @@ export class ParameterSearchComponent {
   paramsearch_name;
   data;
   showChangingParams = true;
+  editing = false;
   $http;
 
   /*@ngInject*/
@@ -37,6 +38,13 @@ export class ParameterSearchComponent {
     this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
       this.parameterSearches = response.data;
     });
+  }
+
+  changeParamSearchName(id, newName) {
+    this.$http.post("/api/simulation-runs/change_param_search_name/", { name: newName, _id: id }).then((response) => {
+      console.log("Name changed.");
+    });
+    this.editing = false;
   }
 
   insertParamSearch() {
