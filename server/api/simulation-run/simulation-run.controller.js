@@ -88,9 +88,18 @@ export function result(req, res) {
     .catch(handleError(res));
 }
 
-export function getSimRunInfo(req, res) {
-  return SimulationRun.findById(req.params.id)
+export function getSimRuns(req, res) {
+  return SimulationRun.find({ '_id': { $in: req.body } })
     .select("-results")
+    .exec()
+    .then(handleEntityNotFound(res))
+    .catch(handleError(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+export function getSimRunsWithResults(req, res) {
+  return SimulationRun.find({ '_id': { $in: req.body } })
     .exec()
     .then(handleEntityNotFound(res))
     .catch(handleError(res))
@@ -136,64 +145,25 @@ export function paramSearch(req, res) {
 }
 
 export async function deleteSimRun(req, res) {
-  if (req.params.id.includes("$")) {
-    var params = req.params.id.split("$");
-    var idd = params[0];
-    var id = params[1];
-
-    var paramSearch = await ParameterSearch.findById(idd)
-      .select("-simulation_runs.results.parameters")
-      .populate("simulation_runs.results.figure")
-      .exec();
-    var newSimulationRuns = paramSearch.simulation_runs.filter(function (el) {
-      return el != id;
-    });
-
-    await SimulationRun.deleteOne({ _id: id })
-      .exec()
-      .then(handleEntityNotFound(res))
-      .catch(handleError(res));
-
-    // update ParameterSearch db document to remove desired simulation run
-    await ParameterSearch.findOneAndUpdate(
-      { _id: idd },
-      { simulation_runs: newSimulationRuns }, // removes the run from simulation_runs array
-      function (err, result) {
-        if (err) {
-          res.send(err);
-        } else {
-          res.send(result);
-        }
-      }
-    );
-  } else {
-    // var query = new Object();
-    // const simRuns = await SimulationRun.find(query)
-    //   .select("-results")
-    //   .exec()
-
-    await SimulationRun.deleteOne({ _id: req.params.id })
-      .exec()
-      .then(handleEntityNotFound(res))
-      .then(respondWithResult(res))
-      .catch(handleError(res));
-  }
+  await SimulationRun.deleteOne({ _id: req.params.id })
+    .exec()
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 export async function deleteParamSearch(req, res) {
-  var paramSearches = await ParameterSearch.findByIdAndRemove({
-    _id: req.params.id,
-  })
+  var paramSearches = await ParameterSearch.findByIdAndRemove({ _id: req.params.id })
     .exec()
     .then(handleEntityNotFound(res))
     .catch(handleError(res));
 
-  await paramSearches.simulation_runs.forEach((simrunID) => {
-    SimulationRun.deleteOne({ _id: simrunID })
-      .exec()
-      .then(handleEntityNotFound(res))
-      .catch(handleError(res));
-  });
+  await SimulationRun.deleteMany({ _id: { $in: paramSearches.simulation_runs } })
+    .exec()
+    .then(handleEntityNotFound(res))
+    .catch(handleError(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 export function insertSimrunsToDb(req, res) {

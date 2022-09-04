@@ -63,9 +63,9 @@ const paths = {
 function onServerLog(log) {
   console.log(
     plugins.util.colors.white("[") +
-      plugins.util.colors.yellow("nodemon") +
-      plugins.util.colors.white("] ") +
-      log.message
+    plugins.util.colors.yellow("nodemon") +
+    plugins.util.colors.white("] ") +
+    log.message
   );
 }
 

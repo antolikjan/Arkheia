@@ -22,7 +22,10 @@ var SimulationRunSchema = new mongoose.Schema({
 
 var ParameterSearchSchema = new mongoose.Schema({
   submission_date: String,
+  changing_params: String,
   name: String,
+  run_date: String,
+  model_name: String,
   simulation_runs: [
     { type: mongoose.Schema.Types.ObjectId, ref: SimulationRun }
   ],

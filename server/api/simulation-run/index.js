@@ -10,7 +10,8 @@ router.get("/result/:id", controller.result);
 router.get("/download/:id", controller.download);
 router.get("/images/:id", controller.getImage);
 
-router.get("/simruninfo/:id", controller.getSimRunInfo);
+router.post("/simruns", controller.getSimRuns);
+router.post("/simrunsres", controller.getSimRunsWithResults);
 
 router.get("/configuration", controller.getConfiguration);
 
@@ -23,9 +24,6 @@ router.get("/:query", controller.index);
 
 router.post("/insert_repository", controller.insertSimrunsToDb);
 // router.get('/insert_repository/:file_name/:simrun_name', controller.insertSimrunsToDb)
-router.post(
-  "/merge_and_insert_repository",
-  controller.mergeAndInsertSimrunsToDb
-);
+router.post("/merge_and_insert_repository", controller.mergeAndInsertSimrunsToDb);
 
 module.exports = router;

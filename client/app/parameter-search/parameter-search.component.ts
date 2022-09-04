@@ -11,6 +11,7 @@ export class ParameterSearchComponent {
   file_path2;
   paramsearch_name;
   data;
+  showChangingParams = true;
   $http;
 
   /*@ngInject*/
@@ -18,40 +19,29 @@ export class ParameterSearchComponent {
     this.$http = $http;
   }
 
+  toggleChangingParams() {
+    this.showChangingParams = !this.showChangingParams;
+  }
+
   deleteParamSearch(id) {
     // Delete the parameter search from db
-    this.$http
-      .get("/api/simulation-runs/delete_parameter_search/" + id)
-      .then((res) => {
-        // Update the view
-        this.$http
-          .get("/api/simulation-runs/param_search_list")
-          .then((response) => {
-            this.parameterSearches = response.data;
-          });
-      });
+    console.log("Deleting parameter search.");
+    this.$http.get("/api/simulation-runs/delete_parameter_search/" + id).then((res) => {
+      // Update the view
+      this.updateVIew();
+      console.log("Done.");
+    });
   }
 
   updateVIew() {
-    this.data = Array();
-    this.$http
-      .get("/api/simulation-runs/param_search_list")
-      .then((response) => {
-        this.parameterSearches = response.data;
-        this.parameterSearches.forEach((element) => {
-          this.$http
-            .get(
-              "/api/simulation-runs/simruninfo/" + element["simulation_runs"][0]
-            )
-            .then((res) => {
-              this.data.push([element, res.data]);
-            });
-        });
-      });
+    this.$http.get("/api/simulation-runs/param_search_list").then((response) => {
+      this.parameterSearches = response.data;
+    });
   }
 
   insertParamSearch() {
     if (this.file_path2) {
+      console.log("Inserting parameter search.");
       this.$http
         .post("/api/simulation-runs/merge_and_insert_repository", {
           file_name1: this.file_path1,
@@ -59,8 +49,10 @@ export class ParameterSearchComponent {
         })
         .then((res) => {
           this.updateVIew();
+          console.log("Done.");
         });
     } else {
+      console.log("Inserting parameter search.");
       this.$http
         .post("/api/simulation-runs/insert_repository", {
           file_name: this.file_path1,
@@ -68,12 +60,17 @@ export class ParameterSearchComponent {
         })
         .then((res) => {
           this.updateVIew();
+          console.log("Done.");
         });
     }
   }
 
   getRunDate(row) {
     return moment(row.run_date, "DD/MM/YYYY-HH:mm:ss").valueOf();
+  }
+
+  getSubmissionDate(row) {
+    return moment(row.submission_date, "DD/MM/YYYY-HH:mm:ss").valueOf();
   }
 
   $onInit() {

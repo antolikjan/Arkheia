@@ -21,29 +21,13 @@ export class SimRunListComponent {
 
   deleteSimRun(id) {
     console.log("deleting simulation run with an id: " + id);
-
-    if (this.idd !== undefined) {
-      // Delete the run from db
-      this.$http.get("/api/simulation-runs/delete_simrun/" + this.idd + "$" + id).then((res) => {
-        // Update the view
-        this.$http.get("/api/simulation-runs/param_search/" + this.idd).then((response) => {
-          this.simulationRuns = Array();
-          response.data.simulation_runs.forEach((id) => {
-            this.$http.get("/api/simulation-runs/simruninfo/" + id).then((res) => {
-              this.simulationRuns.push(res.data);
-            });
-          });
-        });
+    // Delete the run from db
+    this.$http.get("/api/simulation-runs/delete_simrun/" + id).then((res) => {
+      // Update the view
+      this.$http.get("/api/simulation-runs").then((response) => {
+        this.simulationRuns = response.data;
       });
-    } else {
-      // Delete the run from db
-      this.$http.get("/api/simulation-runs/delete_simrun/" + id).then((res) => {
-        // Update the view
-        this.$http.get("/api/simulation-runs").then((response) => {
-          this.simulationRuns = response.data;
-        });
-      });
-    }
+    });
   }
 
   getSubmissionDate(row) {
@@ -88,10 +72,8 @@ export class SimRunListComponent {
       });
     } else if (this.idd !== undefined) {
       this.$http.get("/api/simulation-runs/param_search/" + this.idd).then((response) => {
-        response.data.simulation_runs.forEach((id) => {
-          this.$http.get("/api/simulation-runs/simruninfo/" + id).then((res) => {
-            this.simulationRuns.push(res.data);
-          });
+        this.$http.post("/api/simulation-runs/simruns", response.data.simulation_runs).then((res) => {
+          this.simulationRuns = res.data;
         });
       });
     } else {

@@ -7,3 +7,5 @@ nest-simulator-3.1
 .vscode
 .mypy_cache
 dist
+test_data
+.vscode

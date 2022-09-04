@@ -18,7 +18,7 @@ export class ResultsComponent {
   simRun;
   resId;
   $uibModal;
-  images = [];
+  images: any = [];
 
   /*@ngInject*/
   constructor($http, $route, Lightbox, $uibModal) {
@@ -54,7 +54,7 @@ export class ResultsComponent {
         for (let res of this.simRun.results) {
           res.data = convertJsonToTree(res.parameters);
           this.images.push({
-            url: "/api/simulation-runs/images/" + res.figure._id,
+            url: "/api/simulation-runs/images/" + res.figure,
             //'caption': res.file_name,
             //'thumbUrl': 'thumb1.jpg' // used only for this example
           });

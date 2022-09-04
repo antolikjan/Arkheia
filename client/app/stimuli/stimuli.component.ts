@@ -17,7 +17,7 @@ export class StimuliComponent {
   simRun;
   simRunId;
   data;
-  gifs = [];
+  gifs: any = [];
 
   /*@ngInject*/
   constructor($http, $route, Lightbox, $uibModal) {

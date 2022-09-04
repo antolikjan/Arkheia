@@ -1,5 +1,5 @@
 <h1>Simulation runs</h1>
-<div class="input-group">
+<div ng-if="$ctrl.idd==undefined" class="input-group">
   <span style="margin-left:15px;"><b>Enter a path for a simrun directory to insert to the db:</b></span>
   <input style="margin-left:15px; margin-right:5px; width:1070px;" type="text" ng-model="$ctrl.file_path" name="file-path"/>
   <button ng-click="$ctrl.insertSimrun()">Insert</button>
@@ -7,18 +7,18 @@
 <table st-table="simruns" st-safe-src="$ctrl.simulationRuns" class="table table-striped">
   <thead>
     <tr>
-      <th st-sort="getSubmissionDate" tooltip-append-to-body="true"
+      <th style="cursor:pointer" st-sort="submission_date" tooltip-append-to-body="true"
         uib-tooltip="The date when the the simulation run was submitted to the repository.">
         Submission date
       </th>
-      <th st-sort="getRunDate" tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">
+      <th style="cursor:pointer" st-sort="run_date" tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">
         Run date
       </th>
-      <th st-sort="simulation_run_name" tooltip-append-to-body="true"
+      <th style="cursor:pointer" st-sort="simulation_run_name" tooltip-append-to-body="true"
         uib-tooltip="The name given to the simulation instance.">
         Run name
       </th>
-      <th st-sort="model_name" tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">
+      <th style="cursor:pointer" st-sort="model_name" tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">
         Model name
       </th>
       <th tooltip-append-to-body="true"
@@ -44,7 +44,7 @@
       <th tooltip-append-to-body="true" uib-tooltip="Download all content associated to the given simulation run.">
         Download
       </th>
-      <th tooltip-append-to-body="true" uib-tooltip="Delete this simulation run from the database.">
+      <th ng-if="$ctrl.idd==undefined" tooltip-append-to-body="true" uib-tooltip="Delete this simulation run from the database.">
         Delete
       </th>
     </tr>
@@ -105,7 +105,7 @@
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </a>
       </td>
-      <td>
+      <td ng-if="$ctrl.idd==undefined">
         <a ng-click="$ctrl.deleteSimRun(simrun._id)" class="btn btn" target="_blank">
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>

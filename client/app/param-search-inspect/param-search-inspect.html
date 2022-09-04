@@ -179,7 +179,7 @@
                 <a ng-click="$ctrl.openLightboxModal(figures)" href>
                   <img
                     ng-if="figures[$ctrl.selectedFigure] !== undefined"
-                    ng-src="/api/simulation-runs/images/{{figures[$ctrl.selectedFigure]._id}}"
+                    ng-src="/api/simulation-runs/images/{{figures[$ctrl.selectedFigure]}}"
                     class="img-thumbnail"
                     ng-style="{'width' : $ctrl.image_size + 'px'}"
                   />
