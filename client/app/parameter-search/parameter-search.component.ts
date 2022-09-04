@@ -42,7 +42,7 @@ export class ParameterSearchComponent {
 
   changeParamSearchName(id, newName) {
     this.$http.post("/api/simulation-runs/change_param_search_name/", { name: newName, _id: id }).then((response) => {
-      console.log("Name changed.");
+      console.log("Name changed to: " + newName);
     });
     this.editing = false;
   }
