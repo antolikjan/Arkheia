@@ -9,3 +9,7 @@ nest-simulator-3.1
 dist
 test_data
 .vscode
+tmp
+mozaik
+.gitignore
+migrate-mongo
