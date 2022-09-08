@@ -405,11 +405,8 @@ async def insertMozaikRepository(file_path, simrun_name=None):
         for param_to_check in working_combinations[0].keys():
             for working_combination in working_combinations[0:]:
                 for param in working_combination.keys():
-                    if (
-                        working_combination[param]
-                        != working_combinations[0][param_to_check]
-                    ):
-                        changing_params.add(param_to_check.split(".")[-1])
+                    if param == param_to_check and working_combination[param] != working_combinations[0][param_to_check]:
+                        changing_params.add(param_to_check)
 
         simulation_runs_relation = mongodb_client.mongo_client.submissions.insert_many(
             simulation_runs

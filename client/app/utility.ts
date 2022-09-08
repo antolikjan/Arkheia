@@ -2,7 +2,7 @@
 
 function _convertJsonToTree(c, json) {
   let counter = c;
-  let nodes = [];
+  let nodes: any = [];
   for (let key in json) {
     if (json.hasOwnProperty(key)) {
       counter++;
