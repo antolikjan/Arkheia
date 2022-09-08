@@ -34,7 +34,7 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 
 3. Run `sudo mkdir -p /data/db/` and `` sudo chown `id -u` /data/db `` to create the MongoDB directory with user ownership and then `mongod` in a separate shell to keep an instance of the MongoDB Daemon running.
 
-4. Setup mozaik virtual env. (see https://github.com/CSNG-MFF/mozaik/)
+4. Setup mozaik virtual env. (see https://github.com/CSNG-MFF/mozaik/) Install `klein` library. (`pip install klein`)
 
 5. Run `sudo npm install --global gulp@3.9.0` to install gulp and `npm link gulp` to link it locally. Then run `gulp serve` to start the development server. It should automatically open the client in your browser when ready.
 
