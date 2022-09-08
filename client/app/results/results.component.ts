@@ -42,6 +42,7 @@ export class ResultsComponent {
   }
 
   openLightboxModal(index) {
+    console.log(this.images, index);
     this.lightbox.openModal(this.images, index);
   }
 
@@ -54,7 +55,7 @@ export class ResultsComponent {
         for (let res of this.simRun.results) {
           res.data = convertJsonToTree(res.parameters);
           this.images.push({
-            url: "/api/simulation-runs/images/" + res.figure,
+            url: "/api/simulation-runs/images/" + res.figure._id,
             //'caption': res.file_name,
             //'thumbUrl': 'thumb1.jpg' // used only for this example
           });
