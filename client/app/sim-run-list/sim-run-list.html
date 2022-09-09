@@ -1,75 +1,115 @@
 <h1>Simulation runs</h1>
-  <table st-table="simruns" st-safe-src="$ctrl.simulationRuns" class="table table-striped">
-    <thead>
-      <tr>
-        <th st-sort='getSubmissionDate' tooltip-append-to-body="true" uib-tooltip="The date when the the simulation run was submitted to the repository.">Submission date</th>
-        <th st-sort='getRunDate' tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">Run date</th>
-        <th st-sort='simulation_run_name' tooltip-append-to-body="true" uib-tooltip="The name given to the simulation instance.">Run name</th>
-        <th st-sort='model_name' tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">Model name</th>
-        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the description of the model that was simulated.">View model description</th>
-        
-        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the full parametrization of the given simulation run.">View params</th>
-        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the stimuli that were shown during the given simulation run.">View stim</th>
-        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the experimental protocols that were performed over the model during the given simulation run.">View exp. prot</th>
-        <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect the results (figures) generated during the given simulation run.">View results</th>
-        <th tooltip-append-to-body="true" uib-tooltip="Download all content associated to the given simulation run.">Download</th>
-      </tr>
-      <tr>
-        <th>
-          <input st-search="submission_date" placeholder="search for submission date" class="input-sm form-control" type="search"/>
-        </th>
-        <th>
-          <input st-search="run_date" placeholder="search for run date" class="input-sm form-control" type="search"/>
-        </th>
-        <th>
-          <input st-search="simulation_run_name" placeholder="search for simulation run name" class="input-sm form-control" type="search"/>
-        </th>
-        <th>
-          <input st-search="model_name" placeholder="search for model name" class="input-sm form-control" type="search"/>
-        </th>
-        <th>
-        </th>
-
-       </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="simrun in simruns">
-        <td>{{$ctrl.getSubmissionDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
-        <td>{{$ctrl.getRunDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
-        <td>{{simrun.simulation_run_name}}</td>
-        <td>{{simrun.model_name}}</td>
-        <td>
-            <a ng-click="$ctrl.descriptionModal(simrun.model_description)" class="btn  btn">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-           
-        </td>
-        <td>
-            <a href="/param-view/{{simrun._id}}" class="btn  btn">
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-        </td>
-         <td>
-            <a href="/stimuli/{{simrun._id}}" class="btn  btn">
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-        </td>
-        <td>
-            <a href="/experimental-protocol/{{simrun._id}}" class="btn  btn">
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-        </td>
-        <td>
-            <a href="/results/{{simrun._id}}" class="btn  btn">
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            </a>
-        </td>
-        <td>
-            <!-- <a ng-click="$ctrl.download(simrun._id)" class="btn btn-success"> -->
-            <a ng-href="/api/simulation-runs/download/{{simrun._id}}" class="btn  btn" target="_blank">
-              <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-            </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div ng-if="$ctrl.idd==undefined" class="input-group">
+  <span style="margin-left:15px;"><b>Enter a path for a simrun directory to insert to the db:</b></span>
+  <input style="margin-left:15px; margin-right:5px; width:1070px;" type="text" ng-model="$ctrl.file_path" name="file-path"/>
+  <button ng-click="$ctrl.insertSimrun()">Insert</button>
+</div>
+<table st-table="simruns" st-safe-src="$ctrl.simulationRuns" class="table table-striped">
+  <thead>
+    <tr>
+      <th style="cursor:pointer" st-sort="submission_date" tooltip-append-to-body="true"
+        uib-tooltip="The date when the the simulation run was submitted to the repository.">
+        Submission date
+      </th>
+      <th style="cursor:pointer" st-sort="run_date" tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">
+        Run date
+      </th>
+      <th style="cursor:pointer" st-sort="simulation_run_name" tooltip-append-to-body="true"
+        uib-tooltip="The name given to the simulation instance.">
+        Run name
+      </th>
+      <th style="cursor:pointer" st-sort="model_name" tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">
+        Model name
+      </th>
+      <th tooltip-append-to-body="true"
+        uib-tooltip="Click the 'eye' icon to inspect the description of the model that was simulated.">
+        View model description
+      </th>
+      <th tooltip-append-to-body="true"
+        uib-tooltip="Click the 'eye' icon to inspect the full parametrization of the given simulation run.">
+        View params
+      </th>
+      <th tooltip-append-to-body="true"
+        uib-tooltip="Click the 'eye' icon to inspect the stimuli that were shown during the given simulation run.">
+        View stim
+      </th>
+      <th tooltip-append-to-body="true"
+        uib-tooltip="Click the 'eye' icon to inspect the experimental protocols that were performed over the model during the given simulation run.">
+        View exp. prot
+      </th>
+      <th tooltip-append-to-body="true"
+        uib-tooltip="Click the 'eye' icon to inspect the results (figures) generated during the given simulation run.">
+        View results
+      </th>
+      <th tooltip-append-to-body="true" uib-tooltip="Download all content associated to the given simulation run.">
+        Download
+      </th>
+      <th ng-if="$ctrl.idd==undefined" tooltip-append-to-body="true" uib-tooltip="Delete this simulation run from the database.">
+        Delete
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <input st-search="submission_date" placeholder="search for submission date" class="input-sm form-control"
+          type="search" />
+      </th>
+      <th>
+        <input st-search="run_date" placeholder="search for run date" class="input-sm form-control" type="search" />
+      </th>
+      <th>
+        <input st-search="simulation_run_name" placeholder="search for simulation run name"
+          class="input-sm form-control" type="search" />
+      </th>
+      <th>
+        <input st-search="model_name" placeholder="search for model name" class="input-sm form-control" type="search" />
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- <tr ng-repeat="simrun in simruns"> -->
+    <!-- <tr ng-repeat="n in [].constructor(simruns.length) track by $index"> -->
+    <tr ng-repeat="simrun in simruns">
+      <td>{{$ctrl.getSubmissionDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
+      <td>{{$ctrl.getRunDate(simrun) | date : 'dd-MM-yy H:m'}}</td>
+      <td>{{simrun.simulation_run_name}}</td>
+      <td>{{simrun.model_name}}</td>
+      <td>
+        <a ng-click="$ctrl.descriptionModal(simrun.model_description)" class="btn btn">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td>
+        <a href="/param-view/{{simrun._id}}" class="btn btn">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td>
+        <a href="/stimuli/{{simrun._id}}" class="btn btn">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td>
+        <a href="/experimental-protocol/{{simrun._id}}" class="btn btn">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td>
+        <a href="/results/{{simrun._id}}" class="btn btn">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td>
+        <a ng-click="$ctrl.download(simrun._id)" class="btn btn-success">
+          <a ng-href="/api/simulation-runs/download/{{simrun._id}}" class="btn btn" target="_blank">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+          </a>
+      </td>
+      <td ng-if="$ctrl.idd==undefined">
+        <a ng-click="$ctrl.deleteSimRun(simrun._id)" class="btn btn" target="_blank">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,17 +1,16 @@
 .tooltip.customClass .tooltip-inner {
-          background-color: #000000;
-          
-        }
+  background-color: #000000;
+}
 
 .tooltip.customClass {
-          background-color: #033000;
+  background-color: #033000;
 
-          margin :0px;
-          border :0px;
-        }
+  margin: 0px;
+  border: 0px;
+}
 
-experimental-protocol  p {
-	text-align : justify;
-	margin-left : 10px;
-	margin-right : 10px;
+experimental-protocol p {
+  text-align: justify;
+  margin-left: 10px;
+  margin-right: 10px;
 }

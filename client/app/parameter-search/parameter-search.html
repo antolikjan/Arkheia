@@ -1,30 +1,133 @@
 <h1>Parameter search runs</h1>
-
-<table class="table table-striped">
-	<thead>
-	  <th tooltip-append-to-body="true" uib-tooltip="The date when the parameter search was submitted to the repository.">Submission date</th>
-	  <th tooltip-append-to-body="true" uib-tooltip="The date when the simulation was ran.">Run date ~</th>
-	  <th tooltip-append-to-body="true" uib-tooltip="The name of the simulation instance.">Name</th>
-	  <th tooltip-append-to-body="true" uib-tooltip="The name of the model that was simulated.">Model name</th>
-	  <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to inspect individual runs of the parameter search.">View individual runs</th>
-	  <th tooltip-append-to-body="true" uib-tooltip="Click the 'eye' icon to perform parameter dependent interactive inspection of the paramter search results.">Inspect results</th>
-	</thead>
-	<tbody>
-	  <tr ng-repeat="ps in $ctrl.parameterSearches">
-	    <td>{{ps.submission_date}}</td>
-	    <td>{{ps.simulation_runs[0].run_date}}</td>
-	    <td>{{ps.name.substring(ps.name.lastIndexOf(']')+1)}}</td>
-	    <td>{{ps.simulation_runs[0].model_name}}</td>
-	    <td>
-	        <a href="/simruns/{{ps._id}}" class="btn  btn-sm">
-	          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-	        </a>
-	    </td>
-	    <td>
-	        <a href="/param-search-inspect/{{ps._id}}" class="btn  btn-sm">
-	          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-	        </a>
-	    </td>
-	  </tr>
-	</tbody>
+<div class="input-group">
+  <!-- <span style="margin-left:15px;"><b>Enter a path for a simrun directory to insert to the db:</b></span> -->
+  <label for="simrun-name">Enter parameter search name</label>
+  <input
+    style="margin-left: 15px; margin-right: 5px"
+    type="text"
+    ng-model="$ctrl.paramsearch_name"
+    name="paramsearch-name"
+    ng-init="$ctrl.paramsearch_name ='SelfSustainedPushPull'"
+  />
+  <label for="file-path1">Enter path to parameter search directory</label>
+  <input
+    style="margin-left: 15px; margin-right: 5px"
+    type="text"
+    ng-model="$ctrl.file_path1"
+    name="file-path1"
+    ng-init="$ctrl.file_path1 ='arkheia_example_data'"
+  />
+  <!-- UNCOMMENT THIS TO MERGE RESULTS -->
+  <!-- <label for="file-path2"
+    >(optional) Enter path to parameter search second directory</label
+  >
+  <input
+    style="margin-left: 15px; margin-right: 5px"
+    type="text"
+    ng-model="$ctrl.file_path2"
+    name="file-path2"
+    ng-init="$ctrl.file_path2 =''"
+  /> -->
+  <button ng-click="$ctrl.insertParamSearch()">Insert</button>
+  <b>Toggle changing parameters</b>
+  <a ng-click="$ctrl.toggleChangingParams()" class="btn btn-sm">
+    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+  </a>
+</div>
+<table st-table="param_searches" st-safe-src="$ctrl.parameterSearches" class="table table-striped">
+  <thead>
+    <th
+      style="cursor: pointer"
+      st-sort="submission_date"
+      tooltip-append-to-body="true"
+      uib-tooltip="The date when the parameter search was submitted to the repository."
+    >
+      Submission date
+    </th>
+    <th
+      style="cursor: pointer"
+      st-sort="run_date"
+      tooltip-append-to-body="true"
+      uib-tooltip="The date when the simulation was ran."
+    >
+      Run date ~
+    </th>
+    <th
+      style="cursor: pointer"
+      st-sort="name"
+      tooltip-append-to-body="true"
+      uib-tooltip="The name of the simulation instance."
+    >
+      Name
+    </th>
+    <th
+      ng-if="$ctrl.showChangingParams"
+      style="cursor: pointer"
+      st-sort="changing_params"
+      tooltip-append-to-body="true"
+      uib-tooltip="The list of changing parameters."
+    >
+      Changing parameters
+    </th>
+    <th
+      style="cursor: pointer"
+      st-sort="model_name"
+      tooltip-append-to-body="true"
+      uib-tooltip="The name of the model that was simulated."
+    >
+      Model name
+    </th>
+    <th
+      tooltip-append-to-body="true"
+      uib-tooltip="Click the 'eye' icon to inspect individual runs of the parameter search."
+    >
+      View individual runs
+    </th>
+    <th
+      tooltip-append-to-body="true"
+      uib-tooltip="Click the 'eye' icon to perform parameter dependent interactive inspection of the paramter search results."
+    >
+      Inspect results
+    </th>
+    <th tooltip-append-to-body="true" uib-tooltip="Click the 'cross' icon to delete the parameter search run.">
+      Delete results
+    </th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="param_search in param_searches">
+      <td>{{$ctrl.getSubmissionDate(param_search) | date : 'dd-MM-yy H:m'}}</td>
+      <td>{{$ctrl.getRunDate(param_search) | date : 'dd-MM-yy H:m'}}</td>
+      <!-- <td>{{param_search.name}}</td> -->
+      <td>
+        <div>
+          <span style="font-weight: bold" ng-show="!$ctrl.editing">
+            {{param_search.name}}
+            <a ng-click="$ctrl.editing=true" style="cursor:pointer" class="btn btn-sm">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </a>
+          </span>
+          <span ng-show="$ctrl.editing"><input type="input" ng-model="param_search.name"/>
+            <button ng-click="$ctrl.changeParamSearchName(param_search._id, param_search.name)">Save</button>
+          </span>
+        </div>
+      </td>
+      <td ng-if="$ctrl.showChangingParams" ng-bind-html="param_search.changing_params"></td>
+      <td>{{param_search.model_name}}</td>
+      <td>
+        <a href="/simruns/{{param_search._id}}" class="btn btn-sm">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td>
+        <a href="/param-search-inspect/{{param_search._id}}" class="btn btn-sm">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td>
+        <a ng-click="$ctrl.deleteParamSearch(param_search._id)" class="btn btn-sm">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
 </table>

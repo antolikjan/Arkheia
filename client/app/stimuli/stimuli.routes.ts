@@ -1,9 +1,8 @@
-'use strict';
+"use strict";
 
-export default function($routeProvider) {
-  'ngInject';
-  $routeProvider
-    .when('/stimuli/:simRunId', {
-      template: '<stimuli></stimuli>'
-    });
+export default function ($routeProvider) {
+  "ngInject";
+  $routeProvider.when("/stimuli/:simRunId", {
+    template: "<stimuli></stimuli>",
+  });
 }

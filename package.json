@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "server/index.js",
   "dependencies": {
+    "@types/node": "^18.7.13",
     "angular": "~1.6.0",
     "angular-animate": "~1.6.0",
     "angular-aria": "~1.6.0",
@@ -14,6 +15,7 @@
     "angular-smart-table": "^2.1.8",
     "angular-ui-bootstrap": "^2.0.1",
     "angular-validation-match": "^1.9.0",
+    "axios": "^0.27.2",
     "babel-polyfill": "^6.7.2",
     "babel-runtime": "^6.6.1",
     "bluebird": "^3.3.3",

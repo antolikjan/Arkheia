@@ -1,10 +1,23 @@
 <h1>API</h1>
 
-<p>Arkheia API is fully defined by the format in which individual simulation runs (or parameter searches) are stored in the associated MongoDB database. Currently the name of the database Arkheia expects data to be stored is fixed to <em>arkheia</em>. It is the responsibility of the given back-end to export the information from the given simulation environment, connect to the MongoDB database and insert the information in the prescribed format.</p>
+<p>
+  Arkheia API is fully defined by the format in which individual simulation runs
+  (or parameter searches) are stored in the associated MongoDB database.
+  Currently the name of the database Arkheia expects data to be stored is fixed
+  to <em>arkheia</em>. It is the responsibility of the given back-end to export
+  the information from the given simulation environment, connect to the MongoDB
+  database and insert the information in the prescribed format.
+</p>
 
 <h2>Format for individual simulation runs</h2>
 
-<p>Each simulation run is represented by a single JSON hierarchical data-structure which corresponds to the document inserted into the database collection named <em>submissions</em>. At the root level the data-structure contains following entries with indicated expected value types and brief explanations on the semantics of the given entry:</p>
+<p>
+  Each simulation run is represented by a single JSON hierarchical
+  data-structure which corresponds to the document inserted into the database
+  collection named <em>submissions</em>. At the root level the data-structure
+  contains following entries with indicated expected value types and brief
+  explanations on the semantics of the given entry:
+</p>
 
 <pre><code>{
         submission_date        :  string,            # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of submission to Arkheia.
@@ -19,9 +32,24 @@
 }
 </code></pre>
 
-<p>The <em>parameters</em> entry should describe the full parametrization of the model used in this run and as all parametrization throughout Arkheia API, it should follow the <em>ParameterSet</em> format. <em>ParameterSet</em> is a nested dictionary where each value associated with a key (that corresponds to the name of the parameter) is a tuple <em>(a,b,c)</em>, where <em>a</em> corresponds to the value of the parameter and can either be a scalar or <em>ParameterSet</em> itself, <em>b</em> is the type of the parameter, and <em>c</em> is a short description of the parameter's meaning.</p>
+<p>
+  The <em>parameters</em> entry should describe the full parametrization of the
+  model used in this run and as all parametrization throughout Arkheia API, it
+  should follow the <em>ParameterSet</em> format. <em>ParameterSet</em> is a
+  nested dictionary where each value associated with a key (that corresponds to
+  the name of the parameter) is a tuple <em>(a,b,c)</em>, where
+  <em>a</em> corresponds to the value of the parameter and can either be a
+  scalar or <em>ParameterSet</em> itself, <em>b</em> is the type of the
+  parameter, and <em>c</em> is a short description of the parameter's meaning.
+</p>
 
-<p>Let's have a look at the format of the individual JSON datastructures representing  a single result of the simulation run (list of these is inserted into the <em>results</em> entry of the root JSON document described above). Each result is meant to represent a figure with an accompanying explanatory caption, and is stored as following JSON data-structure:</p>
+<p>
+  Let's have a look at the format of the individual JSON datastructures
+  representing a single result of the simulation run (list of these is inserted
+  into the <em>results</em> entry of the root JSON document described above).
+  Each result is meant to represent a figure with an accompanying explanatory
+  caption, and is stored as following JSON data-structure:
+</p>
 
 <pre><code>{
         code                   :  string,         # Reference to the source code that generated the given figure (e.g. class or function name).
@@ -32,9 +60,27 @@
 }
 </code></pre>
 
-<p>The <em>parameters</em> entry should contain the parameters with which the generator of the figure identified by the <em>class</em> entry was invoked to generated the given figure in the form of <em>ParameterSet</em> described above. Finally, MongoDB provides a separate efficient storage for binary data-files (see MongoDB GridFS). The back-end implementing the specification should thus submit the image of the figure (in either the GIF, JPEG or PNG format) to the database via the GridFS API and then store the returned id which can be used to later retrieve the image to the entry <em>figure</em>.</p>
+<p>
+  The <em>parameters</em> entry should contain the parameters with which the
+  generator of the figure identified by the <em>class</em> entry was invoked to
+  generated the given figure in the form of <em>ParameterSet</em> described
+  above. Finally, MongoDB provides a separate efficient storage for binary
+  data-files (see MongoDB GridFS). The back-end implementing the specification
+  should thus submit the image of the figure (in either the GIF, JPEG or PNG
+  format) to the database via the GridFS API and then store the returned id
+  which can be used to later retrieve the image to the entry <em>figure</em>.
+</p>
 
-<p>Next we will describe the format in which the  information about stimuli that were presented during simulation should be stored. A list of such data structures is meant to be stored in the <em>stimuli</em> root level entry. It assumes that the model was presented with a list of stimuli, generated by some source code entity (class function) and parameters, and its ‘raw’ instantiation can be represented as vector stream, which in turn can be translated into a movie for visual inspection by the user. The format of each stimulus data-structure is as follows:</p>
+<p>
+  Next we will describe the format in which the information about stimuli that
+  were presented during simulation should be stored. A list of such data
+  structures is meant to be stored in the <em>stimuli</em> root level entry. It
+  assumes that the model was presented with a list of stimuli, generated by some
+  source code entity (class function) and parameters, and its ‘raw’
+  instantiation can be represented as vector stream, which in turn can be
+  translated into a movie for visual inspection by the user. The format of each
+  stimulus data-structure is as follows:
+</p>
 
 <pre><code>{       
         code                   : string,          # Reference to the source code that generated the given stimulus (e.g. class or function name).
@@ -45,7 +91,14 @@
 }
 </code></pre>
 
-<p>The <em>recorders</em> root level entry should contain information on the recording configuration present during the stimulation. It assumes that it can be described a list of parametrized entities that each records from some set of neurons some variables. The <em>recorders</em> entry should thus contain a list of JSON data-structures each corresponding to one such recording configuration entity. </p>
+<p>
+  The <em>recorders</em> root level entry should contain information on the
+  recording configuration present during the stimulation. It assumes that it can
+  be described a list of parametrized entities that each records from some set
+  of neurons some variables. The <em>recorders</em> entry should thus contain a
+  list of JSON data-structures each corresponding to one such recording
+  configuration entity.
+</p>
 
 <pre><code>{
         code                   : string,          # Reference to the source code that generated the given recording configuration (e.g. class or function name). 
@@ -57,7 +110,11 @@
 }
 </code></pre>
 
-<p>The <em>experimental_protocols</em> root entry is expected to contain a list of JSON data-structures characterizing the experimental protocols that were performed during the simulation of the model: </p>
+<p>
+  The <em>experimental_protocols</em> root entry is expected to contain a list
+  of JSON data-structures characterizing the experimental protocols that were
+  performed during the simulation of the model:
+</p>
 
 <pre><code>{
         code                   : string,          # Reference to the source code that generated the given experimental protocol (e.g. class or function name). 
@@ -69,7 +126,13 @@
 
 <h2>Format for parameter search representation</h2>
 
-<p>Parameter search is represented as a collection of simulation runs with systematically varying subset of parameters. For sake of efficiency the parameter searches are stored in a separate collection (within the same instance of the MongoDB database) named <em>parameterSearchRuns</em>. Each parameter search is a JSON document of following format:</p>
+<p>
+  Parameter search is represented as a collection of simulation runs with
+  systematically varying subset of parameters. For sake of efficiency the
+  parameter searches are stored in a separate collection (within the same
+  instance of the MongoDB database) named <em>parameterSearchRuns</em>. Each
+  parameter search is a JSON document of following format:
+</p>
 
 <pre><code>{
         submission_date        : string           # '%d/%m/%Y-%H:%M:%S' formatted string representing the time of submission to Arkheia.
@@ -79,4 +142,12 @@
 }
 </code></pre>
 
-<p>The <em>simulation_runs</em> entry should contain a list of JSON data-structures, each corresponding to one simulation run with same format as the JSON data-structure describing individual simulation run described in previous section. Finally the <em>parameter_combinations</em> entry should contain a list of tuples, with each tuple holding a name of the parameter that was varied, and a list of parameter values that were explored (note that currently Arkheia supports only grid parameter searches).</p>
+<p>
+  The <em>simulation_runs</em> entry should contain a list of JSON
+  data-structures, each corresponding to one simulation run with same format as
+  the JSON data-structure describing individual simulation run described in
+  previous section. Finally the <em>parameter_combinations</em> entry should
+  contain a list of tuples, with each tuple holding a name of the parameter that
+  was varied, and a list of parameter values that were explored (note that
+  currently Arkheia supports only grid parameter searches).
+</p>

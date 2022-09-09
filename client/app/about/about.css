@@ -1,7 +1,7 @@
 body,
 html {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 body,
@@ -11,74 +11,73 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-weight: 700;
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
 }
 
-.navbar-header  a {
-    padding-top:9px !important; 
-    padding-bottom:30px !important;
-    height: 30px;
-    margin-bottom: 0px;
-    
-   color: white !important; 
+.navbar-header a {
+  padding-top: 9px !important;
+  padding-bottom: 30px !important;
+  height: 30px;
+  margin-bottom: 0px;
+
+  color: white !important;
 }
 
 .navbar-default .navbar-nav > li > a {
-    padding-top:9px !important; 
-    padding-bottom:30px !important;
-    height: 30px;
-    margin-bottom: 0px;
-    color: white;
+  padding-top: 9px !important;
+  padding-bottom: 30px !important;
+  height: 30px;
+  margin-bottom: 0px;
+  color: white;
 }
 
-.navbar-default .navbar-nav > .active > a  {
-   background-color : #609dff !important;
-   color : #000000;
+.navbar-default .navbar-nav > .active > a {
+  background-color: #609dff !important;
+  color: #000000;
 }
 
-.navbar-default .navbar-nav > .active > a:hover  {
-   background-color : #609dff !important;
-   color : #000000;
+.navbar-default .navbar-nav > .active > a:hover {
+  background-color: #609dff !important;
+  color: #000000;
 }
 
 .navbar {
-    min-height:30px !important;
-    margin-bottom : 0px !important;
-    background-color : #609dff;
+  min-height: 30px !important;
+  margin-bottom: 0px !important;
+  background-color: #609dff;
 }
 
 .topnav {
-    font-size: 15px; 
+  font-size: 15px;
 }
 
-
 .intro-header {
-    padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
-    padding-bottom: 50px;
-    text-align: center;
-    color: #f8f8f8;
-    background-color: #609dff;
-    background-image:  url(../../assets/images/raw-logo-clipped-light-blue.svg);
-    background-repeat : no-repeat;
-    background-position : center center;
-    /*background : #609dff url(../../assets/images/raw-logo-clipped-light-blue.svg) no-repeat center center;*/
-    background-size: 100vh;
-    height : calc(100vh - 40px);
+  padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
+  padding-bottom: 50px;
+  text-align: center;
+  color: #f8f8f8;
+  background-color: #609dff;
+  background-image: url(../../assets/images/raw-logo-clipped-light-blue.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  /*background : #609dff url(../../assets/images/raw-logo-clipped-light-blue.svg) no-repeat center center;*/
+  background-size: 100vh;
+  height: calc(100vh - 40px);
 }
 
 .intro-message {
-    position: relative;
-    padding-top: 9%;
-    padding-bottom: 9%;
+  position: relative;
+  padding-top: 9%;
+  padding-bottom: 9%;
 }
 
 .intro-message > h1 {
-    margin: 0;
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
-    font-size: 5em;
+  margin: 0;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+  font-size: 5em;
 }
 
 .intro-message > h3 {
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
 }
